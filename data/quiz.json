@@ -1,0 +1,80 @@
+{
+  "passingScore": 70,
+  "successMessage": "You really do know everything about us! Here's something special just for you...",
+  "unlockMemoryId": "memory3",
+  "unlockContent": {
+    "type": "message",
+    "content": "Happy 25th Birthday, Thuvaraha! You mean the world to me. Here's to many more memories together. Love you forever! ❤️"
+  },
+  "questions": [
+    {
+      "type": "question",
+      "question": "Where did we have our first date?",
+      "answers": [
+        "Coffee shop",
+        "Restaurant",
+        "Park",
+        "Cinema"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "type": "question",
+      "question": "What's my favorite thing about you?",
+      "answers": [
+        "Your sense of humor",
+        "Your kindness",
+        "Your smile",
+        "Everything"
+      ],
+      "correctAnswer": 3
+    },
+    {
+      "type": "media",
+      "title": "Remember this moment? 💕",
+      "media": {
+        "type": "image",
+        "url": "media/special-moment.jpg"
+      },
+      "message": "One of my favorite photos of us!"
+    },
+    {
+      "type": "question",
+      "question": "What did we do on our beach trip?",
+      "answers": [
+        "Swimming",
+        "Watching the sunset",
+        "Building sandcastles",
+        "Surfing"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "type": "question",
+      "question": "What's our song?",
+      "answers": [
+        "Perfect by Ed Sheeran",
+        "Thinking Out Loud",
+        "A Thousand Years",
+        "All of Me"
+      ],
+      "correctAnswer": 0,
+      "media": {
+        "type": "image",
+        "url": "media/music.jpg"
+      }
+    },
+    {
+      "type": "question",
+      "question": "How many movies did we watch on our movie marathon night?",
+      "answers": [
+        "2 movies",
+        "3 movies",
+        "4 movies",
+        "5 movies"
+      ],
+      "correctAnswer": 1
+    }
+  ]
+}
+

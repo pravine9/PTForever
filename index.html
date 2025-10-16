@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Forever Timeline</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">P&T Forever ∞</h1>
+            <p class="sidebar-subtitle">Our Story, Our Memories</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Navigation</div>
+                <a href="index.html" class="nav-item active">📖 All Memories</a>
+                <a href="quiz.html" class="nav-item">🎯 Birthday Quiz</a>
+                <a href="favorites-quiz.html" class="nav-item">💝 Favorites Quiz</a>
+            </div>            
+            <div class="nav-section timeline-nav">
+                <button class="timeline-toggle" onclick="toggleTimeline()">
+                    <span>⏱️ Timeline</span>
+                    <span class="timeline-arrow">▶</span>
+                </button>
+                <div class="timeline-dates" id="timelineDates">
+                    <!-- Timeline dates will be populated here -->
+                </div>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            Est. October 2024 💕
+        </div>
+    </aside>
+
+    <main class="container">
+        <header class="page-header">
+            <h2>Our Timeline</h2>
+            <p class="subtitle">Every moment with you is worth remembering</p>
+        </header>
+
+        <div class="filter-tags" id="filterTags">
+            <button class="tag active" data-tag="all">All</button>
+        </div>
+
+        <div class="timeline" id="timeline">
+            <!-- Memories will be loaded here -->
+        </div>
+    </main>
+
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>Private Memory</h3>
+            <p>This memory is protected. Enter the password:</p>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <div class="modal-buttons">
+                <button onclick="checkPassword()">Unlock</button>
+                <button onclick="closeModal()">Cancel</button>
+            </div>
+            <p id="passwordError" class="error"></p>
+        </div>
+    </div>
+
+    <div id="memoryModal" class="modal">
+        <div class="modal-content memory-detail">
+            <span class="close" onclick="closeMemoryModal()">&times;</span>
+            <div id="memoryContent"></div>
+        </div>
+    </div>
+
+    <script src="js/memories.js"></script>
+</body>
+</html>
+

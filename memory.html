@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory - PTForever</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/memory-page.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">PTForever</h1>
+            <p class="sidebar-subtitle">Our Story, Our Memories</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Navigation</div>
+                <a href="index.html" class="nav-item">📖 All Memories</a>
+                <a href="quiz.html" class="nav-item">🎯 Birthday Quiz</a>
+            </div>
+            
+            <div class="nav-section timeline-nav">
+                <button class="timeline-toggle active" onclick="toggleTimeline()">
+                    <span>⏱️ Timeline</span>
+                    <span class="timeline-arrow">▶</span>
+                </button>
+                <div class="timeline-dates expanded" id="timelineDates">
+                    <!-- Timeline dates will be populated here -->
+                </div>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            Est. October 2024 💕
+        </div>
+    </aside>
+
+    <main class="memory-page-container">
+        <div id="memoryPageContent">
+            <!-- Content loads dynamically -->
+            <div style="text-align: center; padding: 4rem;">
+                <p>Loading memory...</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/dynamic-memory.js"></script>
+</body>
+</html>
+

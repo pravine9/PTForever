@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Quiz - PTForever</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">PTForever</h1>
+            <p class="sidebar-subtitle">Our Story, Our Memories</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Navigation</div>
+                <a href="index.html" class="nav-item">📖 All Memories</a>
+                <a href="quiz.html" class="nav-item active">🎯 Birthday Quiz</a>
+                <a href="favorites-quiz.html" class="nav-item">💝 Favorites Quiz</a>
+            </div>
+            
+            <div class="nav-section timeline-nav">
+                <button class="timeline-toggle" onclick="toggleTimeline()">
+                    <span>⏱️ Timeline</span>
+                    <span class="timeline-arrow">▶</span>
+                </button>
+                <div class="timeline-dates" id="timelineDates">
+                    <!-- Timeline dates will be populated here -->
+                </div>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            Est. October 2024 💕
+        </div>
+    </aside>
+
+    <main class="container">
+        <div id="quizStart" class="quiz-start">
+            <h2>Happy 25th Birthday, Thuvaraha! 🎉</h2>
+            <p class="subtitle">Let's see how well you know our story...</p>
+            <button onclick="startQuiz()" class="btn-primary">Start Quiz</button>
+        </div>
+
+        <div id="quizContainer" class="quiz-container" style="display: none;">
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></p>
+            </div>
+
+            <div id="questionContainer" class="question-container">
+                <!-- Questions will be loaded here -->
+            </div>
+
+            <div class="quiz-navigation">
+                <button id="nextBtn" onclick="nextQuestion()" class="btn-primary" style="display: none;">Next</button>
+            </div>
+        </div>
+
+        <div id="quizResults" class="quiz-results" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display">
+                <p class="score">Your Score: <span id="finalScore">0</span>/<span id="totalScore">0</span></p>
+                <div id="unlockContent"></div>
+            </div>
+            <button onclick="restartQuiz()" class="btn-secondary">Try Again</button>
+            <a href="index.html" class="btn-primary">Back to Memories</a>
+        </div>
+    </main>
+
+    <script src="js/quiz.js"></script>
+</body>
+</html>
+

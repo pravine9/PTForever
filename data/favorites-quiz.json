@@ -1,0 +1,426 @@
+{
+  "title": "How Well Do You Know Us? 💕",
+  "description": "Test your knowledge of our favorite things!",
+  "passingScore": 70,
+  "successMessage": "Amazing! You really know us well! 🎉",
+  "questions": [
+    {
+      "id": "movie-pravine",
+      "category": "Movies",
+      "question": "What is Pravine's favorite movie?",
+      "type": "multiple-choice",
+      "answers": [
+        "Sivaji",
+        "Thuppakki",
+        "Vettaikaaran",
+        "Ghilli"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Pravine loves Sivaji!"
+    },
+    {
+      "id": "movie-thuvaraha",
+      "category": "Movies",
+      "question": "What is Thuvaraha's favorite movie?",
+      "type": "multiple-choice",
+      "answers": [
+        "Vinnaithaandi Varuvaayaa",
+        "Sillunu oru kadhal",
+        "Alaipayuthey",
+        "Ghajini"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Thuvaraha's favorite is Sillunu oru kadhal!"
+    },
+    {
+      "id": "song-pravine",
+      "category": "Music",
+      "question": "What is Pravine's favorite song?",
+      "type": "multiple-choice",
+      "answers": [
+        "Nenjukulle",
+        "Hosanna",
+        "Oru Kal Oru Kannadi",
+        "Kannazhaga"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Pravine's favorite song is Nenjukulle!"
+    },
+    {
+      "id": "song-thuvaraha",
+      "category": "Music",
+      "question": "What is Thuvaraha's favorite song?",
+      "type": "multiple-choice",
+      "answers": [
+        "Mayilirage",
+        "Hosanna",
+        "Nenjukulle",
+        "Kannukul Kannai"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Thuvaraha loves Mayilirage and Birds of a feather!"
+    },
+    {
+      "id": "animal-pravine",
+      "category": "Animals",
+      "question": "What is Pravine's favorite animal?",
+      "type": "multiple-choice",
+      "answers": [
+        "Lion",
+        "Tiger",
+        "Elephant",
+        "Bear"
+      ],
+      "correctAnswer": 2
+    },
+    {
+      "id": "animal-thuvaraha",
+      "category": "Animals",
+      "question": "What is Thuvaraha's favorite animal?",
+      "type": "multiple-choice",
+      "answers": [
+        "Tiger",
+        "Lion",
+        "Elephant",
+        "Leopard"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "colour-both",
+      "category": "Colors",
+      "question": "What is OUR favorite color? (Hint: We both love the same one!)",
+      "type": "multiple-choice",
+      "answers": [
+        "Red",
+        "Blue",
+        "Purple",
+        "Green"
+      ],
+      "correctAnswer": 1,
+      "explanation": "We both love Blue! 💙"
+    },
+    {
+      "id": "crisps-pravine",
+      "category": "Snacks",
+      "question": "What is Pravine's favorite crisps?",
+      "type": "multiple-choice",
+      "answers": [
+        "Walkers Salt & Vinegar",
+        "Doritos",
+        "Pringles",
+        "Lays"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "crisps-thuvaraha",
+      "category": "Snacks",
+      "question": "What is Thuvaraha's favorite crisps?",
+      "type": "multiple-choice",
+      "answers": [
+        "Takis",
+        "Pringles",
+        "Lays",
+        "Cheetos"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Thuvaraha loves Takis and Doritos!"
+    },
+    {
+      "id": "drink-pravine",
+      "category": "Drinks",
+      "question": "What is Pravine's favorite soft drink?",
+      "type": "multiple-choice",
+      "answers": [
+        "Pepsi",
+        "Coke",
+        "Sprite",
+        "Fanta"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "id": "drink-thuvaraha",
+      "category": "Drinks",
+      "question": "What is Thuvaraha's favorite soft drink?",
+      "type": "multiple-choice",
+      "answers": [
+        "Necto",
+        "Coke",
+        "Sprite",
+        "7up"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Thuvaraha loves Necto, Cream Soda, and Pepsi!"
+    },
+    {
+      "id": "chocolate-both",
+      "category": "Sweets",
+      "question": "What chocolate do we BOTH love?",
+      "type": "multiple-choice",
+      "answers": [
+        "Cadbury",
+        "Lindt",
+        "Galaxy",
+        "Toblerone"
+      ],
+      "correctAnswer": 1,
+      "explanation": "We both love Lindt! 🍫"
+    },
+    {
+      "id": "sweet-pravine",
+      "category": "Sweets",
+      "question": "What is Pravine's favorite sweet?",
+      "type": "multiple-choice",
+      "answers": [
+        "Haribos Tangfastics",
+        "Skittles",
+        "Starburst",
+        "Wine Gums"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "sweet-thuvaraha",
+      "category": "Sweets",
+      "question": "What is Thuvaraha's favorite sweet?",
+      "type": "multiple-choice",
+      "answers": [
+        "Strawberry lances",
+        "Gummy bears",
+        "Skittles",
+        "Wine Gums"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "cuisine-both",
+      "category": "Food",
+      "question": "What is OUR favorite cuisine?",
+      "type": "multiple-choice",
+      "answers": [
+        "Italian",
+        "Chinese",
+        "Sri Lankan / Indian",
+        "Mexican"
+      ],
+      "correctAnswer": 2,
+      "explanation": "We both love Sri Lankan and Indian food! 🍛"
+    },
+    {
+      "id": "food-pravine",
+      "category": "Food",
+      "question": "What is Pravine's favorite food?",
+      "type": "multiple-choice",
+      "answers": [
+        "Steak",
+        "Biriyani",
+        "Pasta",
+        "Kottu"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "food-thuvaraha",
+      "category": "Food",
+      "question": "What is Thuvaraha's favorite food?",
+      "type": "multiple-choice",
+      "answers": [
+        "Steak",
+        "Biriyani",
+        "Pasta",
+        "Noodles"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "id": "tv-pravine",
+      "category": "TV Shows",
+      "question": "What is Pravine's favorite TV series?",
+      "type": "multiple-choice",
+      "answers": [
+        "Breaking Bad",
+        "Game of Thrones",
+        "The Crown",
+        "Stranger Things"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "id": "tv-thuvaraha",
+      "category": "TV Shows",
+      "question": "What is Thuvaraha's favorite TV series?",
+      "type": "multiple-choice",
+      "answers": [
+        "Emily in Paris",
+        "Friends",
+        "Bridgerton",
+        "The Crown"
+      ],
+      "correctAnswer": 2
+    },
+    {
+      "id": "actor-pravine",
+      "category": "Actors",
+      "question": "Who is Pravine's favorite actor?",
+      "type": "multiple-choice",
+      "answers": [
+        "Vijay",
+        "Suriya",
+        "Ajith",
+        "Vikram"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Pravine loves Vijay and Dhanush!"
+    },
+    {
+      "id": "actor-thuvaraha",
+      "category": "Actors",
+      "question": "Who is Thuvaraha's favorite actor?",
+      "type": "multiple-choice",
+      "answers": [
+        "Suriya",
+        "Vijay",
+        "Dhanush",
+        "Ajith"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "genre-pravine",
+      "category": "Movies",
+      "question": "What is Pravine's favorite movie genre?",
+      "type": "multiple-choice",
+      "answers": [
+        "Action / Thriller",
+        "Romance",
+        "Comedy",
+        "Horror"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "genre-thuvaraha",
+      "category": "Movies",
+      "question": "What is Thuvaraha's favorite movie genre?",
+      "type": "multiple-choice",
+      "answers": [
+        "Action",
+        "Horror",
+        "Romance / Comedy",
+        "Thriller"
+      ],
+      "correctAnswer": 2
+    },
+    {
+      "id": "dessert-pravine",
+      "category": "Food",
+      "question": "What is Pravine's favorite dessert?",
+      "type": "multiple-choice",
+      "answers": [
+        "Ice Cream (Vanilla)",
+        "Cake",
+        "Brownies",
+        "Cookies"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "dessert-thuvaraha",
+      "category": "Food",
+      "question": "What is Thuvaraha's favorite dessert?",
+      "type": "multiple-choice",
+      "answers": [
+        "Ice Cream",
+        "Cake",
+        "Brownies",
+        "Cookies"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Thuvaraha loves Ice Cream, Waffles, and Crepes!"
+    },
+    {
+      "id": "nandos-pravine",
+      "category": "Food",
+      "question": "What is Pravine's Nando's order?",
+      "type": "multiple-choice",
+      "answers": [
+        "Chicken Butterfly",
+        "Sunset Burger",
+        "Peri-Peri Wrap",
+        "Chicken Wings"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "nandos-thuvaraha",
+      "category": "Food",
+      "question": "What is Thuvaraha's Nando's order?",
+      "type": "multiple-choice",
+      "answers": [
+        "Sunset Burger",
+        "Chicken Butterfly",
+        "Peri-Peri Wrap",
+        "Chicken Wings"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "holiday-pravine",
+      "category": "Travel",
+      "question": "What is Pravine's all-time favorite holiday destination?",
+      "type": "multiple-choice",
+      "answers": [
+        "Dubai",
+        "Greece",
+        "Spain",
+        "Thailand"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Pravine loves Dubai and Japan!"
+    },
+    {
+      "id": "holiday-thuvaraha",
+      "category": "Travel",
+      "question": "What is Thuvaraha's all-time favorite holiday destination?",
+      "type": "multiple-choice",
+      "answers": [
+        "Dubai",
+        "Spain",
+        "Thailand",
+        "Italy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Thuvaraha loves Dubai and Greece!"
+    },
+    {
+      "id": "football-player",
+      "category": "Sports",
+      "question": "Who is Pravine's all-time favorite football player?",
+      "type": "multiple-choice",
+      "answers": [
+        "Zinedine Zidane",
+        "Lionel Messi",
+        "Cristiano Ronaldo",
+        "Ronaldinho"
+      ],
+      "correctAnswer": 0
+    },
+    {
+      "id": "thuvaraha-favorite",
+      "category": "About Us",
+      "question": "Who is Thuvaraha's all-time favorite person? 😊",
+      "type": "multiple-choice",
+      "answers": [
+        "Pravine",
+        "Definitely Pravine",
+        "Obviously Pravine",
+        "It's Pravine!"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Of course it's Pravine! 💕"
+    }
+  ]
+}
+

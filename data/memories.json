@@ -1,0 +1,135 @@
+[
+  {
+    "id": "first-hello",
+    "date": "2024-10-20",
+    "title": "The Day We Started Speaking",
+    "content": "October 20th, 2024. The day our story began. The day you said hello and everything changed. From that first message, I knew there was something special about you.",
+    "fullContent": "This is where our story began.\n\nOctober 20th, 2024. The day you said hello and everything changed. I never imagined that a simple conversation would lead to something so beautiful.\n\nFrom that first message, I knew there was something special about you. The way you made me laugh, the way we could talk about anything and everything - it felt effortless, like we'd known each other forever.\n\nThis is the day that started it all. The first chapter of our forever story. Every moment since then has been worth remembering, and I'm so grateful you reached out. Thank you for taking that first step.\n\nHere's to that day, and to all the memories we've created since. And here's to all the memories still to come. 💕",
+    "quote": "Every great love story has a beginning. This is ours.",
+    "markerLabel": "Day 1 of Forever",
+    "tags": ["first", "special", "beginning"],
+    "hasPage": true,
+    "private": false
+  },
+  {
+    "id": "first-met",
+    "date": "2024-11-20",
+    "title": "We First Met",
+    "content": "November 20th, 2024. After a month of talking, we finally met in person. My heart was racing, but the moment I saw you, everything felt right. You were even more beautiful than I imagined.",
+    "tags": ["first", "special", "milestone"],
+    "private": false
+  },
+  {
+    "id": "first-kiss",
+    "date": "2024-12-01",
+    "title": "Our First Kiss",
+    "content": "December 1st, 2024. The day everything changed. Our first date at the bowling alley, and then... our first kiss. Time stood still. I'll never forget that moment.",
+    "tags": ["first", "romantic", "special"],
+    "private": false
+  },
+  {
+    "id": "first-date-bowling",
+    "date": "2024-12-01",
+    "title": "First Date - Bowling",
+    "content": "Our very first official date! Bowling together, laughing at my terrible throws, and just being with you. The perfect first date that led to our first kiss. Best day ever.",
+    "tags": ["first", "fun", "date"],
+    "private": false
+  },
+  {
+    "id": "second-date-croydon",
+    "date": "2024-12-06",
+    "title": "Second Date in Croydon",
+    "content": "December 6th, 2024. Our second date exploring Croydon together. Every moment with you just gets better and better. I couldn't stop smiling the entire day.",
+    "tags": ["date", "fun", "romantic"],
+    "private": false
+  },
+  {
+    "id": "24hr-challenge",
+    "date": "2024-12-11",
+    "title": "24 Hours Challenge",
+    "content": "The day we tried not to speak for 24 hours. We lasted... well, not very long! Turns out we can't go that long without talking to each other. I missed your voice too much.",
+    "tags": ["funny", "challenge", "sweet"],
+    "private": false
+  },
+  {
+    "id": "i-said-i-love-you",
+    "date": "2024-12-20",
+    "title": "I Said I Love You",
+    "content": "December 20th, 2024. The day I told you I love you. My heart was pounding, but I couldn't hold it in anymore. You mean everything to me, and I needed you to know.",
+    "tags": ["milestone", "romantic", "special"],
+    "private": false
+  },
+  {
+    "id": "she-said-i-love-you",
+    "date": "2024-12-27",
+    "title": "She Said I Love You",
+    "content": "December 27th, 2024. The day you said those three magical words back to me. My heart exploded with happiness. Hearing you say 'I love you' was the best gift I could ever receive.",
+    "tags": ["milestone", "romantic", "special"],
+    "private": false
+  },
+  {
+    "id": "honeymoon-restaurant",
+    "date": "2024-12-30",
+    "title": "First Restaurant Date - Honeymoon",
+    "content": "December 30th, 2024. Our first proper restaurant date at Honeymoon. The food was amazing, but nothing compared to being across the table from you. I love our dinner dates.",
+    "tags": ["date", "romantic", "food"],
+    "private": false
+  },
+  {
+    "id": "intimate-moment",
+    "date": "2025-01-04",
+    "title": "Our Most Intimate Moment",
+    "content": "January 4th, 2025. The day we became one. A moment of pure love, trust, and connection. This memory is just for us.",
+    "tags": ["intimate", "special", "private"],
+    "private": true,
+    "password": "forever"
+  },
+  {
+    "id": "valentine-ask",
+    "date": "2025-02-02",
+    "title": "Be My Valentine",
+    "content": "February 2nd, 2025. I asked you to be my Valentine. Of course you said yes! Looking forward to our first Valentine's Day together.",
+    "tags": ["romantic", "valentine", "sweet"],
+    "private": false
+  },
+  {
+    "id": "pf-changs",
+    "date": "2025-03-23",
+    "title": "First Central Motive - PF Chang's",
+    "content": "March 23rd, 2025. Our first adventure to central London together! PF Chang's for dinner - amazing food and even better company. I love exploring the city with you.",
+    "tags": ["date", "adventure", "food"],
+    "private": false
+  },
+  {
+    "id": "girlfriend-proposal",
+    "date": "2025-04-20",
+    "title": "I Asked Her to Be My Girlfriend",
+    "content": "April 20th, 2025. Six months after we first spoke, I officially asked you to be my girlfriend. The happiest 'yes' I've ever heard. You're mine, and I'm yours. Forever.",
+    "tags": ["milestone", "special", "romantic", "official"],
+    "private": false
+  },
+  {
+    "id": "greenwood-friends",
+    "date": "2025-05-25",
+    "title": "First Time With My Friends - Greenwood",
+    "content": "May 25th, 2025. The first time you met and hung out with my friends at Greenwood. You fit in perfectly, and everyone loves you. Watching you laugh with my friends made me fall for you even more.",
+    "tags": ["friends", "milestone", "fun"],
+    "private": false
+  },
+  {
+    "id": "shard-hutong",
+    "date": "2025-09-01",
+    "title": "Shard Hutong Restaurant",
+    "content": "September 1st, 2025. An incredible evening at Hutong in The Shard. The views, the food, the ambiance - but the best view was sitting across from you. One of our most special dates.",
+    "tags": ["romantic", "date", "special", "fancy"],
+    "private": false
+  },
+  {
+    "id": "jupiter-drive",
+    "date": "2025-09-10",
+    "title": "Came to Jupiter Drive",
+    "content": "September 10th, 2025. A special day at Jupiter Drive. Another beautiful memory added to our collection. Every moment with you is worth remembering.",
+    "tags": ["special", "date"],
+    "private": false
+  }
+]
