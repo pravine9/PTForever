@@ -8,55 +8,33 @@ async function loadMemories() {
         memories = await response.json();
         displayMemories();
         populateFilterTags();
-        populateTimelineSidebar();
+        // Timeline sidebar is populated by shared.js
     } catch (error) {
         console.error('Error loading memories:', error);
         document.getElementById('timeline').innerHTML = '<p style="text-align: center;">No memories found. Add some in data/memories.json!</p>';
     }
 }
 
-// Fill the sidebar with all our special dates
-function populateTimelineSidebar() {
-    const container = document.getElementById('timelineDates');
-    if (!container) return;
-    
-    // Sort our memories by date (newest first)
-    const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    container.innerHTML = '';
-    sortedMemories.forEach(memory => {
-        const link = document.createElement('a');
-        
-        // Link to the memory's dedicated page or scroll to it on the timeline
-        if (memory.hasPage) {
-            link.href = `memory.html?id=${memory.id}`;
-            link.onclick = null;
-        } else {
-            link.href = '#memory-' + memory.id;
-            link.onclick = (e) => {
-                e.preventDefault();
-                scrollToMemory(memory.id);
-                if (window.innerWidth <= 768) {
-                    toggleSidebar();
-                }
-            };
-        }
-        
-        link.className = 'timeline-date';
-        link.textContent = formatDate(memory.date);
-        container.appendChild(link);
-    });
-}
 
 // Scroll to a specific memory on the timeline
 function scrollToMemory(memoryId) {
+    console.log('scrollToMemory called with ID:', memoryId);
     const memoryCard = document.querySelector(`[data-memory-id="${memoryId}"]`);
+    console.log('Memory card found:', memoryCard);
+    
     if (memoryCard) {
+        console.log('Scrolling to memory:', memoryId);
+        // Don't remove animation - this causes opacity to go to 0!
+        // memoryCard.style.animation = 'none';
+        
+        // Ensure card is visible
+        memoryCard.style.opacity = '1';
+        
         memoryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        memoryCard.style.animation = 'none';
+        
         setTimeout(() => {
             memoryCard.style.animation = 'pulse 0.5s ease';
-        }, 10);
+        }, 600);
     }
 }
 
@@ -83,7 +61,8 @@ function createMemoryCard(memory, index) {
     const card = document.createElement('div');
     card.className = 'memory-card';
     card.setAttribute('data-memory-id', memory.id);
-    card.style.animationDelay = `${index * 0.1}s`;
+    // Reduced delay for faster loading - max 0.5s delay for any card
+    card.style.animationDelay = `${Math.min(index * 0.05, 0.5)}s`;
     
     if (memory.private && !isUnlocked(memory.id)) {
         card.classList.add('memory-locked');
@@ -147,15 +126,17 @@ function populateFilterTags() {
         button.className = 'tag';
         button.textContent = tag;
         button.dataset.tag = tag;
-        button.onclick = () => filterByTag(tag);
+        button.onclick = function() { filterByTag(tag, this); };
         filterContainer.appendChild(button);
     });
 }
 
 // Filter our memories by tag
-function filterByTag(tag) {
+function filterByTag(tag, element) {
     document.querySelectorAll('.tag').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (element) {
+        element.classList.add('active');
+    }
     displayMemories(tag);
 }
 
@@ -242,9 +223,44 @@ function isUnlocked(memoryId) {
     return unlocked.includes(memoryId);
 }
 
+// Prevent auto-scroll immediately
+if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+}
+
+// Clear any hash from URL on page load to prevent auto-scroll
+if (window.location.hash && !sessionStorage.getItem('intentionalHash')) {
+    // Remove the hash without reloading the page
+    history.replaceState(null, null, window.location.pathname);
+}
+
 // Set up everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Force scroll to top on load
+    console.log('Page loaded, scrolling to top');
+    console.log('URL hash:', window.location.hash);
+    window.scrollTo(0, 0);
+    
     loadMemories();
+    populateTimelineSidebar(); // Call the shared function
+    
+    // Add click handler for the "All" button
+    const allButton = document.querySelector('[data-tag="all"]');
+    if (allButton) {
+        allButton.onclick = function() { filterByTag('all', this); };
+    }
+    
+    // Check if there's a hash in the URL to scroll to a specific memory
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1); // Remove the # symbol
+        if (hash.startsWith('memory-')) {
+            const memoryId = hash.replace('memory-', '');
+            // Wait for memories to load AND animations to complete before scrolling
+            setTimeout(() => {
+                scrollToMemory(memoryId);
+            }, 1500);
+        }
+    }
     
     const passwordInput = document.getElementById('passwordInput');
     if (passwordInput) {
@@ -267,5 +283,12 @@ document.addEventListener('DOMContentLoaded', () => {
             closeMemoryModal();
         }
     });
+    
+    // Ensure page stays at top after everything loads
+    setTimeout(() => {
+        if (!window.location.hash) {
+            window.scrollTo(0, 0);
+        }
+    }, 100);
 });
 

@@ -79,9 +79,11 @@ body::after {
     height: 100vh;
     background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #667eea 100%);
     color: white;
-    overflow-y: auto;
     z-index: 1000;
     box-shadow: 2px 0 30px rgba(102, 126, 234, 0.3);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
 }
 
 .sidebar::before {
@@ -123,6 +125,28 @@ body::after {
 
 .sidebar-nav {
     padding: 1rem 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
 }
 
 .nav-section {
@@ -203,7 +227,7 @@ body::after {
 }
 
 .timeline-dates.expanded {
-    max-height: 500px;
+    max-height: 2000px; /* Large enough for all dates - parent will handle scrolling */
 }
 
 .timeline-date {
@@ -234,14 +258,14 @@ body::after {
 
 /* Sidebar Footer */
 .sidebar-footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     padding: 1.5rem;
     text-align: center;
     border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.85rem;
     opacity: 0.7;
+    background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    z-index: 10;
 }
 
 /* Mobile Toggle */
