@@ -28,10 +28,10 @@ function showPasswordScreen() {
         <div class="auth-container">
             <div class="auth-header">
                 <h1>P&T Forever ∞</h1>
-                <p>Our Private Space</p>
+                <p>All our memories</p>
             </div>
             <div class="auth-body">
-                <p class="auth-message">Enter the password to access our memories</p>
+                <p class="auth-message">Enter the password to access the site</p>
                 <input type="password" id="authPassword" placeholder="Enter password" autocomplete="off">
                 <button id="authSubmit">Unlock</button>
                 <p id="authError" class="auth-error"></p>
