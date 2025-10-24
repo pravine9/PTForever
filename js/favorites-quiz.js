@@ -1,58 +1,11 @@
-// Favorites Quiz - All data loaded from JSON
+// Our Favorites Quiz - Let's see how well you know us!
 
 let quizData = {};
 let currentQuestionIndex = 0;
 let score = 0;
 let selectedAnswer = null;
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Timeline toggle in sidebar
-function toggleTimeline() {
-    const toggle = document.querySelector('.timeline-toggle');
-    const dates = document.getElementById('timelineDates');
-    
-    toggle.classList.toggle('active');
-    dates.classList.toggle('expanded');
-}
-
-// Populate timeline in sidebar
-async function populateTimelineSidebar() {
-    try {
-        const response = await fetch('data/memories.json');
-        const memories = await response.json();
-        const container = document.getElementById('timelineDates');
-        
-        if (!container) return;
-        
-        const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        container.innerHTML = '';
-        sortedMemories.forEach(memory => {
-            const link = document.createElement('a');
-            
-            if (memory.hasPage) {
-                link.href = `memory.html?id=${memory.id}`;
-            } else {
-                link.href = 'index.html#memory-' + memory.id;
-            }
-            
-            link.className = 'timeline-date';
-            const dateStr = new Date(memory.date).toLocaleDateString('en-US', { 
-                year: 'numeric', month: 'long', day: 'numeric' 
-            });
-            link.textContent = dateStr;
-            container.appendChild(link);
-        });
-    } catch (error) {
-        console.error('Error loading timeline:', error);
-    }
-}
-
-// Load quiz data
+// Load our quiz questions
 async function loadQuizData() {
     try {
         const response = await fetch('data/favorites-quiz.json');
@@ -62,7 +15,7 @@ async function loadQuizData() {
     }
 }
 
-// Start the quiz
+// Let's start the quiz!
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
@@ -75,17 +28,17 @@ function startQuiz() {
     showQuestion();
 }
 
-// Show current question
+// Display the current question
 function showQuestion() {
     const question = quizData.questions[currentQuestionIndex];
     const container = document.getElementById('questionContainer');
     
-    // Update progress
+    // Update progress bar
     document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
     const progress = ((currentQuestionIndex) / quizData.questions.length) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
     
-    // Update category
+    // Show the category
     document.getElementById('categoryText').textContent = `Category: ${question.category}`;
     
     const answersHtml = question.answers.map((answer, index) => 
@@ -101,7 +54,7 @@ function showQuestion() {
     document.getElementById('nextBtn').style.display = 'none';
 }
 
-// Handle answer selection
+// Check your answer
 function selectAnswer(answerIndex) {
     if (selectedAnswer !== null) return;
     
@@ -117,7 +70,7 @@ function selectAnswer(answerIndex) {
         score++;
         buttons[answerIndex].classList.add('correct');
         
-        // Show explanation if available
+        // Show why that's correct
         if (question.explanation) {
             const container = document.getElementById('questionContainer');
             const explanationDiv = document.createElement('div');
@@ -126,7 +79,7 @@ function selectAnswer(answerIndex) {
             explanationDiv.style.background = 'linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.1) 100%)';
             explanationDiv.style.borderRadius = '10px';
             explanationDiv.style.borderLeft = '4px solid var(--success)';
-            explanationDiv.innerHTML = `<strong>✓ Correct!</strong> ${question.explanation}`;
+            explanationDiv.innerHTML = `<strong>✓ You got it!</strong> ${question.explanation}`;
             container.appendChild(explanationDiv);
         }
     } else {
@@ -148,7 +101,7 @@ function selectAnswer(answerIndex) {
     document.getElementById('nextBtn').style.display = 'block';
 }
 
-// Move to next question
+// Go to the next question
 function nextQuestion() {
     currentQuestionIndex++;
     
@@ -159,7 +112,7 @@ function nextQuestion() {
     }
 }
 
-// Show quiz results
+// Show your final score
 function showResults() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('quizResults').style.display = 'block';
@@ -176,13 +129,13 @@ function showResults() {
     
     if (percentage === 100) {
         emoji = '🏆';
-        message = 'Perfect score! You know us better than we know ourselves! Amazing!';
+        message = 'Perfect score! You know us so perfectly! Amazing!';
     } else if (percentage >= 90) {
         emoji = '⭐';
-        message = 'Outstanding! You really know us so well! Impressive!';
+        message = 'Outstanding! You really know me so well! Impressive!';
     } else if (percentage >= 80) {
         emoji = '🎉';
-        message = 'Great job! You know a lot about our favorites!';
+        message = 'Great job! You know so much about our favorites!';
     } else if (percentage >= 70) {
         emoji = '😊';
         message = 'Good effort! You know us pretty well!';
@@ -191,7 +144,7 @@ function showResults() {
         message = 'Not bad! There\'s still more to learn about us!';
     } else {
         emoji = '📚';
-        message = 'Keep learning! Spend more time with us to know our favorites!';
+        message = 'Keep learning! Spend more time with me to discover my favorites!';
     }
     
     messageContainer.innerHTML = `
@@ -203,13 +156,13 @@ function showResults() {
     `;
 }
 
-// Restart quiz
+// Try again!
 function restartQuiz() {
     document.getElementById('quizResults').style.display = 'none';
     document.getElementById('quizStart').style.display = 'block';
 }
 
-// Load on page ready
+// Load everything when the page is ready
 document.addEventListener('DOMContentLoaded', () => {
     loadQuizData();
     populateTimelineSidebar();

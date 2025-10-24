@@ -3,54 +3,7 @@ let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let isFullscreen = false;
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Timeline toggle in sidebar
-function toggleTimeline() {
-    const toggle = document.querySelector('.timeline-toggle');
-    const dates = document.getElementById('timelineDates');
-    
-    toggle.classList.toggle('active');
-    dates.classList.toggle('expanded');
-}
-
-// Populate timeline in sidebar
-async function populateTimelineSidebar() {
-    try {
-        const response = await fetch('data/memories.json');
-        const memories = await response.json();
-        const container = document.getElementById('timelineDates');
-        
-        if (!container) return;
-        
-        // Sort memories by date
-        const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        container.innerHTML = '';
-        sortedMemories.forEach(memory => {
-            const link = document.createElement('a');
-            
-            // Link to dynamic page if hasPage, otherwise to main page
-            if (memory.hasPage) {
-                link.href = `memory.html?id=${memory.id}`;
-            } else {
-                link.href = 'index.html#memory-' + memory.id;
-            }
-            
-            link.className = 'timeline-date';
-            const dateStr = new Date(memory.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            link.textContent = dateStr;
-            container.appendChild(link);
-        });
-    } catch (error) {
-        console.error('Error loading timeline:', error);
-    }
-}
-
-// Load questions from JSON
+// Load all our whiteboard questions
 async function loadQuestions() {
     try {
         const response = await fetch('data/whiteboard-questions.json');
@@ -61,7 +14,7 @@ async function loadQuestions() {
     }
 }
 
-// Shuffle array using Fisher-Yates algorithm
+// Shuffle the questions randomly
 function shuffleArray(array) {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -71,7 +24,7 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-// Start the game
+// Let's start the whiteboard game!
 function startGame() {
     currentQuestionIndex = 0;
     shuffledQuestions = shuffleArray(questions);
@@ -83,14 +36,14 @@ function startGame() {
     showQuestion();
 }
 
-// Show current question
+// Display the current question
 function showQuestion() {
     const question = shuffledQuestions[currentQuestionIndex];
     
     document.getElementById('questionText').textContent = question;
     document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
     
-    // Update button states
+    // Enable/disable navigation buttons
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
@@ -98,18 +51,18 @@ function showQuestion() {
     nextBtn.disabled = false;
 }
 
-// Go to next question
+// Go to the next question
 function nextQuestion() {
     if (currentQuestionIndex < shuffledQuestions.length - 1) {
         currentQuestionIndex++;
         showQuestion();
     } else {
-        // Game complete
+        // We've finished all questions!
         endGame();
     }
 }
 
-// Go to previous question
+// Go back to the previous question
 function previousQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
@@ -117,7 +70,7 @@ function previousQuestion() {
     }
 }
 
-// End game
+// Finish the game
 function endGame() {
     if (isFullscreen) {
         exitFullscreen();
@@ -127,7 +80,7 @@ function endGame() {
     document.getElementById('gameComplete').style.display = 'block';
 }
 
-// Restart game
+// Play again!
 function restartGame() {
     if (isFullscreen) {
         exitFullscreen();
@@ -137,7 +90,7 @@ function restartGame() {
     document.getElementById('gameStart').style.display = 'block';
 }
 
-// Toggle fullscreen mode
+// Switch fullscreen mode on/off
 function toggleFullscreen() {
     if (!isFullscreen) {
         enterFullscreen();
@@ -146,7 +99,7 @@ function toggleFullscreen() {
     }
 }
 
-// Enter fullscreen mode
+// Go fullscreen for the whiteboard
 function enterFullscreen() {
     isFullscreen = true;
     const gameContainer = document.getElementById('gameContainer');
@@ -154,22 +107,22 @@ function enterFullscreen() {
     const mobileToggle = document.getElementById('mobileToggle');
     const mainContainer = document.getElementById('mainContainer');
     
-    // Hide sidebar, mobile toggle, and other controls
+    // Hide sidebar and controls for distraction-free mode
     sidebar.style.display = 'none';
     mobileToggle.style.display = 'none';
     mainContainer.style.marginLeft = '0';
     mainContainer.style.padding = '0';
     
-    // Make game container fullscreen
+    // Make the game take up the whole screen
     gameContainer.classList.add('fullscreen-mode');
     
-    // Hide all buttons in btn-group
+    // Hide the control buttons
     const btnGroup = gameContainer.querySelector('.btn-group');
     if (btnGroup) {
         btnGroup.style.display = 'none';
     }
     
-    // Add exit button
+    // Add an exit button
     const exitBtn = document.createElement('button');
     exitBtn.className = 'exit-fullscreen';
     exitBtn.id = 'exitFullscreenBtn';
@@ -177,7 +130,7 @@ function enterFullscreen() {
     exitBtn.onclick = exitFullscreen;
     document.body.appendChild(exitBtn);
     
-    // Try to use native fullscreen API
+    // Use the browser's fullscreen feature
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
         elem.requestFullscreen().catch(err => {
@@ -190,7 +143,7 @@ function enterFullscreen() {
     }
 }
 
-// Exit fullscreen mode
+// Exit fullscreen and return to normal view
 function exitFullscreen() {
     isFullscreen = false;
     const gameContainer = document.getElementById('gameContainer');
@@ -199,27 +152,27 @@ function exitFullscreen() {
     const mainContainer = document.getElementById('mainContainer');
     const exitBtn = document.getElementById('exitFullscreenBtn');
     
-    // Show sidebar and mobile toggle again
+    // Bring back the sidebar and controls
     sidebar.style.display = 'flex';
     mobileToggle.style.display = 'block';
     mainContainer.style.marginLeft = '';
     mainContainer.style.padding = '';
     
-    // Remove fullscreen class
+    // Return to normal mode
     gameContainer.classList.remove('fullscreen-mode');
     
-    // Show button group again
+    // Show the control buttons again
     const btnGroup = gameContainer.querySelector('.btn-group');
     if (btnGroup) {
         btnGroup.style.display = 'flex';
     }
     
-    // Remove exit button
+    // Remove the exit button
     if (exitBtn) {
         exitBtn.remove();
     }
     
-    // Exit native fullscreen
+    // Exit the browser's fullscreen mode
     if (document.exitFullscreen) {
         document.exitFullscreen().catch(err => {
             console.log('Exit fullscreen failed:', err);
@@ -231,14 +184,14 @@ function exitFullscreen() {
     }
 }
 
-// Handle ESC key to exit fullscreen
+// Press ESC to exit fullscreen
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isFullscreen) {
         exitFullscreen();
     }
 });
 
-// Handle native fullscreen change events
+// Listen for fullscreen changes
 document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement && isFullscreen) {
         exitFullscreen();
@@ -251,7 +204,7 @@ document.addEventListener('webkitfullscreenchange', () => {
     }
 });
 
-// Load questions on page load
+// Load everything when the page is ready
 document.addEventListener('DOMContentLoaded', () => {
     loadQuestions();
     populateTimelineSidebar();

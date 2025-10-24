@@ -3,54 +3,7 @@ let currentQuestionIndex = 0;
 let score = 0;
 let selectedAnswer = null;
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Timeline toggle in sidebar
-function toggleTimeline() {
-    const toggle = document.querySelector('.timeline-toggle');
-    const dates = document.getElementById('timelineDates');
-    
-    toggle.classList.toggle('active');
-    dates.classList.toggle('expanded');
-}
-
-// Populate timeline in sidebar
-async function populateTimelineSidebar() {
-    try {
-        const response = await fetch('data/memories.json');
-        const memories = await response.json();
-        const container = document.getElementById('timelineDates');
-        
-        if (!container) return;
-        
-        // Sort memories by date
-        const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        container.innerHTML = '';
-        sortedMemories.forEach(memory => {
-            const link = document.createElement('a');
-            
-            // Link to dynamic page if hasPage, otherwise to main page
-            if (memory.hasPage) {
-                link.href = `memory.html?id=${memory.id}`;
-            } else {
-                link.href = 'index.html#memory-' + memory.id;
-            }
-            
-            link.className = 'timeline-date';
-            const dateStr = new Date(memory.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            link.textContent = dateStr;
-            container.appendChild(link);
-        });
-    } catch (error) {
-        console.error('Error loading timeline:', error);
-    }
-}
-
-// Load quiz data
+// Load my birthday quiz questions
 async function loadQuizData() {
     try {
         const response = await fetch('data/quiz.json');
@@ -60,7 +13,7 @@ async function loadQuizData() {
     }
 }
 
-// Start the quiz
+// Let's start the birthday quiz!
 function startQuiz() {
     currentQuestionIndex = 0;
     score = 0;
@@ -73,17 +26,17 @@ function startQuiz() {
     showQuestion();
 }
 
-// Show current question
+// Display the current question
 function showQuestion() {
     const question = quizData.questions[currentQuestionIndex];
     const container = document.getElementById('questionContainer');
     
-    // Update progress
+    // Update progress bar
     document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
     const progress = ((currentQuestionIndex) / quizData.questions.length) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
     
-    // Check if this is a media item (not a question)
+    // Check if this is a photo/video or an actual question
     if (question.type === 'media') {
         displayMediaItem(question, container);
     } else {
@@ -94,7 +47,7 @@ function showQuestion() {
     document.getElementById('nextBtn').style.display = 'none';
 }
 
-// Display a regular question
+// Show a quiz question
 function displayQuestion(question, container) {
     let mediaHtml = '';
     if (question.media) {
@@ -116,7 +69,7 @@ function displayQuestion(question, container) {
     `;
 }
 
-// Display a media item (photo/video between questions)
+// Show a special photo or video
 function displayMediaItem(item, container) {
     let mediaHtml = '';
     if (item.media.type === 'image') {
@@ -131,22 +84,22 @@ function displayMediaItem(item, container) {
         ${item.message ? `<p style="margin-top: 1rem; color: var(--secondary);">${item.message}</p>` : ''}
     `;
     
-    // Auto show next button for media items
+    // Automatically show next button for photos/videos
     document.getElementById('nextBtn').style.display = 'block';
 }
 
-// Handle answer selection
+// Check your answer
 function selectAnswer(answerIndex) {
-    if (selectedAnswer !== null) return; // Already answered
+    if (selectedAnswer !== null) return;
     
     selectedAnswer = answerIndex;
     const question = quizData.questions[currentQuestionIndex];
     const buttons = document.querySelectorAll('.answer-btn');
     
-    // Disable all buttons
+    // Lock in the answer
     buttons.forEach(btn => btn.disabled = true);
     
-    // Mark correct and incorrect answers
+    // Highlight the correct answer
     buttons[question.correctAnswer].classList.add('correct');
     
     if (answerIndex === question.correctAnswer) {
@@ -156,11 +109,11 @@ function selectAnswer(answerIndex) {
         buttons[answerIndex].classList.add('incorrect');
     }
     
-    // Show next button
+    // Show the next button
     document.getElementById('nextBtn').style.display = 'block';
 }
 
-// Move to next question
+// Go to the next question
 function nextQuestion() {
     currentQuestionIndex++;
     
@@ -171,17 +124,17 @@ function nextQuestion() {
     }
 }
 
-// Show quiz results
+// Show your final score
 function showResults() {
     document.getElementById('quizContainer').style.display = 'none';
     document.getElementById('quizResults').style.display = 'block';
     
-    // Calculate score (excluding media items)
+    // Calculate the score (excluding photos/videos)
     const actualQuestions = quizData.questions.filter(q => q.type !== 'media').length;
     document.getElementById('finalScore').textContent = score;
     document.getElementById('totalScore').textContent = actualQuestions;
     
-    // Check if they passed and show unlock content
+    // See if you've unlocked something special!
     const percentage = (score / actualQuestions) * 100;
     const unlockContainer = document.getElementById('unlockContent');
     
@@ -205,24 +158,24 @@ function showResults() {
         unlockHtml += '</div>';
         unlockContainer.innerHTML = unlockHtml;
         
-        // Unlock any private memories if specified
+        // Unlock any private memories
         if (quizData.unlockMemoryId) {
             unlockMemory(quizData.unlockMemoryId);
         }
     } else {
         unlockContainer.innerHTML = `
-            <p style="margin-top: 1rem;">You got ${percentage.toFixed(0)}% correct. Try again to unlock something special!</p>
+            <p style="margin-top: 1rem;">You got ${percentage.toFixed(0)}% correct. Try again to unlock my special surprise!</p>
         `;
     }
 }
 
-// Restart quiz
+// Try again!
 function restartQuiz() {
     document.getElementById('quizResults').style.display = 'none';
     document.getElementById('quizStart').style.display = 'block';
 }
 
-// Unlock memory (same as in memories.js)
+// Unlock a private memory
 function unlockMemory(memoryId) {
     const unlocked = JSON.parse(localStorage.getItem('unlockedMemories') || '[]');
     if (!unlocked.includes(memoryId)) {
@@ -231,7 +184,7 @@ function unlockMemory(memoryId) {
     }
 }
 
-// Load quiz data on page load
+// Load everything when the page is ready
 document.addEventListener('DOMContentLoaded', () => {
     loadQuizData();
     populateTimelineSidebar();

@@ -1,6 +1,6 @@
 # PTForever - Our Memory Timeline & Quiz
 
-A beautiful, minimalist website to celebrate memories and special moments, featuring an interactive quiz system.
+Our private blog, memory timeline and quiz website.
 
 ## 🎉 Features
 
@@ -13,21 +13,7 @@ A beautiful, minimalist website to celebrate memories and special moments, featu
 
 ## 📁 File Structure
 
-```
-PTForever/
-├── index.html              # Main memory timeline page
-├── quiz.html               # Quiz page
-├── css/
-│   └── style.css          # All styling
-├── js/
-│   ├── memories.js        # Memory display logic
-│   └── quiz.js            # Quiz logic
-├── data/
-│   ├── memories.json      # Your memories (EDIT THIS)
-│   └── quiz.json          # Quiz questions (EDIT THIS)
-├── media/                 # Your photos and videos
-└── README.md              # This file
-```
+## 📝 Adding Memories
 
 ## 🚀 Quick Start
 

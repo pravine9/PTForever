@@ -1,21 +1,7 @@
 let memories = [];
 let currentLockedMemory = null;
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Timeline toggle in sidebar
-function toggleTimeline() {
-    const toggle = document.querySelector('.timeline-toggle');
-    const dates = document.getElementById('timelineDates');
-    
-    toggle.classList.toggle('active');
-    dates.classList.toggle('expanded');
-}
-
-// Load memories from JSON
+// Load all our memories
 async function loadMemories() {
     try {
         const response = await fetch('data/memories.json');
@@ -29,22 +15,22 @@ async function loadMemories() {
     }
 }
 
-// Populate timeline dates in sidebar
+// Fill the sidebar with all our special dates
 function populateTimelineSidebar() {
     const container = document.getElementById('timelineDates');
     if (!container) return;
     
-    // Sort memories by date
+    // Sort our memories by date (newest first)
     const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
     
     container.innerHTML = '';
     sortedMemories.forEach(memory => {
         const link = document.createElement('a');
         
-        // Link to dynamic page if hasPage flag is set, otherwise scroll to card
+        // Link to the memory's dedicated page or scroll to it on the timeline
         if (memory.hasPage) {
             link.href = `memory.html?id=${memory.id}`;
-            link.onclick = null; // Let it navigate normally
+            link.onclick = null;
         } else {
             link.href = '#memory-' + memory.id;
             link.onclick = (e) => {
@@ -62,7 +48,7 @@ function populateTimelineSidebar() {
     });
 }
 
-// Scroll to specific memory
+// Scroll to a specific memory on the timeline
 function scrollToMemory(memoryId) {
     const memoryCard = document.querySelector(`[data-memory-id="${memoryId}"]`);
     if (memoryCard) {
@@ -74,7 +60,7 @@ function scrollToMemory(memoryId) {
     }
 }
 
-// Display memories on the timeline
+// Show all our memories on the timeline
 function displayMemories(filterTag = 'all') {
     const timeline = document.getElementById('timeline');
     timeline.innerHTML = '';
@@ -92,7 +78,7 @@ function displayMemories(filterTag = 'all') {
     });
 }
 
-// Create a memory card element
+// Create a memory card
 function createMemoryCard(memory, index) {
     const card = document.createElement('div');
     card.className = 'memory-card';
@@ -139,13 +125,13 @@ function createMemoryCard(memory, index) {
     return card;
 }
 
-// Format date nicely
+// Make dates look pretty
 function formatDate(dateStr) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateStr).toLocaleDateString('en-US', options);
 }
 
-// Populate filter tags
+// Create filter tags from our memories
 function populateFilterTags() {
     const allTags = new Set();
     memories.forEach(memory => {
@@ -166,14 +152,14 @@ function populateFilterTags() {
     });
 }
 
-// Filter memories by tag
+// Filter our memories by tag
 function filterByTag(tag) {
     document.querySelectorAll('.tag').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     displayMemories(tag);
 }
 
-// Password modal functions
+// Show the password prompt for locked memories
 function showPasswordModal(memory) {
     currentLockedMemory = memory;
     document.getElementById('passwordModal').classList.add('show');
@@ -200,7 +186,7 @@ function checkPassword() {
     }
 }
 
-// Memory detail modal
+// Show a memory in a popup
 function showMemoryDetail(memory) {
     if (memory.private && !isUnlocked(memory.id)) {
         showPasswordModal(memory);
@@ -241,7 +227,7 @@ function closeMemoryModal() {
     document.getElementById('memoryModal').classList.remove('show');
 }
 
-// Local storage functions for unlocked memories
+// Save unlocked memories to your browser
 function unlockMemory(memoryId) {
     const unlocked = JSON.parse(localStorage.getItem('unlockedMemories') || '[]');
     if (!unlocked.includes(memoryId)) {
@@ -250,12 +236,13 @@ function unlockMemory(memoryId) {
     }
 }
 
+// Check if a memory has been unlocked
 function isUnlocked(memoryId) {
     const unlocked = JSON.parse(localStorage.getItem('unlockedMemories') || '[]');
     return unlocked.includes(memoryId);
 }
 
-// Handle Enter key in password input
+// Set up everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     loadMemories();
     
@@ -268,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Close modals when clicking outside
+    // Close popups when clicking outside
     document.getElementById('passwordModal').addEventListener('click', (e) => {
         if (e.target.id === 'passwordModal') {
             closeModal();

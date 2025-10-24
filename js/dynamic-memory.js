@@ -1,19 +1,5 @@
 // Dynamic Memory Page - Loads content from JSON
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
-
-// Timeline toggle in sidebar
-function toggleTimeline() {
-    const toggle = document.querySelector('.timeline-toggle');
-    const dates = document.getElementById('timelineDates');
-    
-    toggle.classList.toggle('active');
-    dates.classList.toggle('expanded');
-}
-
 // Get memory ID from URL
 function getMemoryIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -40,7 +26,7 @@ async function loadMemory() {
         }
         
         displayMemory(memory);
-        populateTimelineSidebar(memories, memoryId);
+        populateTimelineSidebar();
         
     } catch (error) {
         console.error('Error loading memory:', error);
@@ -144,40 +130,6 @@ function showError(message) {
     `;
 }
 
-// Populate timeline in sidebar
-async function populateTimelineSidebar(memories, currentId) {
-    const container = document.getElementById('timelineDates');
-    if (!container) return;
-    
-    // Sort memories by date
-    const sortedMemories = [...memories].sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    container.innerHTML = '';
-    sortedMemories.forEach(memory => {
-        const link = document.createElement('a');
-        
-        // Link to dynamic page if hasPage, otherwise to index
-        if (memory.hasPage) {
-            link.href = `memory.html?id=${memory.id}`;
-        } else {
-            link.href = `index.html#memory-${memory.id}`;
-        }
-        
-        link.className = 'timeline-date';
-        if (memory.id === currentId) {
-            link.classList.add('active');
-        }
-        
-        const dateStr = new Date(memory.date).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-        link.textContent = dateStr;
-        
-        container.appendChild(link);
-    });
-}
 
 // Load on page ready
 document.addEventListener('DOMContentLoaded', () => {
