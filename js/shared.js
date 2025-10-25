@@ -14,114 +14,25 @@ function toggleTimeline() {
     dates.classList.toggle('expanded');
 }
 
-// Scroll to a specific memory on the timeline
+// Scroll to a specific memory on the timeline (used by hash navigation)
 function scrollToMemory(memoryId) {
-    console.log('IMMEDIATE: scrollToMemory entered');
-    try {
-        console.log('=== SCROLL TO MEMORY DEBUG ===');
-        console.log('scrollToMemory function called!');
-        console.log('Memory ID:', memoryId);
-        console.log('Type of memoryId:', typeof memoryId);
+    const memoryCard = document.querySelector(`[data-memory-id="${memoryId}"]`);
+    
+    if (memoryCard) {
+        const cardRect = memoryCard.getBoundingClientRect();
+        const absoluteTop = cardRect.top + window.scrollY;
+        const scrollToPosition = absoluteTop - 150;
         
-        const memoryCard = document.querySelector(`[data-memory-id="${memoryId}"]`);
-        console.log('Memory card found:', memoryCard);
+        window.scrollTo({
+            top: scrollToPosition,
+            behavior: 'smooth'
+        });
         
-        if (memoryCard) {
-            // Log initial CSS state
-            const initialStyles = window.getComputedStyle(memoryCard);
-            console.log('Initial card CSS:', {
-                display: initialStyles.display,
-                visibility: initialStyles.visibility,
-                opacity: initialStyles.opacity,
-                position: initialStyles.position,
-                zIndex: initialStyles.zIndex
-            });
-            
-            // Log initial state
-            console.log('Current window.scrollY:', window.scrollY);
-            console.log('Window innerHeight:', window.innerHeight);
-            console.log('Document height:', document.documentElement.scrollHeight);
-            
-            // Get card position
-            const rect = memoryCard.getBoundingClientRect();
-            console.log('Card getBoundingClientRect():', {
-                top: rect.top,
-                bottom: rect.bottom,
-                left: rect.left,
-                right: rect.right,
-                width: rect.width,
-                height: rect.height
-            });
-            
-            const cardTop = rect.top + window.scrollY;
-            console.log('Card absolute top position:', cardTop);
-            
-            const offset = 150;
-            const scrollToPosition = cardTop - offset;
-            console.log('Target scroll position:', scrollToPosition);
-            console.log('Offset:', offset);
-            console.log('Will scroll be needed?', scrollToPosition !== window.scrollY);
-            
-            // Scroll to the card with offset
-            console.log('Initiating scroll...');
-            window.scrollTo({
-                top: scrollToPosition,
-                behavior: 'smooth'
-            });
-            
-            // Check scroll position after scrolling
-            setTimeout(() => {
-                console.log('--- After scroll check (600ms) ---');
-                console.log('After scroll - window.scrollY:', window.scrollY);
-                const newRect = memoryCard.getBoundingClientRect();
-                console.log('After scroll - card getBoundingClientRect():', {
-                    top: newRect.top,
-                    bottom: newRect.bottom,
-                    left: newRect.left,
-                    right: newRect.right
-                });
-                
-                const viewportHeight = window.innerHeight;
-                const isInViewport = newRect.top >= 0 && 
-                                    newRect.bottom <= viewportHeight && 
-                                    newRect.left >= 0 && 
-                                    newRect.right <= window.innerWidth;
-                
-                console.log('Is card in viewport?', isInViewport);
-                console.log('Card top relative to viewport:', newRect.top);
-                console.log('Viewport height:', viewportHeight);
-                
-                // Check CSS after scroll
-                const finalStyles = window.getComputedStyle(memoryCard);
-                console.log('Final card CSS:', {
-                    display: finalStyles.display,
-                    visibility: finalStyles.visibility,
-                    opacity: finalStyles.opacity,
-                    transform: finalStyles.transform,
-                    animation: finalStyles.animation
-                });
-            }, 600);
-            
-            // Add pulse animation after scroll
-            console.log('Adding pulse animation...');
-            setTimeout(() => {
-                memoryCard.style.opacity = '1'; // Ensure card stays visible
-                memoryCard.style.animation = 'pulse 0.5s ease';
-                console.log('Pulse animation applied, current animation value:', memoryCard.style.animation);
-            }, 500);
-        } else {
-            console.error('Memory card not found for ID:', memoryId);
-            console.log('All memory cards on page:');
-            const allCards = document.querySelectorAll('[data-memory-id]');
-            console.log('Total cards found:', allCards.length);
-            allCards.forEach(card => {
-                console.log('- Card ID:', card.getAttribute('data-memory-id'));
-            });
-        }
-        console.log('=== END DEBUG ===');
-    } catch (error) {
-        console.error('ERROR in scrollToMemory:', error);
-        console.error('Error stack:', error.stack);
+        // Add pulse animation
+        setTimeout(() => {
+            memoryCard.style.opacity = '1';
+            memoryCard.style.animation = 'pulse 0.5s ease';
+        }, 600);
     }
 }
 
@@ -152,65 +63,26 @@ async function populateTimelineSidebar() {
                 // On index page - scroll to memory card
                 link.href = 'javascript:void(0)'; // Don't use hash to prevent it from sticking
                 link.onclick = (e) => {
-                    console.log('Timeline link clicked for memory:', memory.id);
                     e.preventDefault();
                     
                     // Inline scroll implementation
                     const memoryCard = document.querySelector(`[data-memory-id="${memory.id}"]`);
-                    console.log('Found memory card:', memoryCard);
                     
                     if (memoryCard) {
-                        // Log CSS before scroll
-                        const beforeStyles = window.getComputedStyle(memoryCard);
-                        console.log('BEFORE scroll CSS:', {
-                            display: beforeStyles.display,
-                            visibility: beforeStyles.visibility,
-                            opacity: beforeStyles.opacity,
-                            transform: beforeStyles.transform,
-                            position: beforeStyles.position
-                        });
-                        
                         const cardRect = memoryCard.getBoundingClientRect();
                         const absoluteTop = cardRect.top + window.scrollY;
                         const scrollToPosition = absoluteTop - 150;
-                        
-                        console.log('Current scroll:', window.scrollY);
-                        console.log('Card position:', absoluteTop);
-                        console.log('Scrolling to:', scrollToPosition);
                         
                         window.scrollTo({
                             top: scrollToPosition,
                             behavior: 'smooth'
                         });
                         
-                        // Check CSS after scroll
+                        // Add pulse animation after scroll
                         setTimeout(() => {
-                            const afterStyles = window.getComputedStyle(memoryCard);
-                            console.log('AFTER scroll CSS:', {
-                                display: afterStyles.display,
-                                visibility: afterStyles.visibility,
-                                opacity: afterStyles.opacity,
-                                transform: afterStyles.transform,
-                                position: afterStyles.position
-                            });
-                            
-                            const afterRect = memoryCard.getBoundingClientRect();
-                            console.log('AFTER scroll position:', {
-                                top: afterRect.top,
-                                bottom: afterRect.bottom,
-                                left: afterRect.left,
-                                width: afterRect.width,
-                                height: afterRect.height,
-                                inViewport: afterRect.top >= 0 && afterRect.bottom <= window.innerHeight
-                            });
-                            
-                            // Add pulse animation - ensure opacity stays at 1
-                            memoryCard.style.opacity = '1'; // Force opacity to stay visible
+                            memoryCard.style.opacity = '1'; // Ensure card stays visible
                             memoryCard.style.animation = 'pulse 0.5s ease';
-                            console.log('Animation applied');
                         }, 600);
-                    } else {
-                        console.error('Memory card not found for:', memory.id);
                     }
                     
                     if (window.innerWidth <= 768) {

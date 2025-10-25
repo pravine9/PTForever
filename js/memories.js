@@ -16,20 +16,12 @@ async function loadMemories() {
 }
 
 
-// Scroll to a specific memory on the timeline
+// Scroll to a specific memory on the timeline (legacy - kept for compatibility)
 function scrollToMemory(memoryId) {
-    console.log('scrollToMemory called with ID:', memoryId);
     const memoryCard = document.querySelector(`[data-memory-id="${memoryId}"]`);
-    console.log('Memory card found:', memoryCard);
     
     if (memoryCard) {
-        console.log('Scrolling to memory:', memoryId);
-        // Don't remove animation - this causes opacity to go to 0!
-        // memoryCard.style.animation = 'none';
-        
-        // Ensure card is visible
-        memoryCard.style.opacity = '1';
-        
+        memoryCard.style.opacity = '1'; // Ensure card is visible
         memoryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
         setTimeout(() => {
@@ -237,8 +229,6 @@ if (window.location.hash && !sessionStorage.getItem('intentionalHash')) {
 // Set up everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Force scroll to top on load
-    console.log('Page loaded, scrolling to top');
-    console.log('URL hash:', window.location.hash);
     window.scrollTo(0, 0);
     
     loadMemories();
