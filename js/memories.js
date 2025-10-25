@@ -51,21 +51,46 @@ function displayMemories(filterTag = 'all') {
 // Auto-detect images based on date
 async function getImagesForDate(date) {
     const images = [];
-    let imageNum = 1;
+    const supportedFormats = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
     
-    // Try to find images named like: 2025-09-01-1.jpg, 2025-09-01-2.jpg, etc.
-    while (true) {
-        const imageUrl = `images/${date}-${imageNum}.jpg`;
+    // First check for single image without number suffix (2025-09-01.jpg)
+    for (const format of supportedFormats) {
+        const imageUrl = `images/${date}.${format}`;
         try {
             const response = await fetch(imageUrl, { method: 'HEAD' });
             if (response.ok) {
                 images.push(imageUrl);
-                imageNum++;
-            } else {
-                break;
+                return images; // Found single image, return immediately
             }
         } catch {
-            break;
+            continue;
+        }
+    }
+    
+    // If no single image found, try numbered images (2025-09-01-1.jpg, 2025-09-01-2.jpg, etc.)
+    let imageNum = 1;
+    while (true) {
+        let foundImage = false;
+        
+        // Try each format for this image number
+        for (const format of supportedFormats) {
+            const imageUrl = `images/${date}-${imageNum}.${format}`;
+            try {
+                const response = await fetch(imageUrl, { method: 'HEAD' });
+                if (response.ok) {
+                    images.push(imageUrl);
+                    foundImage = true;
+                    break; // Found this number, move to next
+                }
+            } catch {
+                continue; // Try next format
+            }
+        }
+        
+        if (foundImage) {
+            imageNum++;
+        } else {
+            break; // No more images found
         }
     }
     

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Forever Timeline</title>
+    <title>Photo Gallery - Our Forever Timeline</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
 </head>
@@ -21,8 +21,8 @@
         <nav class="sidebar-nav">
             <div class="nav-section">
                 <div class="nav-section-title">Navigation</div>
-                <a href="index.html" class="nav-item active">📖 All Memories</a>
-                <a href="gallery.html" class="nav-item">📸 Photo Gallery</a>
+                <a href="index.html" class="nav-item">📖 All Memories</a>
+                <a href="gallery.html" class="nav-item active">📸 Photo Gallery</a>
                 <a href="quiz.html" class="nav-item">🎯 Birthday Quiz</a>
                 <a href="favorites-quiz.html" class="nav-item">💝 Favorites Quiz</a>
                 <a href="whiteboard-game.html" class="nav-item">🎲 Whiteboard Game</a>
@@ -45,42 +45,24 @@
 
     <main class="container">
         <header class="page-header">
-            <h2>Our Timeline</h2>
-            <p class="subtitle">Every moment with you is worth remembering</p>
+            <h2>Our Photo Gallery</h2>
+            <p class="subtitle">All our beautiful moments in one place</p>
         </header>
 
-        <div class="filter-tags" id="filterTags">
-            <button class="tag active" data-tag="all">All</button>
+        <div class="filter-section">
+            <div id="galleryStats" class="gallery-stats"></div>
+            <button class="tag active" data-tag="all" onclick="filterGalleryByTag('all', this)">All</button>
+            <div id="galleryFilterTags"></div>
         </div>
 
-        <div class="timeline" id="timeline">
-            <!-- Memories will be loaded here -->
+        <div id="gallery" class="photo-gallery">
+            <!-- Photos will be loaded here -->
         </div>
     </main>
 
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <h3>Private Memory</h3>
-            <p>This memory is protected. Enter the password:</p>
-            <input type="password" id="passwordInput" placeholder="Enter password">
-            <div class="modal-buttons">
-                <button onclick="checkPassword()">Unlock</button>
-                <button onclick="closeModal()">Cancel</button>
-            </div>
-            <p id="passwordError" class="error"></p>
-        </div>
-    </div>
-
-    <div id="memoryModal" class="modal">
-        <div class="modal-content memory-detail">
-            <span class="close" onclick="closeMemoryModal()">&times;</span>
-            <div id="memoryContent"></div>
-        </div>
-    </div>
-
     <script src="js/auth.js"></script>
     <script src="js/shared.js"></script>
-    <script src="js/memories.js"></script>
+    <script src="js/gallery.js"></script>
 </body>
 </html>
 
