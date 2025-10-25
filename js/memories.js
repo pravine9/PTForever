@@ -48,6 +48,30 @@ function displayMemories(filterTag = 'all') {
     });
 }
 
+// Auto-detect images based on date
+async function getImagesForDate(date) {
+    const images = [];
+    let imageNum = 1;
+    
+    // Try to find images named like: 2025-09-01-1.jpg, 2025-09-01-2.jpg, etc.
+    while (true) {
+        const imageUrl = `images/${date}-${imageNum}.jpg`;
+        try {
+            const response = await fetch(imageUrl, { method: 'HEAD' });
+            if (response.ok) {
+                images.push(imageUrl);
+                imageNum++;
+            } else {
+                break;
+            }
+        } catch {
+            break;
+        }
+    }
+    
+    return images;
+}
+
 // Create a memory card
 function createMemoryCard(memory, index) {
     const card = document.createElement('div');
@@ -65,12 +89,21 @@ function createMemoryCard(memory, index) {
     
     const dateStr = formatDate(memory.date);
     
+    // Auto-detect images or use manual media
     let mediaHtml = '';
-    if (memory.media && !memory.private) {
-        if (memory.media.type === 'image') {
-            mediaHtml = `<div class="memory-media"><img src="${memory.media.url}" alt="${memory.title}"></div>`;
-        } else if (memory.media.type === 'video') {
-            mediaHtml = `<div class="memory-media"><video controls src="${memory.media.url}"></video></div>`;
+    if (!memory.private || isUnlocked(memory.id)) {
+        // Check for auto-detected images first
+        const mediaContainer = document.createElement('div');
+        mediaContainer.className = 'memory-media-placeholder';
+        mediaContainer.setAttribute('data-date', memory.date);
+        
+        // Also add manual media if specified
+        if (memory.media) {
+            if (memory.media.type === 'image') {
+                mediaHtml = `<div class="memory-media"><img src="${memory.media.url}" alt="${memory.title}"></div>`;
+            } else if (memory.media.type === 'video') {
+                mediaHtml = `<div class="memory-media"><video controls src="${memory.media.url}"></video></div>`;
+            }
         }
     }
     
@@ -84,16 +117,88 @@ function createMemoryCard(memory, index) {
     const contentClass = (memory.private && !isUnlocked(memory.id)) ? 'memory-content blur' : 'memory-content';
     const lockIcon = (memory.private && !isUnlocked(memory.id)) ? '<div class="lock-icon">🔒</div>' : '';
     
+    // Truncate content for card view
+    const maxLength = 200;
+    let displayContent = memory.content;
+    if (memory.content.length > maxLength) {
+        displayContent = memory.content.substring(0, maxLength) + '...';
+    }
+    
     card.innerHTML = `
         <div class="memory-date">${dateStr}</div>
         <h3 class="memory-title">${memory.title}</h3>
         ${lockIcon}
-        <div class="${contentClass}">${memory.content}</div>
+        <div class="${contentClass}">${displayContent}</div>
+        <div class="photo-badge-placeholder" data-date="${memory.date}"></div>
         ${mediaHtml}
         ${tagsHtml}
     `;
     
+    // Load images asynchronously and show badge
+    if (!memory.private || isUnlocked(memory.id)) {
+        getImagesForDate(memory.date).then(images => {
+            if (images.length > 0) {
+                const placeholder = card.querySelector('.photo-badge-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = createPhotoBadge(images.length);
+                }
+            }
+        });
+    }
+    
     return card;
+}
+
+// Create thumbnail gallery for modal view
+function createThumbnailGallery(images) {
+    if (images.length === 0) return '';
+    
+    return `
+        <div class="memory-thumbnail-gallery">
+            ${images.map((img, idx) => `
+                <div class="thumbnail-item" onclick="openGalleryViewer(${idx}, ${JSON.stringify(images).replace(/"/g, '&quot;')})">
+                    <img src="${img}" alt="Memory photo ${idx + 1}">
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Create photo count badge for timeline view
+function createPhotoBadge(count) {
+    if (count === 0) return '';
+    return `<div class="photo-badge">📸 ${count} ${count === 1 ? 'photo' : 'photos'}</div>`;
+}
+
+// Format long content with better paragraph breaks
+function formatLongContent(content) {
+    // If content is shorter than 500 chars, return as is
+    if (content.length < 500) return content;
+    
+    // Split into sentences
+    const sentences = content.match(/[^.!?]+[.!?]+/g) || [content];
+    
+    // Group sentences into paragraphs (roughly every 3-4 sentences or 250 chars)
+    let paragraphs = [];
+    let currentParagraph = '';
+    
+    sentences.forEach((sentence, index) => {
+        currentParagraph += sentence;
+        
+        // Create new paragraph if we've accumulated enough content or every 3-4 sentences
+        if (currentParagraph.length > 250 || (index + 1) % 3 === 0) {
+            paragraphs.push(currentParagraph.trim());
+            currentParagraph = ' ';
+        }
+    });
+    
+    // Add remaining content
+    if (currentParagraph.trim()) {
+        paragraphs.push(currentParagraph.trim());
+    }
+    
+    // Join with double line breaks for paragraph spacing
+    return paragraphs.join('\n\n');
 }
 
 // Make dates look pretty
@@ -160,7 +265,7 @@ function checkPassword() {
 }
 
 // Show a memory in a popup
-function showMemoryDetail(memory) {
+async function showMemoryDetail(memory) {
     if (memory.private && !isUnlocked(memory.id)) {
         showPasswordModal(memory);
         return;
@@ -178,6 +283,13 @@ function showMemoryDetail(memory) {
         }
     }
     
+    // Check for auto-detected images
+    const autoImages = await getImagesForDate(memory.date);
+    let autoMediaHtml = '';
+    if (autoImages.length > 0) {
+        autoMediaHtml = createThumbnailGallery(autoImages);
+    }
+    
     let tagsHtml = '';
     if (memory.tags && memory.tags.length > 0) {
         tagsHtml = '<div class="memory-tags">' + 
@@ -185,10 +297,13 @@ function showMemoryDetail(memory) {
             '</div>';
     }
     
+    const formattedContent = formatLongContent(memory.content);
+    
     content.innerHTML = `
         <div class="memory-date">${formatDate(memory.date)}</div>
         <h3 class="memory-title">${memory.title}</h3>
-        <div class="memory-content">${memory.content}</div>
+        <div class="memory-content">${formattedContent}</div>
+        ${autoMediaHtml}
         ${mediaHtml}
         ${tagsHtml}
     `;
@@ -198,6 +313,108 @@ function showMemoryDetail(memory) {
 
 function closeMemoryModal() {
     document.getElementById('memoryModal').classList.remove('show');
+}
+
+// Gallery viewer state
+let galleryState = {
+    images: [],
+    currentIndex: 0
+};
+
+// Open full-screen gallery viewer
+function openGalleryViewer(startIndex, images) {
+    galleryState.images = images;
+    galleryState.currentIndex = startIndex;
+    
+    const viewer = document.getElementById('galleryViewer');
+    if (!viewer) {
+        createGalleryViewer();
+    }
+    
+    updateGalleryViewer();
+    document.getElementById('galleryViewer').classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+// Create gallery viewer HTML
+function createGalleryViewer() {
+    const viewer = document.createElement('div');
+    viewer.id = 'galleryViewer';
+    viewer.className = 'gallery-viewer';
+    viewer.innerHTML = `
+        <div class="gallery-viewer-overlay"></div>
+        <button class="gallery-close" onclick="closeGalleryViewer()">✕</button>
+        <button class="gallery-prev" onclick="navigateGallery(-1)">‹</button>
+        <button class="gallery-next" onclick="navigateGallery(1)">›</button>
+        <div class="gallery-image-container">
+            <img id="galleryImage" src="" alt="Gallery image">
+        </div>
+        <div class="gallery-counter"></div>
+    `;
+    document.body.appendChild(viewer);
+    
+    // Close on overlay click
+    viewer.querySelector('.gallery-viewer-overlay').addEventListener('click', closeGalleryViewer);
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', handleGalleryKeyboard);
+}
+
+// Update gallery viewer with current image
+function updateGalleryViewer() {
+    const image = document.getElementById('galleryImage');
+    const counter = document.querySelector('.gallery-counter');
+    
+    image.src = galleryState.images[galleryState.currentIndex];
+    counter.textContent = `${galleryState.currentIndex + 1} / ${galleryState.images.length}`;
+    
+    // Show/hide navigation buttons
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+    
+    prevBtn.style.display = galleryState.currentIndex === 0 ? 'none' : 'block';
+    nextBtn.style.display = galleryState.currentIndex === galleryState.images.length - 1 ? 'none' : 'block';
+}
+
+// Navigate gallery
+function navigateGallery(direction) {
+    galleryState.currentIndex += direction;
+    
+    // Wrap around
+    if (galleryState.currentIndex < 0) {
+        galleryState.currentIndex = galleryState.images.length - 1;
+    } else if (galleryState.currentIndex >= galleryState.images.length) {
+        galleryState.currentIndex = 0;
+    }
+    
+    updateGalleryViewer();
+}
+
+// Close gallery viewer
+function closeGalleryViewer() {
+    const viewer = document.getElementById('galleryViewer');
+    if (viewer) {
+        viewer.classList.remove('show');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+}
+
+// Handle keyboard navigation
+function handleGalleryKeyboard(e) {
+    const viewer = document.getElementById('galleryViewer');
+    if (!viewer || !viewer.classList.contains('show')) return;
+    
+    switch(e.key) {
+        case 'ArrowLeft':
+            navigateGallery(-1);
+            break;
+        case 'ArrowRight':
+            navigateGallery(1);
+            break;
+        case 'Escape':
+            closeGalleryViewer();
+            break;
+    }
 }
 
 // Save unlocked memories to your browser
