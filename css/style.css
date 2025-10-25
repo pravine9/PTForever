@@ -6,9 +6,9 @@
 }
 
 :root {
-    --primary: #667eea;
-    --secondary: #764ba2;
-    --accent: #f093fb;
+    --primary: #3b82f6;
+    --secondary: #60a5fa;
+    --accent: #93c5fd;
     --light: #f5f7ff;
     --dark: #2d3748;
     --success: #48bb78;
@@ -33,7 +33,7 @@ body::before {
     right: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
     pointer-events: none;
     animation: float 20s ease-in-out infinite;
 }
@@ -45,7 +45,7 @@ body::after {
     left: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(240, 147, 251, 0.03) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(147, 197, 253, 0.03) 0%, transparent 70%);
     pointer-events: none;
     animation: float 25s ease-in-out infinite reverse;
 }
@@ -77,10 +77,10 @@ body::after {
     top: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
     color: white;
     z-index: 1000;
-    box-shadow: 2px 0 30px rgba(102, 126, 234, 0.3);
+    box-shadow: 2px 0 30px rgba(59, 130, 246, 0.3);
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
@@ -264,7 +264,7 @@ body::after {
     border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.85rem;
     opacity: 0.7;
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+    background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
     z-index: 10;
 }
 
@@ -281,13 +281,13 @@ body::after {
     padding: 0.8rem 1rem;
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     transition: var(--transition);
 }
 
 .mobile-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 /* Top Bar (simplified since we have sidebar) */
@@ -322,7 +322,7 @@ body::after {
     margin: -20px -20px 3rem -20px;
     padding: 4rem 2rem 3rem;
     border-radius: 0 0 30px 30px;
-    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
     position: relative;
     overflow: hidden;
 }
@@ -385,21 +385,21 @@ body::after {
     cursor: pointer;
     transition: var(--transition);
     font-size: 0.9rem;
-    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.1);
 }
 
 .tag:hover {
     border-color: var(--primary);
     color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }
 
 .tag.active {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 /* Timeline */
@@ -417,7 +417,7 @@ body::after {
     height: 100%;
     background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
     border-radius: 2px;
-    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
 .memory-card {
@@ -425,12 +425,12 @@ body::after {
     border-radius: 20px;
     padding: 2rem;
     margin-bottom: 3rem;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
     position: relative;
     width: calc(50% - 40px);
     opacity: 0;
     animation: fadeIn 0.5s ease forwards;
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.1);
     transition: var(--transition);
     cursor: pointer;
     backdrop-filter: blur(10px);
@@ -444,7 +444,7 @@ body::after {
     right: 0;
     bottom: 0;
     border-radius: 20px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(240, 147, 251, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -452,8 +452,8 @@ body::after {
 
 .memory-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
-    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
 .memory-card:hover::after {
@@ -483,7 +483,7 @@ body::after {
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     border-radius: 50%;
     border: 3px solid white;
-    box-shadow: 0 0 0 3px var(--primary), 0 0 15px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 0 3px var(--primary), 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
 .memory-card:nth-child(odd)::before {
@@ -554,7 +554,7 @@ body::after {
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 /* Thumbnail gallery in modal */
@@ -579,7 +579,7 @@ body::after {
 
 .thumbnail-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
 .thumbnail-item img {
@@ -733,10 +733,10 @@ body::after {
 .memory-tags span {
     font-size: 0.8rem;
     padding: 0.4rem 1rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.1) 100%);
     border-radius: 15px;
     color: var(--primary);
-    border: 1px solid rgba(102, 126, 234, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     font-weight: 500;
 }
 
@@ -744,7 +744,7 @@ body::after {
     margin-top: 1rem;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
 }
 
 .memory-media img {
@@ -793,7 +793,7 @@ body::after {
     display: inline-block;
     text-decoration: none;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }
 
 .btn-primary {
@@ -803,21 +803,21 @@ body::after {
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
 }
 
 .btn-secondary {
     background: white;
     color: var(--primary);
     border: 2px solid var(--primary);
-    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.15);
 }
 
 .btn-secondary:hover {
     background: var(--primary);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.3);
 }
 
 .quiz-container {
@@ -832,7 +832,7 @@ body::after {
 .progress-bar {
     width: 100%;
     height: 10px;
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(59, 130, 246, 0.1);
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 0.5rem;
@@ -844,7 +844,7 @@ body::after {
     background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
     transition: width 0.3s ease;
     width: 0%;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
 }
 
 .progress-text {
@@ -857,9 +857,9 @@ body::after {
     background: white;
     padding: 3rem;
     border-radius: 20px;
-    box-shadow: 0 4px 25px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 25px rgba(59, 130, 246, 0.15);
     min-height: 300px;
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .question-text {
@@ -875,7 +875,7 @@ body::after {
     border-radius: 15px;
     overflow: hidden;
     max-width: 100%;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
 }
 
 .question-media img {
@@ -898,21 +898,21 @@ body::after {
 
 .answer-btn {
     padding: 1.2rem 1.5rem;
-    border: 2px solid rgba(102, 126, 234, 0.2);
+    border: 2px solid rgba(59, 130, 246, 0.2);
     background: white;
     border-radius: 12px;
     cursor: pointer;
     transition: var(--transition);
     font-size: 1rem;
     text-align: left;
-    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.05);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.05);
 }
 
 .answer-btn:hover {
     border-color: var(--primary);
     transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(96, 165, 250, 0.05) 100%);
 }
 
 .answer-btn.selected {
@@ -947,9 +947,9 @@ body::after {
     background: white;
     padding: 3rem;
     border-radius: 20px;
-    box-shadow: 0 4px 25px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 4px 25px rgba(59, 130, 246, 0.15);
     margin-bottom: 2rem;
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .score {
@@ -1010,8 +1010,8 @@ body::after {
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .modal-content > div {
@@ -1024,7 +1024,7 @@ body::after {
 }
 
 .modal-content > div::-webkit-scrollbar-track {
-    background: rgba(102, 126, 234, 0.05);
+    background: rgba(59, 130, 246, 0.05);
     border-radius: 10px;
 }
 
@@ -1066,7 +1066,7 @@ body::after {
     width: 100%;
     padding: 0.8rem 1rem;
     margin: 1rem 0;
-    border: 2px solid rgba(102, 126, 234, 0.2);
+    border: 2px solid rgba(59, 130, 246, 0.2);
     border-radius: 10px;
     font-size: 1rem;
     transition: var(--transition);
@@ -1075,7 +1075,7 @@ body::after {
 .modal-content input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .modal-buttons {
@@ -1102,7 +1102,7 @@ body::after {
 
 .modal-buttons button:first-child:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .modal-buttons button:last-child {
@@ -1284,7 +1284,7 @@ body::after {
     padding: 0.6rem 1.25rem;
     background: white;
     border-radius: 50px;
-    box-shadow: 0 2px 12px rgba(102, 126, 234, 0.12);
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.12);
     align-items: center;
 }
 
@@ -1334,7 +1334,7 @@ body::after {
 
 .gallery-photo-wrapper:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3);
 }
 
 .gallery-photo-wrapper img {
@@ -1501,13 +1501,13 @@ html {
     transition: all 0.3s ease;
     min-width: 120px;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }
 
 .btn-nav:hover {
     background: var(--primary-dark, var(--secondary));
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
 }
 
 .btn-nav:disabled {
@@ -1527,14 +1527,14 @@ html {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
-    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.15);
 }
 
 .btn-fullscreen:hover {
     background: var(--primary);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.3);
 }
 
 /* Fullscreen Mode Styles */
@@ -1665,8 +1665,8 @@ html {
 .spinner {
     width: 50px;
     height: 50px;
-    border: 4px solid rgba(138, 92, 246, 0.1);
-    border-top: 4px solid #8a5cf6;
+    border: 4px solid rgba(59, 130, 246, 0.1);
+    border-top: 4px solid #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
@@ -1678,7 +1678,7 @@ html {
 }
 
 .loading-spinner p {
-    color: #8a5cf6;
+    color: #3b82f6;
     font-size: 1.1rem;
     margin: 0;
 }

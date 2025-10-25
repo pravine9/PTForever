@@ -184,10 +184,22 @@ function exitFullscreen() {
     }
 }
 
-// Press ESC to exit fullscreen
+// Keyboard navigation
 document.addEventListener('keydown', (e) => {
+    // ESC to exit fullscreen
     if (e.key === 'Escape' && isFullscreen) {
         exitFullscreen();
+        return;
+    }
+    
+    // Arrow keys for navigation (only when game is active)
+    const gameContainer = document.getElementById('gameContainer');
+    if (gameContainer && gameContainer.style.display !== 'none') {
+        if (e.key === 'ArrowLeft') {
+            previousQuestion();
+        } else if (e.key === 'ArrowRight') {
+            nextQuestion();
+        }
     }
 });
 
