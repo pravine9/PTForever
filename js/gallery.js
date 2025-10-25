@@ -4,6 +4,10 @@ let filteredPhotos = [];
 
 // Load memories and extract all photos
 async function loadGallery() {
+    // Show loading indicator
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Loading your beautiful memories...</p></div>';
+    
     try {
         const response = await fetch('data/memories.json');
         memories = await response.json();
@@ -14,7 +18,7 @@ async function loadGallery() {
         populateTimelineSidebar();
     } catch (error) {
         console.error('Error loading gallery:', error);
-        document.getElementById('gallery').innerHTML = '<p style="text-align: center;">Error loading photos.</p>';
+        gallery.innerHTML = '<p style="text-align: center;">Error loading photos.</p>';
     }
 }
 
