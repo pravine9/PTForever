@@ -6,202 +6,6 @@
     <title>Whiteboard Game - PTForever</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
-    <style>
-        .whiteboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .game-controls {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .game-controls h2 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .question-display {
-            background: var(--card-bg);
-            padding: 4rem 3rem;
-            border-radius: 12px;
-            text-align: center;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .question-text {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--text);
-            line-height: 1.4;
-            margin-bottom: 2rem;
-        }
-
-        .question-counter {
-            font-size: 1.2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        .navigation-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .btn-nav {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .btn-nav:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-nav:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-fullscreen {
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-fullscreen:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
-        }
-
-        .fullscreen-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--bg);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
-        .fullscreen-mode .question-display {
-            width: 90%;
-            max-width: 1200px;
-            min-height: auto;
-            padding: 5rem 4rem;
-        }
-
-        .fullscreen-mode .question-text {
-            font-size: 3rem;
-            line-height: 1.5;
-        }
-
-        .fullscreen-mode .question-counter {
-            font-size: 1.4rem;
-            margin-bottom: 2rem;
-        }
-
-        .fullscreen-mode .navigation-buttons {
-            margin-top: 3rem;
-        }
-
-        .fullscreen-mode .btn-nav {
-            padding: 1.2rem 2.5rem;
-            font-size: 1.2rem;
-            min-width: 140px;
-        }
-
-        .exit-fullscreen {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 0.75rem 1.5rem;
-            background: rgba(231, 76, 60, 0.9);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            z-index: 10000;
-            transition: all 0.3s ease;
-        }
-
-        .exit-fullscreen:hover {
-            background: rgba(192, 57, 43, 1);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .question-text {
-                font-size: 1.8rem;
-            }
-
-            .question-display {
-                padding: 2rem 1.5rem;
-                min-height: 300px;
-            }
-
-            .btn-nav {
-                padding: 0.75rem 1.5rem;
-                font-size: 1rem;
-                min-width: 100px;
-            }
-
-            .fullscreen-mode .question-text {
-                font-size: 2rem;
-            }
-
-            .fullscreen-mode .question-display {
-                padding: 3rem 2rem;
-            }
-
-            .fullscreen-mode .question-counter {
-                font-size: 1.1rem;
-            }
-
-            .fullscreen-mode .btn-nav {
-                padding: 1rem 2rem;
-                font-size: 1.1rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Mobile Menu Toggle (only visible when not in fullscreen) -->
@@ -209,34 +13,7 @@
 
     <!-- Left Sidebar (hidden in fullscreen) -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h1 class="sidebar-title">PTForever</h1>
-            <p class="sidebar-subtitle">Our Story, Our Memories</p>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-section-title">Navigation</div>
-                <a href="index.html" class="nav-item">📖 All Memories</a>
-                <a href="quiz.html" class="nav-item">🎯 Birthday Quiz</a>
-                <a href="favorites-quiz.html" class="nav-item">💝 Favorites Quiz</a>
-                <a href="whiteboard-game.html" class="nav-item active">🎲 Whiteboard Game</a>
-            </div>
-            
-            <div class="nav-section timeline-nav">
-                <button class="timeline-toggle" onclick="toggleTimeline()">
-                    <span>⏱️ Timeline</span>
-                    <span class="timeline-arrow">▶</span>
-                </button>
-                <div class="timeline-dates" id="timelineDates">
-                    <!-- Timeline dates will be populated here -->
-                </div>
-            </div>
-        </nav>
-        
-        <div class="sidebar-footer">
-            Est. October 2024 💕
-        </div>
+        <!-- Sidebar content loaded by shared.js -->
     </aside>
 
     <main class="container" id="mainContainer">
@@ -255,11 +32,13 @@
 
         <div id="gameContainer" class="whiteboard-container" style="display: none;">
             <div class="question-display">
-                <div class="question-counter">
-                    Question <span id="currentQuestion">1</span> of <span id="totalQuestions">0</span>
-                </div>
-                <div class="question-text" id="questionText">
-                    <!-- Question will be loaded here -->
+                <div class="question-content">
+                    <div class="question-counter">
+                        Question <span id="currentQuestion">1</span> of <span id="totalQuestions">0</span>
+                    </div>
+                    <div class="question-text" id="questionText">
+                        <!-- Question will be loaded here -->
+                    </div>
                 </div>
                 <div class="navigation-buttons">
                     <button id="prevBtn" onclick="previousQuestion()" class="btn-nav">← Back</button>
@@ -268,10 +47,10 @@
             </div>
             <div class="btn-group" style="margin-top: 2rem;">
                 <button onclick="toggleFullscreen()" class="btn-fullscreen" id="fullscreenBtn">
-                    🖥️ Enter Fullscreen
+                    Enter Fullscreen
                 </button>
-                <button onclick="restartGame()" class="btn-secondary">🔄 Restart</button>
-                <a href="index.html" class="btn-secondary">🏠 Back to Home</a>
+                <button onclick="restartGame()" class="btn-secondary">Restart</button>
+                <a href="index.html" class="btn-secondary">Back to Home</a>
             </div>
         </div>
 
@@ -290,6 +69,10 @@
     <script src="js/auth.js"></script>
     <script src="js/shared.js"></script>
     <script src="js/whiteboard-game.js"></script>
+    <script>
+        // Initialize sidebar with active page indicator
+        initializeSidebar('whiteboard');
+    </script>
 </body>
 </html>
 

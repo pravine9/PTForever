@@ -1,5 +1,48 @@
 // Shared utility functions used across all pages
 
+// Create the sidebar/navbar HTML - used on all pages to avoid duplication
+function createSidebar(activePage) {
+    return `
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">P&T Forever ∞</h1>
+            <p class="sidebar-subtitle">Our Story, Our Memories</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Navigation</div>
+                <a href="index.html" class="nav-item ${activePage === 'memories' ? 'active' : ''}">📖 All Memories</a>
+                <a href="gallery.html" class="nav-item ${activePage === 'gallery' ? 'active' : ''}">📸 Gallery</a>
+                <a href="quiz.html" class="nav-item ${activePage === 'quiz' ? 'active' : ''}">🎯 Birthday Quiz</a>
+                <a href="favorites-quiz.html" class="nav-item ${activePage === 'favorites' ? 'active' : ''}">💝 Favorites Quiz</a>
+                <a href="whiteboard-game.html" class="nav-item ${activePage === 'whiteboard' ? 'active' : ''}">🎲 Whiteboard Game</a>
+            </div>
+            
+            <div class="nav-section timeline-nav">
+                <button class="timeline-toggle" onclick="toggleTimeline()">
+                    <span>⏱️ Timeline</span>
+                    <span class="timeline-arrow">▶</span>
+                </button>
+                <div class="timeline-dates" id="timelineDates">
+                    <!-- Timeline dates will be populated here -->
+                </div>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            Est. October 2024 💕
+        </div>
+    `;
+}
+
+// Initialize sidebar on page load
+function initializeSidebar(activePage) {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.innerHTML = createSidebar(activePage);
+    }
+}
+
 // Toggle the sidebar when I'm on mobile
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');

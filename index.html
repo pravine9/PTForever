@@ -13,34 +13,7 @@
 
     <!-- Left Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h1 class="sidebar-title">P&T Forever ∞</h1>
-            <p class="sidebar-subtitle">Our Story, Our Memories</p>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-section-title">Navigation</div>
-                <a href="index.html" class="nav-item active">📖 All Memories</a>
-                <a href="gallery.html" class="nav-item">📸 Photo Gallery</a>
-                <a href="quiz.html" class="nav-item">🎯 Birthday Quiz</a>
-                <a href="favorites-quiz.html" class="nav-item">💝 Favorites Quiz</a>
-                <a href="whiteboard-game.html" class="nav-item">🎲 Whiteboard Game</a>
-            </div>            
-            <div class="nav-section timeline-nav">
-                <button class="timeline-toggle" onclick="toggleTimeline()">
-                    <span>⏱️ Timeline</span>
-                    <span class="timeline-arrow">▶</span>
-                </button>
-                <div class="timeline-dates" id="timelineDates">
-                    <!-- Timeline dates will be populated here -->
-                </div>
-            </div>
-        </nav>
-        
-        <div class="sidebar-footer">
-            Est. October 2024 💕
-        </div>
+        <!-- Sidebar content loaded by shared.js -->
     </aside>
 
     <main class="container">
@@ -81,6 +54,10 @@
     <script src="js/auth.js"></script>
     <script src="js/shared.js"></script>
     <script src="js/memories.js"></script>
+    <script>
+        // Initialize sidebar with active page indicator
+        initializeSidebar('memories');
+    </script>
 </body>
 </html>
 

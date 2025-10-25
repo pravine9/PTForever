@@ -153,8 +153,8 @@ function exitFullscreen() {
     const exitBtn = document.getElementById('exitFullscreenBtn');
     
     // Bring back the sidebar and controls
-    sidebar.style.display = 'flex';
-    mobileToggle.style.display = 'block';
+    sidebar.style.display = '';
+    mobileToggle.style.display = '';
     mainContainer.style.marginLeft = '';
     mainContainer.style.padding = '';
     
@@ -164,7 +164,7 @@ function exitFullscreen() {
     // Show the control buttons again
     const btnGroup = gameContainer.querySelector('.btn-group');
     if (btnGroup) {
-        btnGroup.style.display = 'flex';
+        btnGroup.style.display = '';
     }
     
     // Remove the exit button
