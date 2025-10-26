@@ -197,33 +197,8 @@ function createPhotoBadge(count) {
 
 // Format long content with better paragraph breaks
 function formatLongContent(content) {
-    // If content is shorter than 500 chars, return as is
-    if (content.length < 500) return content;
-    
-    // Split into sentences
-    const sentences = content.match(/[^.!?]+[.!?]+/g) || [content];
-    
-    // Group sentences into paragraphs (roughly every 3-4 sentences or 250 chars)
-    let paragraphs = [];
-    let currentParagraph = '';
-    
-    sentences.forEach((sentence, index) => {
-        currentParagraph += sentence;
-        
-        // Create new paragraph if we've accumulated enough content or every 3-4 sentences
-        if (currentParagraph.length > 250 || (index + 1) % 3 === 0) {
-            paragraphs.push(currentParagraph.trim());
-            currentParagraph = ' ';
-        }
-    });
-    
-    // Add remaining content
-    if (currentParagraph.trim()) {
-        paragraphs.push(currentParagraph.trim());
-    }
-    
-    // Join with double line breaks for paragraph spacing
-    return paragraphs.join('\n\n');
+    // Convert newlines to HTML breaks for proper rendering
+    return content.replace(/\n/g, '<br>');
 }
 
 // Make dates look pretty

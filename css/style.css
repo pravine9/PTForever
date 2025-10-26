@@ -525,6 +525,7 @@ body::after {
     font-size: 1.05rem;
     text-align: justify;
     color: #4a5568;
+    white-space: pre-line;
 }
 
 .read-more-indicator {
