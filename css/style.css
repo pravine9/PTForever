@@ -1683,3 +1683,288 @@ html {
     margin: 0;
 }
 
+/* Birthday Card Styles */
+.birthday-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    z-index: 10000;
+    background: 
+        linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 20px);
+    padding: 4rem 6rem;
+    border-radius: 25px;
+    box-shadow: 
+        0 20px 60px rgba(59, 130, 246, 0.4),
+        0 10px 30px rgba(59, 130, 246, 0.3),
+        inset 0 -5px 15px rgba(0, 0, 0, 0.1),
+        inset 0 5px 15px rgba(255, 255, 255, 0.2);
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+    min-width: 700px;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    animation: 
+        cardFloat 3s ease-in-out infinite, 
+        borderRainbow 4s linear infinite,
+        cardBounce 0.8s ease-in-out infinite;
+}
+
+.birthday-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(147, 197, 253, 0.2) 0%, transparent 60%);
+    animation: rotate3d 8s linear infinite;
+    pointer-events: none;
+}
+
+.birthday-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 50% 20%, rgba(147, 197, 253, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(96, 165, 250, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+    animation: rotate3dReverse 12s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate3d {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes rotate3dReverse {
+    0% {
+        transform: rotate(360deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.15);
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+@keyframes cardFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    50% {
+        transform: translate(-50%, -52%) scale(0.92);
+    }
+}
+
+@keyframes cardGlow {
+    0%, 100% {
+        box-shadow: 
+            0 20px 60px rgba(59, 130, 246, 0.4),
+            0 10px 30px rgba(59, 130, 246, 0.3),
+            inset 0 -5px 15px rgba(0, 0, 0, 0.1),
+            inset 0 5px 15px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 25px 80px rgba(59, 130, 246, 0.6),
+            0 15px 40px rgba(59, 130, 246, 0.5),
+            inset 0 -5px 15px rgba(0, 0, 0, 0.1),
+            inset 0 5px 20px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes borderRainbow {
+    0% {
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    25% {
+        border-color: rgba(147, 197, 253, 0.6);
+    }
+    50% {
+        border-color: rgba(255, 255, 255, 0.7);
+    }
+    75% {
+        border-color: rgba(96, 165, 250, 0.6);
+    }
+    100% {
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+@keyframes cardBounce {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(0.9) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, -50%) scale(0.91) rotate(0.5deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(0.92) rotate(0deg);
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(0.91) rotate(-0.5deg);
+    }
+}
+
+.birthday-card-content {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.8;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.2),
+            0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        text-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.2),
+            0 0 20px rgba(255, 255, 255, 0.6),
+            0 0 30px rgba(255, 255, 255, 0.4);
+    }
+}
+
+.birthday-card-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    line-height: 1;
+    padding: 0;
+}
+
+.birthday-card-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1) rotate(90deg);
+}
+
+
+/* Confetti Animation */
+.confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    z-index: 9999;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) translateX(var(--drift)) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Balloon Animation */
+.balloon-piece {
+    position: fixed;
+    top: -100px;
+    z-index: 9999;
+    font-size: 60px;
+    animation: balloonFall linear forwards;
+}
+
+@keyframes balloonFall {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh + 100px)) translateX(var(--drift));
+        opacity: 0;
+    }
+}
+
+/* Birthday Overlay */
+.birthday-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Responsive Birthday Card Styles */
+@media (max-width: 768px) {
+    .birthday-card {
+        padding: 2rem 2.5rem;
+        max-width: 85%;
+        min-width: auto;
+    }
+    
+    .birthday-card-content {
+        font-size: 1.4rem;
+    }
+    
+    .birthday-card-close {
+        width: 25px;
+        height: 25px;
+        font-size: 1.2rem;
+    }
+}
+

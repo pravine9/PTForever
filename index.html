@@ -51,12 +51,193 @@
         </div>
     </div>
 
+    <!-- Birthday Card -->
+    <div id="birthdayCard" class="birthday-card" onclick="event.stopPropagation()">
+        <button class="birthday-card-close" onclick="closeBirthdayCard()">×</button>
+        <div class="birthday-card-content">
+            
+            Happy 25th Birthday, Thuvaraha! 🎂🎉
+        </div>
+    </div>
+    
+    <!-- Birthday Overlay for click outside -->
+    <div id="birthdayOverlay" class="birthday-overlay" onclick="closeBirthdayCard()"></div>
+
     <script src="js/auth.js"></script>
     <script src="js/shared.js"></script>
     <script src="js/memories.js"></script>
     <script>
         // Initialize sidebar with active page indicator
         initializeSidebar('memories');
+        
+        // Birthday card functionality
+        function checkBirthday() {
+            const isBirthday = true; // Set to true to always show
+            
+            if (isBirthday) {
+                setTimeout(() => {
+                    showBirthdayCard();
+                }, 500);
+            }
+        }
+        
+        let confettiInterval;
+        let balloonInterval;
+        
+        function showBirthdayCard() {
+            const card = document.getElementById('birthdayCard');
+            const overlay = document.getElementById('birthdayOverlay');
+            
+            card.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translate(-50%, -50%) scale(1)';
+                overlay.style.opacity = '1';
+            }, 10);
+            
+            // Confetti and balloon effects
+            createConfetti();
+            createBalloons();
+        }
+        
+        function closeBirthdayCard() {
+            const card = document.getElementById('birthdayCard');
+            const overlay = document.getElementById('birthdayOverlay');
+            
+            card.style.opacity = '0';
+            card.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            overlay.style.opacity = '0';
+            
+            // Stop creating new confetti and balloons immediately
+            clearInterval(confettiInterval);
+            clearInterval(balloonInterval);
+            
+            // Immediately fade out all existing confetti and balloons
+            const allConfetti = document.querySelectorAll('.confetti-piece');
+            const allBalloons = document.querySelectorAll('.balloon-piece');
+            
+            allConfetti.forEach(confetti => {
+                confetti.style.transition = 'opacity 0.3s ease';
+                confetti.style.opacity = '0';
+                confetti.style.pointerEvents = 'none';
+                setTimeout(() => confetti.remove(), 300);
+            });
+            
+            allBalloons.forEach(balloon => {
+                balloon.style.transition = 'opacity 0.3s ease';
+                balloon.style.opacity = '0';
+                balloon.style.pointerEvents = 'none';
+                setTimeout(() => balloon.remove(), 300);
+            });
+            
+            setTimeout(() => {
+                card.style.display = 'none';
+                overlay.style.display = 'none';
+            }, 300);
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#a8e6cf', '#ffd3b6', '#3b82f6', '#60a5fa', '#93c5fd'];
+            const confettiCount = 150;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti-piece';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 1 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 6000);
+                }, i * 30);
+            }
+            
+            // Keep adding confetti
+            confettiInterval = setInterval(() => {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti-piece';
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                        confetti.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+                        document.body.appendChild(confetti);
+                        
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 6000);
+                    }, i * 100);
+                }
+            }, 2000);
+        }
+        
+        function createBalloons() {
+            const balloons = [
+                { emoji: '🎈', color: 'hue-rotate(0deg)' },      // Red
+                { emoji: '🎈', color: 'hue-rotate(200deg)' },    // Blue
+                { emoji: '🎈', color: 'hue-rotate(290deg)' },    // Pink
+                { emoji: '🎈', color: 'hue-rotate(60deg)' },     // Yellow
+                { emoji: '🎈', color: 'hue-rotate(120deg)' },    // Green
+                { emoji: '🎈', color: 'hue-rotate(180deg)' },    // Cyan
+                { emoji: '🎈', color: 'hue-rotate(330deg)' }     // Purple
+            ];
+            const balloonCount = 20;
+            
+            for (let i = 0; i < balloonCount; i++) {
+                setTimeout(() => {
+                    const balloonData = balloons[Math.floor(Math.random() * balloons.length)];
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon-piece';
+                    balloon.textContent = balloonData.emoji;
+                    balloon.style.left = Math.random() * 100 + '%';
+                    balloon.style.filter = balloonData.color;
+                    balloon.style.animationDelay = Math.random() * 2 + 's';
+                    balloon.style.animationDuration = (Math.random() * 4 + 5) + 's';
+                    balloon.style.setProperty('--drift', (Math.random() * 150 - 75) + 'px');
+                    document.body.appendChild(balloon);
+                    
+                    setTimeout(() => {
+                        balloon.remove();
+                    }, 9000);
+                }, i * 100);
+            }
+            
+            // Keep adding balloons
+            balloonInterval = setInterval(() => {
+                for (let i = 0; i < 2; i++) {
+                    setTimeout(() => {
+                        const balloonData = balloons[Math.floor(Math.random() * balloons.length)];
+                        const balloon = document.createElement('div');
+                        balloon.className = 'balloon-piece';
+                        balloon.textContent = balloonData.emoji;
+                        balloon.style.left = Math.random() * 100 + '%';
+                        balloon.style.filter = balloonData.color;
+                        balloon.style.animationDuration = (Math.random() * 4 + 5) + 's';
+                        balloon.style.setProperty('--drift', (Math.random() * 150 - 75) + 'px');
+                        document.body.appendChild(balloon);
+                        
+                        setTimeout(() => {
+                            balloon.remove();
+                        }, 9000);
+                    }, i * 200);
+                }
+            }, 3000);
+        }
+        
+        // Check for birthday when page loads
+        document.addEventListener('DOMContentLoaded', checkBirthday);
     </script>
 </body>
 </html>
