@@ -1953,19 +1953,38 @@ html {
 /* Responsive Birthday Card Styles */
 @media (max-width: 768px) {
     .birthday-card {
-        padding: 2rem 2.5rem;
-        max-width: 85%;
+        padding: 2rem 2rem;
+        max-width: 90%;
         min-width: auto;
+        width: auto;
     }
     
     .birthday-card-content {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.6;
     }
     
     .birthday-card-close {
         width: 25px;
         height: 25px;
         font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .birthday-card {
+        padding: 1.5rem 1.5rem;
+        max-width: 95%;
+    }
+    
+    .birthday-card-content {
+        font-size: 1.1rem;
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 }
 
