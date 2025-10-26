@@ -67,6 +67,10 @@ function handleAuth() {
         overlay.classList.add('fade-out');
         setTimeout(() => {
             overlay.remove();
+            // Trigger birthday check after auth overlay is removed
+            if (typeof checkBirthday === 'function') {
+                checkBirthday();
+            }
         }, 300);
     } else {
         // Wrong password
@@ -87,6 +91,13 @@ function handleAuth() {
 document.addEventListener('DOMContentLoaded', () => {
     if (!isAuthenticated()) {
         showPasswordScreen();
+    } else {
+        // Already authenticated, trigger birthday check
+        setTimeout(() => {
+            if (typeof checkBirthday === 'function') {
+                checkBirthday();
+            }
+        }, 100);
     }
 });
 
