@@ -1,0 +1,181 @@
+═══════════════════════════════════════════════════════════════
+  THAALI GOLD CALCULATOR - 5 MINUTE SETUP
+═══════════════════════════════════════════════════════════════
+
+🏆 RECOMMENDED: Gold-API.com (UNLIMITED FREE REQUESTS!)
+══════════════════════════════════════════════════════════════
+
+STEP 1: Get Your Free API Key (2 minutes)
+──────────────────────────────────────────────────────────────
+1. Visit: https://gold-api.com/
+2. Click "Sign Up" (top right)
+3. Create free account with email
+4. Login to your dashboard
+5. Copy your API key
+
+FREE TIER INCLUDES:
+✓ UNLIMITED API requests (yes, really!)
+✓ Real-time gold prices
+✓ Multiple currency support
+✓ No credit card required
+✓ No expiration
+
+──────────────────────────────────────────────────────────────
+
+STEP 2: Add API Key to Your Code (1 minute)
+──────────────────────────────────────────────────────────────
+1. Open: js/thaali.js
+2. Find line 8 (at the top of the file)
+3. Add your API key
+
+   BEFORE:
+   const GOLD_API_KEY = '';
+
+   AFTER:
+   const GOLD_API_KEY = 'your-actual-api-key-here';
+
+4. Save the file
+
+──────────────────────────────────────────────────────────────
+
+STEP 3: Test It (1 minute)
+──────────────────────────────────────────────────────────────
+1. Open thaali.html in your browser
+2. You should see live gold prices displayed
+3. Click refresh (↻) button to verify updates
+4. Enter sovereign counts to calculate thaali cost
+
+✓ You're done! Refresh as many times as you want!
+
+══════════════════════════════════════════════════════════════
+
+ALTERNATIVE FREE APIs (all excellent options)
+══════════════════════════════════════════════════════════════
+
+Option 2: GoldAPI.io (1,000 requests/month)
+───────────────────────────────────────────
+→ Visit: https://goldapi.io/
+→ 1,000 free requests per month (not 100!)
+→ Updates every 10 minutes
+→ Very reliable and popular
+
+To use GoldAPI.io:
+1. Get API key from goldapi.io
+2. The code will automatically try it if Gold-API.com fails
+3. Just use the same GOLD_API_KEY variable
+
+Option 3: FreeGoldPrice.org (Generous limits)
+──────────────────────────────────────────────
+→ Visit: https://freegoldprice.org/
+→ Hourly updates
+→ Generous free tier
+→ Good for regular use
+
+══════════════════════════════════════════════════════════════
+
+COMPARISON CHART
+══════════════════════════════════════════════════════════════
+
+API                  | Free Requests      | Updates        | Reliability
+─────────────────────┼───────────────────┼────────────────┼─────────────
+Gold-API.com        | UNLIMITED ⭐      | Real-time      | Excellent
+GoldAPI.io          | 1,000/month       | Every 10 min   | Excellent
+FreeGoldPrice.org   | Generous          | Hourly         | Good
+GoldPrice.org       | Public (fallback) | Real-time      | Moderate
+
+RECOMMENDATION: Use Gold-API.com for unlimited requests!
+
+══════════════════════════════════════════════════════════════
+
+FALLBACK SYSTEM (NO API KEY NEEDED!)
+══════════════════════════════════════════════════════════════
+
+If you don't add an API key, the calculator will:
+1. Automatically use GoldPrice.org public data (no auth needed)
+2. Show approximate current prices
+3. Still work perfectly for calculations!
+
+So the thaali calculator works OUT OF THE BOX without any API key!
+
+══════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+══════════════════════════════════════════════════════════════
+
+❌ "Unable to fetch live prices" error
+   → Check your API key is correct
+   → Make sure you're connected to internet
+   → Try the refresh button
+   → Check browser console (F12) for details
+   → Don't worry - fallback prices will be used
+
+❌ Getting rate limit errors (unlikely with unlimited!)
+   → Verify you're using Gold-API.com (unlimited)
+   → Check if your API key is correct
+   → Try creating a new API key
+
+❌ Prices seem outdated
+   → Click the refresh button (↻)
+   → Check the "Last updated" timestamp
+   → Verify internet connection
+
+══════════════════════════════════════════════════════════════
+
+USAGE WITH UNLIMITED REQUESTS
+══════════════════════════════════════════════════════════════
+
+With Gold-API.com unlimited plan:
+✓ Refresh as often as you want
+✓ Share the page with family/friends
+✓ Check prices multiple times per day
+✓ No need to worry about limits!
+
+Perfect for:
+→ Tracking daily gold price changes
+→ Planning jewelry purchases
+→ Comparing prices over time
+→ Family sharing
+
+══════════════════════════════════════════════════════════════
+
+PRIVACY & SECURITY
+══════════════════════════════════════════════════════════════
+
+Your API key is stored in client-side JavaScript:
+✓ Only works from your website domain
+✓ Safe for free tier with unlimited requests
+✓ No sensitive data exposed
+✓ Key can be regenerated anytime
+
+For public websites:
+→ Gold-API.com allows domain restrictions
+→ Set allowed domains in their dashboard
+→ This prevents unauthorized use of your key
+
+══════════════════════════════════════════════════════════════
+
+NEED HELP?
+══════════════════════════════════════════════════════════════
+
+1. Check browser console (press F12) for errors
+2. Verify API key is correctly pasted (no extra spaces)
+3. Make sure file is saved after editing
+4. Try hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
+5. Test with fallback mode (leave API key empty)
+
+See THAALI_API_SETUP.md for detailed documentation.
+
+══════════════════════════════════════════════════════════════
+
+QUICK START (TL;DR)
+══════════════════════════════════════════════════════════════
+
+1. Go to: https://gold-api.com/
+2. Sign up (free)
+3. Copy API key
+4. Paste in js/thaali.js line 8
+5. Done! Unlimited requests!
+
+OR: Skip steps 1-4 and use the built-in fallback (works without API!)
+
+═══════════════════════════════════════════════════════════════

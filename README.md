@@ -7,6 +7,7 @@ Our private blog, memory timeline and quiz website.
 - **Memory Timeline**: Chronological display of special moments with tags
 - **Interactive Quiz**: Birthday quiz with photos/videos and unlockable content
 - **Password Protection**: Private memories that require a password
+- **Thaali Gold Calculator**: Live gold prices with sovereign/poun calculator (hidden page)
 - **Easy Content Management**: Simple JSON files to add/edit content
 - **Responsive Design**: Works beautifully on mobile and desktop
 - **No Build Required**: Pure HTML/CSS/JS - just edit and deploy!
@@ -159,6 +160,37 @@ To change it, add a `password` field to the memory in `memories.json`:
 
 **Note:** This is client-side protection, suitable for casual privacy but not for highly sensitive information.
 
+## 💍 Thaali Gold Calculator (Hidden Page)
+
+Access the gold calculator at: `/thaali.html`
+
+This page provides:
+- **Live Gold Prices**: Real-time 24k gold prices in USD and GBP
+- **Sovereign Calculator**: Calculate thaali costs based on number of pouns/sovereigns
+- **Currency Conversion**: Automatic USD to GBP conversion
+- **Quick Presets**: Fast calculations for common sovereign counts
+
+**APIs Used:**
+- **Gold-API.com** - Live gold prices (**UNLIMITED FREE REQUESTS!**)
+- **ExchangeRate-API.com** - Currency conversion (free, no key needed)
+- **GoldPrice.org** - Fallback public data (no auth needed)
+
+**Free API Options (Recommended):**
+1. 🏆 **Gold-API.com**: UNLIMITED requests/month (Best!) - https://gold-api.com/
+2. 🥈 **GoldAPI.io**: 1,000 requests/month - https://goldapi.io/
+3. 🥉 **FreeGoldPrice.org**: Generous free tier with hourly updates
+
+**Quick Setup:**
+1. Sign up at https://gold-api.com/ (free, 2 minutes)
+2. Copy your API key
+3. Add it to `js/thaali.js` (line 12)
+4. Done! Unlimited price checks!
+
+**No API Key? No Problem!**
+The calculator works out-of-the-box using fallback prices. Just access `/thaali.html`
+
+See `SETUP_THAALI_API.txt` for detailed setup instructions.
+
 ## 💡 Tips
 
 - **Start Simple**: Edit the example data first to understand the structure
@@ -166,6 +198,7 @@ To change it, add a `password` field to the memory in `memories.json`:
 - **Backup**: Keep a copy of your JSON files before making major changes
 - **Video Hosting**: For large videos, consider hosting on YouTube/Vimeo and embedding
 - **Dates**: Use YYYY-MM-DD format for proper sorting
+- **Gold Prices**: Thaali calculator works without API key, but add one for best results (unlimited free!)
 
 ## 🐛 Troubleshooting
 

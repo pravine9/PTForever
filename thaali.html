@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thaali Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar content loaded by shared.js -->
+    </aside>
+
+    <main class="container">
+        <header class="page-header">
+            <h2>💍 Thaali Gold Calculator</h2>
+            <p class="subtitle">Live gold prices and sovereign calculator</p>
+        </header>
+
+        <div class="thaali-dashboard">
+            <!-- Live Gold Price Section -->
+            <div class="gold-price-card">
+                <div class="card-header">
+                    <h3>📊 Live Gold Price</h3>
+                    <button class="refresh-btn" onclick="refreshGoldPrice()" title="Refresh price">
+                        <span class="refresh-icon">↻</span>
+                    </button>
+                </div>
+                
+                <div class="price-display">
+                    <div class="price-item">
+                        <span class="price-label">Per Troy Ounce (USD)</span>
+                        <span class="price-value" id="priceUSD">Loading...</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-label">Per Gram (USD)</span>
+                        <span class="price-value" id="priceGramUSD">Loading...</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-label">Per Gram (GBP)</span>
+                        <span class="price-value" id="priceGramGBP">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="last-updated">
+                    Last updated: <span id="lastUpdated">-</span>
+                </div>
+
+                <div class="exchange-rate">
+                    Exchange rate: <span id="exchangeRate">-</span>
+                </div>
+            </div>
+
+            <!-- Sovereign Calculator -->
+            <div class="calculator-card">
+                <h3>⚖️ Sovereign (Poun) Calculator</h3>
+                <p class="calculator-info" id="sovereignInfo">
+                    <span>1 Sovereign = 7.98g (22k) = 7.32g pure gold</span>
+                    <button class="info-close-btn" onclick="hideSovereignInfo()" title="Hide">×</button>
+                </p>
+
+                <div class="calculator-controls">
+                    <div class="control-row-horizontal">
+                        <label for="sovereignCount">Sovereigns (Pouns):</label>
+                        <div class="input-group-inline">
+                            <button class="qty-btn-compact" onclick="adjustSovereigns(-1)">-</button>
+                            <input 
+                                type="number" 
+                                id="sovereignCount" 
+                                value="11" 
+                                min="0" 
+                                step="0.5"
+                                oninput="calculateThaali()"
+                            >
+                            <button class="qty-btn-compact" onclick="adjustSovereigns(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="control-row-horizontal">
+                        <label for="makingCharges">Labour Charges (%):</label>
+                        <div class="making-charges-group">
+                            <div class="input-group-inline">
+                                <button class="qty-btn-compact" onclick="adjustMakingCharges(-5)">-</button>
+                                <input 
+                                    type="number" 
+                                    id="makingCharges" 
+                                    value="20" 
+                                    min="0" 
+                                    max="100"
+                                    step="1"
+                                    oninput="calculateThaali()"
+                                >
+                                <button class="qty-btn-compact" onclick="adjustMakingCharges(5)">+</button>
+                            </div>
+                            <div class="preset-chips-below">
+                                <button class="chip-btn-small" onclick="setMakingCharges(20)">20%</button>
+                                <button class="chip-btn-small" onclick="setMakingCharges(25)">25%</button>
+                                <button class="chip-btn-small" onclick="setMakingCharges(33)">33%</button>
+                                <button class="chip-btn-small" onclick="setMakingCharges(35)">35%</button>
+                                <button class="chip-btn-small" onclick="setMakingCharges(40)">40%</button>
+                                <button class="chip-btn-small" onclick="setMakingCharges(45)">45%</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-row-inline">
+                        <label class="checkbox-label">
+                            <input 
+                                type="checkbox" 
+                                id="vatIncluded" 
+                                onchange="calculateThaali()"
+                                class="vat-checkbox"
+                            >
+                            <span>Include UK VAT (20%)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="calculator-results">
+                    <div class="result-row">
+                        <span class="result-label">Total Weight (Pure Gold):</span>
+                        <span class="result-value" id="totalWeight">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Cost per Sovereign:</span>
+                        <span class="result-value" id="costPerSovereign">£ -</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Gold Cost (Base):</span>
+                        <span class="result-value" id="baseCostGBP">£ -</span>
+                    </div>
+                    <div class="result-row" id="vatRow" style="display: none;">
+                        <span class="result-label">VAT (20%):</span>
+                        <span class="result-value" id="vatCostGBP">£ -</span>
+                    </div>
+                    <div class="result-row highlight">
+                        <span class="result-label">Total Cost (GBP):</span>
+                        <span class="result-value total" id="totalCostGBP">£ -</span>
+                    </div>
+                    <div class="result-row-compact">
+                        <span class="result-label-small">Labour Charges:</span>
+                        <span class="result-value-small" id="makingCostGBP">£ -</span>
+                    </div>
+                    <div class="result-row-compact">
+                        <span class="result-label-small">Total Cost (USD):</span>
+                        <span class="result-value-small" id="totalCostUSD">$ -</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="presets-card">
+                <h3>⚡ Quick Calculations</h3>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setSovereigns(9)">9 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(11)">11 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(13)">13 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(15)">15 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(17)">17 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(19)">19 Pouns</button>
+                    <button class="preset-btn" onclick="setSovereigns(21)">21 Pouns</button>
+                </div>
+            </div>
+
+            <!-- Data Source Info -->
+            <div class="info-card">
+                <p class="info-text">
+                    <strong>Data Source:</strong> Gold-API.com + ExchangeRate-API.com<br>
+                    <strong>Update Frequency:</strong> Real-time on page load and manual refresh<br>
+                    <strong>Fallback:</strong> GoldPrice.org public data if API unavailable<br>
+                    <strong>Note:</strong> Prices are indicative for 22k gold. Calculator includes making charges and VAT options. Actual shop prices may vary. Always get quotes from multiple jewelers.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/thaali.js"></script>
+    <script>
+        // Initialize sidebar without active page indicator (hidden page)
+        initializeSidebar('');
+    </script>
+</body>
+</html>
+
