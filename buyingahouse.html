@@ -139,7 +139,7 @@
                                 <span id="hasEverOwnedLabel">Has ever owned property</span>
                                 <span class="tooltip-icon" aria-label="Help">i</span>
                             </label>
-                            <label class="checkbox-option">
+                            <label class="checkbox-option hidden" id="ownsPropertyAtCompletionRow">
                                 <input 
                                     type="checkbox" 
                                     id="ownsPropertyAtCompletion" 
@@ -179,7 +179,7 @@
                                 <span>Either has ever owned property</span>
                                 <span class="tooltip-icon" aria-label="Help">i</span>
                             </label>
-                            <label class="checkbox-option">
+                            <label class="checkbox-option hidden" id="eitherOwnsPropertyAtCompletionRow">
                                 <input 
                                     type="checkbox" 
                                     id="eitherOwnsPropertyAtCompletion" 
@@ -229,28 +229,68 @@
                             <span class="result-value" id="effectiveRate">0.00%</span>
                         </div>
                         
+                        <!-- Save Calculation Button -->
+                        <div class="save-calculation-section">
+                            <button id="saveCalculationBtn" class="btn-save-calculation" disabled>
+                                Save Calculation
+                            </button>
+                        </div>
+                        
                         <!-- Dynamic Explanation Section -->
                         <div id="explanationContainer" class="explanation-section hidden">
-                            <h4 class="explanation-header">Explanation</h4>
-                            <div id="explanationContent" class="explanation-content"></div>
+                            <h4 class="explanation-header collapsible-header-small" id="explanationHeader">
+                                <span>Explanation</span>
+                                <span class="collapse-icon">▶</span>
+                            </h4>
+                            <div id="explanationContent" class="explanation-content hidden"></div>
                         </div>
                     </div>
 
                     <!-- Breakdown Table -->
-                    <div id="breakdownContainer" class="hidden breakdown-section">
-                        <h4 class="breakdown-header">Tax Breakdown</h4>
-                        <table class="comparison-table" id="breakdownTable">
-                            <thead>
-                                <tr>
-                                    <th>Price Band</th>
-                                    <th>Taxable</th>
-                                    <th>Rate</th>
-                                    <th>Tax</th>
-                                </tr>
-                            </thead>
-                            <tbody id="breakdownBody">
-                            </tbody>
-                        </table>
+                    <div id="breakdownContainer" class="breakdown-section">
+                        <h4 class="breakdown-header collapsible-header-small" id="breakdownHeader">
+                            <span>Tax Breakdown</span>
+                            <span class="collapse-icon">▼</span>
+                        </h4>
+                        <div id="breakdownContent" class="breakdown-content">
+                            <table class="comparison-table" id="breakdownTable">
+                                <thead>
+                                    <tr>
+                                        <th>Price Band</th>
+                                        <th>Taxable</th>
+                                        <th>Rate</th>
+                                        <th>Tax</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="breakdownBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Calculations Section -->
+        <div class="saved-calculations-section">
+            <div class="info-card">
+                <h3 class="collapsible-header" id="savedCalculationsHeader">
+                    <span>Saved Calculations</span>
+                    <span class="collapse-icon">▼</span>
+                </h3>
+                <div class="collapsible-content" id="savedCalculationsContent">
+                    <div id="savedCalculationsList" class="saved-calculations-list">
+                        <!-- Saved calculations will be rendered here -->
+                    </div>
+                    <div id="comparisonView" class="comparison-view hidden">
+                        <h4 class="comparison-header">Comparison</h4>
+                        <div class="comparison-controls">
+                            <button id="clearComparisonBtn" class="btn-clear-comparison">Clear Comparison</button>
+                        </div>
+                        <div class="comparison-cards-container">
+                            <div id="comparisonCard1" class="comparison-card"></div>
+                            <div id="comparisonCard2" class="comparison-card"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -296,11 +336,16 @@
             }
         }
         
-        // Setup collapsible info section
+        // Setup collapsible sections
         document.addEventListener('DOMContentLoaded', () => {
             const infoHeader = document.getElementById('infoHeader');
             if (infoHeader) {
                 infoHeader.addEventListener('click', () => toggleSection(infoHeader));
+            }
+            
+            const savedCalculationsHeader = document.getElementById('savedCalculationsHeader');
+            if (savedCalculationsHeader) {
+                savedCalculationsHeader.addEventListener('click', () => toggleSection(savedCalculationsHeader));
             }
         });
     </script>

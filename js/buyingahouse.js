@@ -46,6 +46,13 @@ const MEMORY_KEY_SPOUSE_HAS_EVER_OWNED_PROPERTY = 'buyingahouse_spouse_has_ever_
 const MEMORY_KEY_SPOUSE_OWNS_PROPERTY_AT_COMPLETION = 'buyingahouse_spouse_owns_property_at_completion';
 
 // ============================================================================
+// Saved Calculations Storage Keys
+// ============================================================================
+
+const STORAGE_KEY_SAVED_CALCULATIONS = 'buyingahouse_saved_calculations';
+const MAX_SAVED_CALCULATIONS = 10;
+
+// ============================================================================
 // DOM Element Cache
 // ============================================================================
 
@@ -63,8 +70,10 @@ function cacheDOMElements() {
         buyerTypeMarried: document.getElementById('buyerTypeMarried'),
         hasEverOwnedProperty: document.getElementById('hasEverOwnedProperty'),
         ownsPropertyAtCompletion: document.getElementById('ownsPropertyAtCompletion'),
+        ownsPropertyAtCompletionRow: document.getElementById('ownsPropertyAtCompletionRow'),
         eitherHasEverOwnedProperty: document.getElementById('eitherHasEverOwnedProperty'),
         eitherOwnsPropertyAtCompletion: document.getElementById('eitherOwnsPropertyAtCompletion'),
+        eitherOwnsPropertyAtCompletionRow: document.getElementById('eitherOwnsPropertyAtCompletionRow'),
         residentialOptions: document.getElementById('residentialOptions'),
         replacingResidenceRow: document.getElementById('replacingResidenceRow'),
         replacingResidenceRowMarried: document.getElementById('replacingResidenceRowMarried'),
@@ -79,6 +88,7 @@ function cacheDOMElements() {
         explanationContent: document.getElementById('explanationContent'),
         errorMessage: document.getElementById('errorMessage'),
         ftbIndicator: document.getElementById('ftbIndicator'),
+        saveCalculationBtn: document.getElementById('saveCalculationBtn'),
     };
 }
 
@@ -356,8 +366,14 @@ function loadBuyingHouseInputs() {
         if (savedWillBeMainResidence !== null && domCache.willBeMainResidence) {
             domCache.willBeMainResidence.checked = savedWillBeMainResidence === 'true';
         }
-        if (savedIsReplacingMainResidence !== null && domCache.isReplacingMainResidence) {
-            domCache.isReplacingMainResidence.checked = savedIsReplacingMainResidence === 'true';
+        if (savedIsReplacingMainResidence !== null) {
+            const isChecked = savedIsReplacingMainResidence === 'true';
+            if (domCache.isReplacingMainResidence) {
+                domCache.isReplacingMainResidence.checked = isChecked;
+            }
+            if (domCache.isReplacingMainResidenceMarried) {
+                domCache.isReplacingMainResidenceMarried.checked = isChecked;
+            }
         }
         if (savedBuyerType !== null) {
             if (savedBuyerType === 'individual' && domCache.buyerTypeIndividual) {
@@ -387,6 +403,120 @@ function loadBuyingHouseInputs() {
     } catch (e) {
         console.error('Failed to load buying house inputs:', e);
     }
+}
+
+// ============================================================================
+// Saved Calculations Storage Functions
+// ============================================================================
+
+// Store current calculation result for saving
+let currentCalculationResult = null;
+
+function saveCalculation() {
+    if (!currentCalculationResult) {
+        showError('No calculation to save');
+        return false;
+    }
+
+    try {
+        const savedCalculations = loadSavedCalculations();
+        
+        // Create calculation object with all necessary data
+        const calculation = {
+            id: Date.now().toString(),
+            timestamp: Date.now(),
+            inputs: {
+                price: currentCalculationResult.inputContext.price,
+                propertyType: currentCalculationResult.inputContext.isResidential ? 'residential' : 'non-residential',
+                willBeMainResidence: currentCalculationResult.inputContext.willBeMainResidence,
+                isReplacingMainResidence: currentCalculationResult.inputContext.isReplacingMainResidence,
+                buyerType: currentCalculationResult.inputContext.isMarried ? 'married' : 'individual',
+                hasEverOwnedProperty: currentCalculationResult.inputContext.hasEverOwnedProperty,
+                ownsPropertyAtCompletion: currentCalculationResult.inputContext.ownsPropertyAtCompletion,
+                spouseHasEverOwnedProperty: currentCalculationResult.inputContext.spouseHasEverOwnedProperty,
+                spouseOwnsPropertyAtCompletion: currentCalculationResult.inputContext.spouseOwnsPropertyAtCompletion,
+            },
+            results: {
+                tax: currentCalculationResult.tax,
+                regime: currentCalculationResult.regime,
+                effectiveRate: currentCalculationResult.effectiveRate,
+                breakdown: currentCalculationResult.breakdown,
+            },
+            inputContext: currentCalculationResult.inputContext,
+        };
+
+        // Add to beginning of array (newest first)
+        savedCalculations.unshift(calculation);
+
+        // Limit to MAX_SAVED_CALCULATIONS (remove oldest if exceeded)
+        if (savedCalculations.length > MAX_SAVED_CALCULATIONS) {
+            savedCalculations.splice(MAX_SAVED_CALCULATIONS);
+        }
+
+        // Save to localStorage
+        localStorage.setItem(STORAGE_KEY_SAVED_CALCULATIONS, JSON.stringify(savedCalculations));
+        
+        // Refresh the saved calculations display
+        renderSavedCalculations();
+        
+        return true;
+    } catch (e) {
+        console.error('Failed to save calculation:', e);
+        showError('Failed to save calculation. Please try again.');
+        return false;
+    }
+}
+
+function loadSavedCalculations() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY_SAVED_CALCULATIONS);
+        if (saved) {
+            return JSON.parse(saved);
+        }
+    } catch (e) {
+        console.error('Failed to load saved calculations:', e);
+    }
+    return [];
+}
+
+function deleteSavedCalculation(id) {
+    try {
+        const savedCalculations = loadSavedCalculations();
+        const filtered = savedCalculations.filter(calc => calc.id !== id);
+        localStorage.setItem(STORAGE_KEY_SAVED_CALCULATIONS, JSON.stringify(filtered));
+        renderSavedCalculations();
+        return true;
+    } catch (e) {
+        console.error('Failed to delete calculation:', e);
+        return false;
+    }
+}
+
+function getCalculationSummary(calculation) {
+    const price = calculation.inputs.price;
+    const sdlt = calculation.results.tax;
+    const regime = calculation.results.regime;
+    const date = new Date(calculation.timestamp);
+    const buyerType = calculation.inputs.buyerType === 'married' ? 'Married' : 'Individual';
+    const propertyType = calculation.inputs.propertyType === 'residential' ? 'Residential' : 'Non-residential';
+    
+    const regimeNames = {
+        'STANDARD': 'Standard',
+        'FTB': 'First-Time Buyer',
+        'HIGHER_RATES': 'Higher Rates',
+        'NON_RESIDENTIAL': 'Non-Residential'
+    };
+    
+    return {
+        price: `£${price.toLocaleString('en-GB')}`,
+        sdlt: `£${sdlt.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        regime: regimeNames[regime] || regime,
+        date: date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+        time: date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+        dateTime: date.toLocaleString('en-GB'),
+        buyerType: buyerType,
+        propertyType: propertyType,
+    };
 }
 
 // ============================================================================
@@ -433,6 +563,7 @@ function toggleMarriedOptions() {
         if (domCache.eitherHasEverOwnedProperty) domCache.eitherHasEverOwnedProperty.checked = false;
         if (domCache.eitherOwnsPropertyAtCompletion) domCache.eitherOwnsPropertyAtCompletion.checked = false;
     }
+    toggleOwnsPropertyAtCompletionVisibility();
     validateResidenceOptions();
     saveBuyingHouseInputs();
     debouncedCalculate();
@@ -442,6 +573,37 @@ function toggleReplacingResidence() {
     validateResidenceOptions();
     saveBuyingHouseInputs();
     debouncedCalculate();
+}
+
+// Toggle visibility of "Owns property at completion" based on "Has ever owned property"
+function toggleOwnsPropertyAtCompletionVisibility() {
+    const hasEverOwned = domCache.hasEverOwnedProperty?.checked || false;
+    const eitherHasEverOwned = domCache.eitherHasEverOwnedProperty?.checked || false;
+    
+    // For individual buyers
+    if (hasEverOwned) {
+        domCache.ownsPropertyAtCompletionRow?.classList.remove('hidden');
+    } else {
+        domCache.ownsPropertyAtCompletionRow?.classList.add('hidden');
+        // Uncheck if hidden
+        if (domCache.ownsPropertyAtCompletion) {
+            domCache.ownsPropertyAtCompletion.checked = false;
+        }
+    }
+    
+    // For married couples
+    if (eitherHasEverOwned) {
+        domCache.eitherOwnsPropertyAtCompletionRow?.classList.remove('hidden');
+    } else {
+        domCache.eitherOwnsPropertyAtCompletionRow?.classList.add('hidden');
+        // Uncheck if hidden
+        if (domCache.eitherOwnsPropertyAtCompletion) {
+            domCache.eitherOwnsPropertyAtCompletion.checked = false;
+        }
+    }
+    
+    // Re-validate residence options since this affects replacing residence visibility
+    validateResidenceOptions();
 }
 
 // Validate residence options to prevent contradictory states
@@ -524,15 +686,15 @@ function calculateStampDuty() {
         const propertyType = (domCache.propertyTypeResidential?.checked) ? 'residential' : 'non-residential';
         const isResidential = propertyType === 'residential';
         const willBeMainResidence = domCache.willBeMainResidence?.checked || false;
-        // Check the visible checkbox (individual or married)
-        const isMarried = domCache.buyerTypeMarried?.checked || false;
-        const isReplacingMainResidence = isMarried 
-            ? (domCache.isReplacingMainResidenceMarried?.checked || false)
-            : (domCache.isReplacingMainResidence?.checked || false);
 
         // Get buyer information
         const buyerType = (domCache.buyerTypeMarried?.checked) ? 'married' : 'individual';
         const isMarried = buyerType === 'married';
+        
+        // Check the visible checkbox (individual or married) for replacing main residence
+        const isReplacingMainResidence = isMarried 
+            ? (domCache.isReplacingMainResidenceMarried?.checked || false)
+            : (domCache.isReplacingMainResidence?.checked || false);
         
         // For married couples, use "either" options; for individuals, use individual options
         let hasEverOwnedProperty, ownsPropertyAtCompletion, spouseHasEverOwnedProperty, spouseOwnsPropertyAtCompletion;
@@ -588,8 +750,16 @@ function calculateStampDuty() {
             spouseOwnsPropertyAtCompletion,
         };
 
+        // Store result for saving
+        currentCalculationResult = result;
+
         // Update UI
         updateResults(result);
+        
+        // Enable save button
+        if (domCache.saveCalculationBtn) {
+            domCache.saveCalculationBtn.disabled = false;
+        }
         
         // Save inputs after successful calculation
         saveBuyingHouseInputs();
@@ -649,6 +819,12 @@ function updateResultsError() {
     domCache.effectiveRate.textContent = '0.00%';
     domCache.breakdownContainer.classList.add('hidden');
     domCache.explanationContainer.classList.add('hidden');
+    
+    // Clear current calculation result and disable save button
+    currentCalculationResult = null;
+    if (domCache.saveCalculationBtn) {
+        domCache.saveCalculationBtn.disabled = true;
+    }
 }
 
 // Update FTB indicator from current inputs (without calculation)
@@ -846,6 +1022,14 @@ function updateExplanation(result) {
     if (explanations.length > 0) {
         domCache.explanationContent.innerHTML = '<p>' + explanations.join('</p><p>') + '</p>';
         domCache.explanationContainer.classList.remove('hidden');
+        // Keep explanation content hidden by default (collapsed)
+        domCache.explanationContent.classList.add('hidden');
+        // Update collapse icon
+        const explanationHeader = document.getElementById('explanationHeader');
+        if (explanationHeader) {
+            const icon = explanationHeader.querySelector('.collapse-icon');
+            if (icon) icon.textContent = '▶';
+        }
     } else {
         domCache.explanationContainer.classList.add('hidden');
     }
@@ -870,7 +1054,25 @@ function setupEventListeners() {
         debouncedCalculate();
         updateFTBIndicatorFromInputs();
     });
-    domCache.isReplacingMainResidence?.addEventListener('change', debouncedCalculate);
+    
+    // Sync the two "Replacing main residence" checkboxes
+    function syncReplacingResidenceCheckboxes(source) {
+        const isChecked = source?.checked || false;
+        if (source === domCache.isReplacingMainResidence && domCache.isReplacingMainResidenceMarried) {
+            domCache.isReplacingMainResidenceMarried.checked = isChecked;
+        } else if (source === domCache.isReplacingMainResidenceMarried && domCache.isReplacingMainResidence) {
+            domCache.isReplacingMainResidence.checked = isChecked;
+        }
+    }
+    
+    domCache.isReplacingMainResidence?.addEventListener('change', (e) => {
+        syncReplacingResidenceCheckboxes(e.target);
+        debouncedCalculate();
+    });
+    domCache.isReplacingMainResidenceMarried?.addEventListener('change', (e) => {
+        syncReplacingResidenceCheckboxes(e.target);
+        debouncedCalculate();
+    });
     
     // Buyer type radio buttons
     domCache.buyerTypeIndividual?.addEventListener('change', toggleMarriedOptions);
@@ -878,17 +1080,25 @@ function setupEventListeners() {
     
     // Buyer options (individual)
     domCache.hasEverOwnedProperty?.addEventListener('change', () => {
+        toggleOwnsPropertyAtCompletionVisibility();
         debouncedCalculate();
         updateFTBIndicatorFromInputs();
     });
-    domCache.ownsPropertyAtCompletion?.addEventListener('change', toggleReplacingResidence);
+    domCache.ownsPropertyAtCompletion?.addEventListener('change', () => {
+        validateResidenceOptions();
+        toggleReplacingResidence();
+    });
     
     // Married couple options
     domCache.eitherHasEverOwnedProperty?.addEventListener('change', () => {
+        toggleOwnsPropertyAtCompletionVisibility();
         debouncedCalculate();
         updateFTBIndicatorFromInputs();
     });
-    domCache.eitherOwnsPropertyAtCompletion?.addEventListener('change', toggleReplacingResidence);
+    domCache.eitherOwnsPropertyAtCompletion?.addEventListener('change', () => {
+        validateResidenceOptions();
+        toggleReplacingResidence();
+    });
     
     // Price input - update FTB indicator
     domCache.propertyPrice?.addEventListener('input', () => {
@@ -913,6 +1123,25 @@ function setupEventListeners() {
     
     // Setup tooltips
     setupTooltips();
+    
+    // Save calculation button
+    if (domCache.saveCalculationBtn) {
+        domCache.saveCalculationBtn.addEventListener('click', () => {
+            if (saveCalculation()) {
+                // Show brief success feedback
+                const btn = domCache.saveCalculationBtn;
+                const originalText = btn.textContent;
+                btn.textContent = 'Saved!';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    if (currentCalculationResult) {
+                        btn.disabled = false;
+                    }
+                }, 2000);
+            }
+        });
+    }
 }
 
 // Setup tooltips for form elements
@@ -1066,6 +1295,398 @@ function setupTooltips() {
     });
 }
 
+// ============================================================================
+// Saved Calculations UI Functions
+// ============================================================================
+
+// Track selected calculations for comparison
+let selectedCalculationsForComparison = [];
+
+function renderSavedCalculations() {
+    const container = document.getElementById('savedCalculationsList');
+    if (!container) return;
+
+    const savedCalculations = loadSavedCalculations();
+    
+    if (savedCalculations.length === 0) {
+        container.innerHTML = '<p class="no-saved-calculations">No saved calculations yet. Save a calculation to see it here.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    
+    savedCalculations.forEach(calculation => {
+        const summary = getCalculationSummary(calculation);
+        const card = document.createElement('div');
+        card.className = 'saved-calculation-card';
+        card.dataset.calculationId = calculation.id;
+        
+        if (selectedCalculationsForComparison.includes(calculation.id)) {
+            card.classList.add('selected-for-comparison');
+        }
+        
+        card.innerHTML = `
+            <div class="calculation-summary">
+                <div class="summary-row">
+                    <span class="summary-label">Price:</span>
+                    <span class="summary-value">${summary.price}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">SDLT:</span>
+                    <span class="summary-value highlight">${summary.sdlt}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Date:</span>
+                    <span class="summary-value">${summary.date}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Buyer Type:</span>
+                    <span class="summary-value">${summary.buyerType}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Property Type:</span>
+                    <span class="summary-value">${summary.propertyType}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Regime:</span>
+                    <span class="summary-value">${summary.regime}</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-load" data-action="load" data-id="${calculation.id}">Load</button>
+                <button class="btn-compare ${selectedCalculationsForComparison.includes(calculation.id) ? 'selected' : ''}" data-action="compare" data-id="${calculation.id}">
+                    ${selectedCalculationsForComparison.includes(calculation.id) ? '<span class="checkmark">✓</span> Selected' : 'Compare'}
+                </button>
+                <button class="btn-delete" data-action="delete" data-id="${calculation.id}">Delete</button>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+    
+    // Attach event listeners
+    attachCalculationCardListeners();
+}
+
+function attachCalculationCardListeners() {
+    const cards = document.querySelectorAll('.saved-calculation-card');
+    cards.forEach(card => {
+        const buttons = card.querySelectorAll('[data-action]');
+        buttons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const action = button.dataset.action;
+                const id = button.dataset.id;
+                
+                if (action === 'load') {
+                    loadCalculationToForm(id);
+                } else if (action === 'compare') {
+                    selectCalculationForComparison(id);
+                } else if (action === 'delete') {
+                    deleteCalculationWithConfirmation(id);
+                }
+            });
+        });
+    });
+    
+    // Clear comparison button
+    const clearComparisonBtn = document.getElementById('clearComparisonBtn');
+    if (clearComparisonBtn) {
+        clearComparisonBtn.addEventListener('click', clearComparison);
+    }
+}
+
+function loadCalculationToForm(id) {
+    const savedCalculations = loadSavedCalculations();
+    const calculation = savedCalculations.find(calc => calc.id === id);
+    
+    if (!calculation) {
+        showError('Calculation not found');
+        return;
+    }
+    
+    const inputs = calculation.inputs;
+    
+    // Load price
+    if (domCache.propertyPrice) {
+        domCache.propertyPrice.value = inputs.price;
+    }
+    
+    // Load property type
+    if (inputs.propertyType === 'residential' && domCache.propertyTypeResidential) {
+        domCache.propertyTypeResidential.checked = true;
+    } else if (inputs.propertyType === 'non-residential' && domCache.propertyTypeNonResidential) {
+        domCache.propertyTypeNonResidential.checked = true;
+    }
+    togglePropertyType();
+    
+    // Load will be main residence
+    if (domCache.willBeMainResidence) {
+        domCache.willBeMainResidence.checked = inputs.willBeMainResidence || false;
+    }
+    
+    // Load buyer type
+    if (inputs.buyerType === 'married' && domCache.buyerTypeMarried) {
+        domCache.buyerTypeMarried.checked = true;
+    } else if (inputs.buyerType === 'individual' && domCache.buyerTypeIndividual) {
+        domCache.buyerTypeIndividual.checked = true;
+    }
+    toggleMarriedOptions();
+    
+    // Load property ownership options
+    if (inputs.buyerType === 'married') {
+        if (domCache.eitherHasEverOwnedProperty) {
+            domCache.eitherHasEverOwnedProperty.checked = inputs.hasEverOwnedProperty || false;
+        }
+        if (domCache.eitherOwnsPropertyAtCompletion) {
+            domCache.eitherOwnsPropertyAtCompletion.checked = inputs.ownsPropertyAtCompletion || false;
+        }
+    } else {
+        if (domCache.hasEverOwnedProperty) {
+            domCache.hasEverOwnedProperty.checked = inputs.hasEverOwnedProperty || false;
+        }
+        if (domCache.ownsPropertyAtCompletion) {
+            domCache.ownsPropertyAtCompletion.checked = inputs.ownsPropertyAtCompletion || false;
+        }
+    }
+    
+    // Load replacing main residence
+    if (inputs.isReplacingMainResidence) {
+        if (inputs.buyerType === 'married' && domCache.isReplacingMainResidenceMarried) {
+            domCache.isReplacingMainResidenceMarried.checked = true;
+        } else if (domCache.isReplacingMainResidence) {
+            domCache.isReplacingMainResidence.checked = true;
+        }
+    }
+    
+    validateResidenceOptions();
+    
+    // Trigger calculation
+    calculateStampDuty();
+    
+    // Scroll to top of calculator
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectCalculationForComparison(id) {
+    if (selectedCalculationsForComparison.includes(id)) {
+        // Deselect if already selected
+        selectedCalculationsForComparison = selectedCalculationsForComparison.filter(calcId => calcId !== id);
+    } else {
+        // Add to selection (max 2)
+        if (selectedCalculationsForComparison.length < 2) {
+            selectedCalculationsForComparison.push(id);
+        } else {
+            // Replace the first one if already have 2
+            selectedCalculationsForComparison[0] = selectedCalculationsForComparison[1];
+            selectedCalculationsForComparison[1] = id;
+        }
+    }
+    
+    // Update UI
+    renderSavedCalculations();
+    
+    // Show comparison if 2 selected
+    if (selectedCalculationsForComparison.length === 2) {
+        showComparisonView(selectedCalculationsForComparison[0], selectedCalculationsForComparison[1]);
+    } else {
+        hideComparisonView();
+    }
+}
+
+function showComparisonView(id1, id2) {
+    const comparisonView = document.getElementById('comparisonView');
+    const card1 = document.getElementById('comparisonCard1');
+    const card2 = document.getElementById('comparisonCard2');
+    
+    if (!comparisonView || !card1 || !card2) return;
+    
+    const savedCalculations = loadSavedCalculations();
+    const calc1 = savedCalculations.find(calc => calc.id === id1);
+    const calc2 = savedCalculations.find(calc => calc.id === id2);
+    
+    if (!calc1 || !calc2) return;
+    
+    // Render comparison cards
+    card1.innerHTML = renderComparisonCard(calc1, 'Calculation 1');
+    card2.innerHTML = renderComparisonCard(calc2, 'Calculation 2');
+    
+    // Remove existing difference section if present
+    const existingDifference = comparisonView.querySelector('.comparison-difference');
+    if (existingDifference) {
+        existingDifference.remove();
+    }
+    
+    // Add difference section
+    const differenceSection = document.createElement('div');
+    differenceSection.className = 'comparison-difference';
+    differenceSection.innerHTML = renderComparisonDifference(calc1, calc2);
+    
+    // Insert difference section before the cards container
+    const cardsContainer = comparisonView.querySelector('.comparison-cards-container');
+    if (cardsContainer) {
+        comparisonView.insertBefore(differenceSection, cardsContainer);
+    } else {
+        comparisonView.appendChild(differenceSection);
+    }
+    
+    comparisonView.classList.remove('hidden');
+    
+    // Scroll to comparison view
+    comparisonView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideComparisonView() {
+    const comparisonView = document.getElementById('comparisonView');
+    if (comparisonView) {
+        // Remove difference section if it exists
+        const differenceSection = comparisonView.querySelector('.comparison-difference');
+        if (differenceSection) {
+            differenceSection.remove();
+        }
+        comparisonView.classList.add('hidden');
+    }
+}
+
+function renderComparisonCard(calculation, label) {
+    const summary = getCalculationSummary(calculation);
+    const inputs = calculation.inputs;
+    const results = calculation.results;
+    
+    return `
+        <div class="comparison-card-header">
+            <h5>${label}</h5>
+        </div>
+        <div class="comparison-card-content">
+            <div class="comparison-section">
+                <h6>Inputs</h6>
+                <div class="comparison-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Property Price:</span>
+                        <span class="detail-value">${summary.price}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Property Type:</span>
+                        <span class="detail-value">${summary.propertyType}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Buyer Type:</span>
+                        <span class="detail-value">${summary.buyerType}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Main Residence:</span>
+                        <span class="detail-value">${inputs.willBeMainResidence ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Replacing Main Residence:</span>
+                        <span class="detail-value">${inputs.isReplacingMainResidence ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Has Ever Owned Property:</span>
+                        <span class="detail-value">${inputs.hasEverOwnedProperty ? 'Yes' : 'No'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Owns Property at Completion:</span>
+                        <span class="detail-value">${inputs.ownsPropertyAtCompletion ? 'Yes' : 'No'}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="comparison-section">
+                <h6>Results</h6>
+                <div class="comparison-details">
+                    <div class="detail-row highlight">
+                        <span class="detail-label">Total SDLT:</span>
+                        <span class="detail-value">${summary.sdlt}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tax Regime:</span>
+                        <span class="detail-value">${summary.regime}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Effective Rate:</span>
+                        <span class="detail-value">${(results.effectiveRate * 100).toFixed(2)}%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Saved:</span>
+                        <span class="detail-value">${summary.date} ${summary.time}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderComparisonDifference(calc1, calc2) {
+    const sdlt1 = calc1.results.tax;
+    const sdlt2 = calc2.results.tax;
+    const difference = sdlt2 - sdlt1;
+    const differencePercent = calc1.results.tax > 0 ? ((difference / calc1.results.tax) * 100) : 0;
+    const isHigher = difference > 0;
+    const isLower = difference < 0;
+    const isSame = difference === 0;
+    
+    const price1 = calc1.inputs.price;
+    const price2 = calc2.inputs.price;
+    const priceDifference = price2 - price1;
+    
+    let differenceClass = 'neutral';
+    let differenceText = '';
+    let differenceIcon = '';
+    
+    if (isSame) {
+        differenceClass = 'same';
+        differenceText = 'Same SDLT amount';
+        differenceIcon = '=';
+    } else if (isHigher) {
+        differenceClass = 'higher';
+        differenceText = `Calculation 2 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} more`;
+        differenceIcon = '↑';
+    } else {
+        differenceClass = 'lower';
+        differenceText = `Calculation 2 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} less`;
+        differenceIcon = '↓';
+    }
+    
+    return `
+        <div class="comparison-difference-card ${differenceClass}">
+            <div class="difference-compact">
+                <div class="difference-compact-main">
+                    <span class="difference-icon-compact">${differenceIcon}</span>
+                    <div class="difference-compact-info">
+                        <span class="difference-label-compact">Difference:</span>
+                        <span class="difference-value-compact">£${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        ${!isSame ? `<span class="difference-percent-compact">(${Math.abs(differencePercent).toFixed(1)}% ${isHigher ? 'higher' : 'lower'})</span>` : ''}
+                    </div>
+                </div>
+                <div class="difference-compact-details">
+                    <span>Calc 1: £${sdlt1.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span>•</span>
+                    <span>Calc 2: £${sdlt2.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function clearComparison() {
+    selectedCalculationsForComparison = [];
+    renderSavedCalculations();
+    hideComparisonView();
+}
+
+function deleteCalculationWithConfirmation(id) {
+    if (confirm('Are you sure you want to delete this calculation?')) {
+        // Remove from comparison selection if selected
+        selectedCalculationsForComparison = selectedCalculationsForComparison.filter(calcId => calcId !== id);
+        
+        if (selectedCalculationsForComparison.length < 2) {
+            hideComparisonView();
+        }
+        
+        deleteSavedCalculation(id);
+    }
+}
+
 // Initialize UI state on page load
 document.addEventListener('DOMContentLoaded', () => {
     cacheDOMElements();
@@ -1073,7 +1694,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     togglePropertyType();
     toggleMarriedOptions();
+    toggleOwnsPropertyAtCompletionVisibility();
     validateResidenceOptions();
     updateFTBIndicatorFromInputs();
     calculateStampDuty();
+    renderSavedCalculations();
 });
