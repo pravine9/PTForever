@@ -2072,7 +2072,24 @@ html {
 }
 
 .breakdown-section {
-    margin-top: 16px;
+    margin-top: 1rem;
+}
+
+.breakdown-content {
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
+    overflow: hidden;
+    max-height: 2000px; /* Large enough for breakdown table */
+    display: block; /* Override .hidden display: none for smooth animations */
+}
+
+.breakdown-content.hidden {
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
+    display: block !important; /* Keep block for animation, but height is 0 */
 }
 
 /* Tooltips */
@@ -2171,9 +2188,9 @@ html {
 
 /* Explanation Section */
 .explanation-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 2px solid #e5e8f5;
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: none;
 }
 
 .explanation-header {
@@ -2187,6 +2204,20 @@ html {
     font-size: 0.9rem;
     line-height: 1.6;
     color: #4a5568;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
+    overflow: hidden;
+    max-height: 2000px; /* Large enough for explanation content */
+    display: block; /* Override .hidden display: none for smooth animations */
+}
+
+.explanation-content.hidden {
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
+    display: block !important; /* Keep block for animation, but height is 0 */
 }
 
 .explanation-content p {
@@ -2537,6 +2568,12 @@ html {
     transition: all 0.3s ease;
 }
 
+/* Add spacing between Saved Calculations and Information sections */
+.saved-calculations-section + .info-card,
+.saved-calculations-section ~ .info-card {
+    margin-top: 2.5rem;
+}
+
 .gold-price-card:hover,
 .calculator-card:hover,
 .presets-card:hover {
@@ -2672,16 +2709,55 @@ html {
     flex: 1;
 }
 
+.collapsible-header-small {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e8f5;
+}
+
+.collapsible-header-small:hover {
+    color: var(--secondary);
+    border-bottom-color: var(--accent);
+}
+
+.collapsible-header-small span:first-child {
+    flex: 1;
+}
+
 .collapse-icon {
     font-size: 0.9rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--primary);
     margin-left: 10px;
+    flex-shrink: 0;
+    display: inline-block;
 }
 
 .collapsible-content {
-    transition: all 0.3s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.4s ease, margin 0.4s ease;
     overflow: hidden;
+    max-height: 5000px; /* Large enough for most content */
+    display: block; /* Override .hidden display: none for smooth animations */
+    opacity: 1;
+}
+
+.collapsible-content.hidden {
+    max-height: 0 !important;
+    opacity: 0;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease 0.1s, padding 0.4s ease, margin 0.4s ease;
+    display: block !important; /* Keep block for animation, but height is 0 */
 }
 
 .calculator-info {
@@ -3197,9 +3273,8 @@ html {
 
 /* Save Calculation Button */
 .save-calculation-section {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(59, 130, 246, 0.2);
+    margin-top: 1rem;
+    padding-top: 0.5rem;
     text-align: center;
 }
 
@@ -3218,7 +3293,6 @@ html {
 
 .btn-save-calculation:hover:not(:disabled) {
     background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
@@ -3230,7 +3304,7 @@ html {
 
 /* Saved Calculations Section */
 .saved-calculations-section {
-    margin-top: 2rem;
+    margin-top: 3rem;
 }
 
 .saved-calculations-list {
@@ -3260,7 +3334,6 @@ html {
 .saved-calculation-card:hover {
     border-color: #3b82f6;
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
-    transform: translateY(-2px);
 }
 
 .saved-calculation-card.selected-for-comparison {
@@ -3337,6 +3410,7 @@ html {
     color: #10b981;
     border-color: #10b981;
     position: relative;
+    white-space: nowrap;
 }
 
 .btn-compare:hover {
@@ -3352,9 +3426,13 @@ html {
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
 }
 
+.btn-compare.selected .checkmark {
+    display: inline;
+    margin-right: 0.25rem;
+}
+
 .btn-compare.selected:hover {
     background: #059669;
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
 }
 
@@ -3377,145 +3455,114 @@ html {
 
 /* Comparison Difference Section */
 .comparison-difference {
-    margin-bottom: 2rem;
-}
-
-.comparison-difference-card {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-}
-
-.comparison-difference-card.higher {
-    border-color: #ef4444;
-    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-}
-
-.comparison-difference-card.lower {
-    border-color: #10b981;
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-}
-
-.comparison-difference-card.same {
-    border-color: #64748b;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
-.difference-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.difference-header h4 {
-    font-size: 1.5rem;
-    color: var(--dark);
-    margin: 0;
-    font-weight: 600;
+.comparison-difference-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.difference-icon {
-    font-size: 2rem;
+.comparison-difference-card.higher {
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
+.comparison-difference-card.lower {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.comparison-difference-card.same {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+/* Compact difference display */
+.difference-compact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.difference-compact-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    flex: 1;
+    min-width: 200px;
+}
+
+.difference-icon-compact {
+    font-size: 1.25rem;
     font-weight: bold;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.comparison-difference-card.higher .difference-icon-compact {
+    color: #ef4444;
+}
+
+.comparison-difference-card.lower .difference-icon-compact {
+    color: #10b981;
+}
+
+.comparison-difference-card.same .difference-icon-compact {
+    color: #64748b;
+}
+
+.difference-compact-info {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.difference-label-compact {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.difference-value-compact {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--dark);
     line-height: 1;
 }
 
-.comparison-difference-card.higher .difference-icon {
+.comparison-difference-card.higher .difference-value-compact {
     color: #ef4444;
 }
 
-.comparison-difference-card.lower .difference-icon {
+.comparison-difference-card.lower .difference-value-compact {
     color: #10b981;
 }
 
-.comparison-difference-card.same .difference-icon {
+.difference-percent-compact {
+    font-size: 0.75rem;
     color: #64748b;
+    font-weight: 500;
 }
 
-.difference-content {
+.difference-compact-details {
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.difference-main {
-    padding: 1rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.difference-amount {
-    display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-}
-
-.difference-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #64748b;
-    font-weight: 500;
-}
-
-.difference-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--dark);
-}
-
-.comparison-difference-card.higher .difference-value {
-    color: #ef4444;
-}
-
-.comparison-difference-card.lower .difference-value {
-    color: #10b981;
-}
-
-.difference-percent {
-    font-size: 1rem;
-    color: #64748b;
-    font-weight: 500;
-    margin-top: 0.5rem;
-}
-
-.difference-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.difference-detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 0.875rem;
-}
-
-.difference-detail-row:last-child {
-    border-bottom: none;
-}
-
-.difference-detail-row.price-diff {
-    margin-top: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 2px solid #e2e8f0;
-    font-weight: 500;
-}
-
-.difference-detail-row .detail-value {
-    font-weight: 600;
-    color: var(--dark);
+    flex-wrap: wrap;
 }
 
 .comparison-header {
@@ -3544,13 +3591,12 @@ html {
 
 .btn-clear-comparison:hover {
     background: #dc2626;
-    transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .comparison-cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin-top: 1.5rem;
 }
@@ -3634,6 +3680,12 @@ html {
     text-align: right;
 }
 
+.detail-value .time-display {
+    color: #64748b;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
 .detail-row.highlight .detail-value {
     color: #3b82f6;
     font-size: 1rem;
@@ -3647,6 +3699,7 @@ html {
     
     .comparison-cards-container {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
     .action-buttons {

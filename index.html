@@ -72,7 +72,12 @@
         
         // Birthday card functionality
         function checkBirthday() {
-            const isBirthday = true; // Set to true to always show
+            const today = new Date();
+            const month = today.getMonth(); // 0-11, October is 9
+            const day = today.getDate(); // 1-31
+            
+            // Only show on October 26th (month 9, day 26)
+            const isBirthday = month === 9 && day === 26;
             
             if (isBirthday) {
                 setTimeout(() => {

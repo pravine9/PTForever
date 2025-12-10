@@ -456,8 +456,9 @@ function saveCalculation() {
         // Save to localStorage
         localStorage.setItem(STORAGE_KEY_SAVED_CALCULATIONS, JSON.stringify(savedCalculations));
         
-        // Refresh the saved calculations display
+        // Refresh the saved calculations display and update counter
         renderSavedCalculations();
+        updateSavedCalculationsCounter(savedCalculations.length);
         
         return true;
     } catch (e) {
@@ -485,6 +486,7 @@ function deleteSavedCalculation(id) {
         const filtered = savedCalculations.filter(calc => calc.id !== id);
         localStorage.setItem(STORAGE_KEY_SAVED_CALCULATIONS, JSON.stringify(filtered));
         renderSavedCalculations();
+        updateSavedCalculationsCounter(filtered.length);
         return true;
     } catch (e) {
         console.error('Failed to delete calculation:', e);
@@ -658,8 +660,43 @@ function debouncedCalculate() {
     calculationTimeout = setTimeout(calculateStampDuty, 300);
 }
 
+// Helper function to update collapsible icon
+function updateCollapsibleIcon(headerId, isOpen) {
+    const header = document.getElementById(headerId);
+    if (header) {
+        const icon = header.querySelector('.collapse-icon');
+        if (icon) {
+            icon.textContent = isOpen ? '▼' : '▶';
+        }
+    }
+}
+
+// Helper function to set collapsible state
+function setCollapsibleState(contentId, headerId, isOpen) {
+    const content = document.getElementById(contentId);
+    if (content) {
+        if (isOpen) {
+            content.classList.remove('hidden');
+        } else {
+            content.classList.add('hidden');
+        }
+    }
+    updateCollapsibleIcon(headerId, isOpen);
+}
+
+function resetCollapsibleStates() {
+    // Reset explanation to closed (default)
+    setCollapsibleState('explanationContent', 'explanationHeader', false);
+    
+    // Reset breakdown to open (default)
+    setCollapsibleState('breakdownContent', 'breakdownHeader', true);
+}
+
 function calculateStampDuty() {
     hideError();
+    
+    // Reset collapsible states when calculation changes
+    resetCollapsibleStates();
     
     try {
         // Get and validate price
@@ -789,6 +826,7 @@ function updateResults(result) {
     domCache.effectiveRate.textContent = `${effectiveRatePercent}%`;
 
     // Update breakdown table
+    const breakdownContent = document.getElementById('breakdownContent');
     if (result.breakdown && result.breakdown.length > 0) {
         domCache.breakdownBody.innerHTML = '';
         result.breakdown.forEach(item => {
@@ -802,6 +840,12 @@ function updateResults(result) {
             domCache.breakdownBody.appendChild(row);
         });
         domCache.breakdownContainer.classList.remove('hidden');
+        // Show breakdown content by default (open)
+        if (breakdownContent) {
+            breakdownContent.classList.remove('hidden');
+        }
+        // Update collapse icon to show open state
+        updateCollapsibleIcon('breakdownHeader', true);
     } else {
         domCache.breakdownContainer.classList.add('hidden');
     }
@@ -824,6 +868,12 @@ function updateResultsError() {
     currentCalculationResult = null;
     if (domCache.saveCalculationBtn) {
         domCache.saveCalculationBtn.disabled = true;
+    }
+    
+    // Hide breakdown content
+    const breakdownContent = document.getElementById('breakdownContent');
+    if (breakdownContent) {
+        breakdownContent.classList.add('hidden');
     }
 }
 
@@ -1024,12 +1074,8 @@ function updateExplanation(result) {
         domCache.explanationContainer.classList.remove('hidden');
         // Keep explanation content hidden by default (collapsed)
         domCache.explanationContent.classList.add('hidden');
-        // Update collapse icon
-        const explanationHeader = document.getElementById('explanationHeader');
-        if (explanationHeader) {
-            const icon = explanationHeader.querySelector('.collapse-icon');
-            if (icon) icon.textContent = '▶';
-        }
+        // Update collapse icon to show closed state
+        updateCollapsibleIcon('explanationHeader', false);
     } else {
         domCache.explanationContainer.classList.add('hidden');
     }
@@ -1302,11 +1348,24 @@ function setupTooltips() {
 // Track selected calculations for comparison
 let selectedCalculationsForComparison = [];
 
+function updateSavedCalculationsCounter(count) {
+    const header = document.getElementById('savedCalculationsHeader');
+    if (header) {
+        const span = header.querySelector('span:first-child');
+        if (span) {
+            span.textContent = `Saved Calculations${count > 0 ? ` (${count})` : ''}`;
+        }
+    }
+}
+
 function renderSavedCalculations() {
     const container = document.getElementById('savedCalculationsList');
     if (!container) return;
 
     const savedCalculations = loadSavedCalculations();
+    
+    // Update counter in header
+    updateSavedCalculationsCounter(savedCalculations.length);
     
     if (savedCalculations.length === 0) {
         container.innerHTML = '<p class="no-saved-calculations">No saved calculations yet. Save a calculation to see it here.</p>';
@@ -1337,7 +1396,7 @@ function renderSavedCalculations() {
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">Date:</span>
-                    <span class="summary-value">${summary.date}</span>
+                    <span class="summary-value">${summary.date} <span class="time-display">${summary.time}</span></span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">Buyer Type:</span>
@@ -1474,10 +1533,12 @@ function selectCalculationForComparison(id) {
         selectedCalculationsForComparison = selectedCalculationsForComparison.filter(calcId => calcId !== id);
     } else {
         // Add to selection (max 2)
+        // First selected = Calc 1, Second selected = Calc 2
         if (selectedCalculationsForComparison.length < 2) {
             selectedCalculationsForComparison.push(id);
         } else {
-            // Replace the first one if already have 2
+            // Replace the first one (Calc 1) if already have 2
+            // Move current Calc 2 to Calc 1, and new selection becomes Calc 2
             selectedCalculationsForComparison[0] = selectedCalculationsForComparison[1];
             selectedCalculationsForComparison[1] = id;
         }
@@ -1487,14 +1548,20 @@ function selectCalculationForComparison(id) {
     renderSavedCalculations();
     
     // Show comparison if 2 selected
+    // selectedCalculationsForComparison[0] = first selected = Calc 1
+    // selectedCalculationsForComparison[1] = second selected = Calc 2
     if (selectedCalculationsForComparison.length === 2) {
-        showComparisonView(selectedCalculationsForComparison[0], selectedCalculationsForComparison[1]);
+        const firstSelectedId = selectedCalculationsForComparison[0]; // Calc 1
+        const secondSelectedId = selectedCalculationsForComparison[1]; // Calc 2
+        showComparisonView(firstSelectedId, secondSelectedId);
     } else {
         hideComparisonView();
     }
 }
 
-function showComparisonView(id1, id2) {
+function showComparisonView(firstSelectedId, secondSelectedId) {
+    // firstSelectedId = first calculation selected by user = Calc 1
+    // secondSelectedId = second calculation selected by user = Calc 2
     const comparisonView = document.getElementById('comparisonView');
     const card1 = document.getElementById('comparisonCard1');
     const card2 = document.getElementById('comparisonCard2');
@@ -1502,12 +1569,14 @@ function showComparisonView(id1, id2) {
     if (!comparisonView || !card1 || !card2) return;
     
     const savedCalculations = loadSavedCalculations();
-    const calc1 = savedCalculations.find(calc => calc.id === id1);
-    const calc2 = savedCalculations.find(calc => calc.id === id2);
+    const calc1 = savedCalculations.find(calc => calc.id === firstSelectedId);
+    const calc2 = savedCalculations.find(calc => calc.id === secondSelectedId);
     
     if (!calc1 || !calc2) return;
     
     // Render comparison cards
+    // calc1 = first selected = Calculation 1
+    // calc2 = second selected = Calculation 2
     card1.innerHTML = renderComparisonCard(calc1, 'Calculation 1');
     card2.innerHTML = renderComparisonCard(calc2, 'Calculation 2');
     
@@ -1518,6 +1587,8 @@ function showComparisonView(id1, id2) {
     }
     
     // Add difference section
+    // Pass calc1 (first selected) and calc2 (second selected)
+    // Difference will show: Calc 2 compared to Calc 1 (calc2 - calc1)
     const differenceSection = document.createElement('div');
     differenceSection.className = 'comparison-difference';
     differenceSection.innerHTML = renderComparisonDifference(calc1, calc2);
@@ -1608,7 +1679,7 @@ function renderComparisonCard(calculation, label) {
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Date Saved:</span>
-                        <span class="detail-value">${summary.date} ${summary.time}</span>
+                        <span class="detail-value">${summary.date} <span class="time-display">${summary.time}</span></span>
                     </div>
                 </div>
             </div>
@@ -1617,17 +1688,20 @@ function renderComparisonCard(calculation, label) {
 }
 
 function renderComparisonDifference(calc1, calc2) {
-    const sdlt1 = calc1.results.tax;
-    const sdlt2 = calc2.results.tax;
-    const difference = sdlt2 - sdlt1;
-    const differencePercent = calc1.results.tax > 0 ? ((difference / calc1.results.tax) * 100) : 0;
-    const isHigher = difference > 0;
-    const isLower = difference < 0;
-    const isSame = difference === 0;
+    // calc1 = first selected calculation = Calculation 1
+    // calc2 = second selected calculation = Calculation 2
+    const sdlt1 = calc1.results.tax; // First selected (Calc 1) SDLT
+    const sdlt2 = calc2.results.tax; // Second selected (Calc 2) SDLT
     
-    const price1 = calc1.inputs.price;
-    const price2 = calc2.inputs.price;
-    const priceDifference = price2 - price1;
+    // Calculate difference: Calc 1 - Calc 2
+    // Positive = Calc 1 is higher, Negative = Calc 1 is lower
+    const difference = sdlt1 - sdlt2;
+    
+    // Calculate percentage based on Calc 2 as the reference
+    const differencePercent = calc2.results.tax > 0 ? ((difference / calc2.results.tax) * 100) : 0;
+    const isHigher = difference > 0; // Calc 1 > Calc 2
+    const isLower = difference < 0;  // Calc 1 < Calc 2
+    const isSame = difference === 0;  // Calc 1 = Calc 2
     
     let differenceClass = 'neutral';
     let differenceText = '';
@@ -1639,11 +1713,11 @@ function renderComparisonDifference(calc1, calc2) {
         differenceIcon = '=';
     } else if (isHigher) {
         differenceClass = 'higher';
-        differenceText = `Calculation 2 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} more`;
+        differenceText = `Calculation 1 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} more than Calculation 2`;
         differenceIcon = '↑';
     } else {
         differenceClass = 'lower';
-        differenceText = `Calculation 2 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} less`;
+        differenceText = `Calculation 1 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} less than Calculation 2`;
         differenceIcon = '↓';
     }
     
@@ -1699,4 +1773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateFTBIndicatorFromInputs();
     calculateStampDuty();
     renderSavedCalculations();
+    // Initialize counter on page load
+    const savedCalculations = loadSavedCalculations();
+    updateSavedCalculationsCounter(savedCalculations.length);
 });

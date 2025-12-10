@@ -298,20 +298,15 @@
 
         <!-- Info Card - Full Width -->
         <div class="info-card">
-            <h3 class="collapsible-header" id="infoHeader">
-                <span>Information</span>
-                <span class="collapse-icon">▼</span>
-            </h3>
-            <div class="collapsible-content">
-                <p class="info-text">
-                    <strong>Note:</strong> This calculator uses current UK SDLT rates (April 2025). 
-                    First-time buyer relief applies to properties up to £500,000. 
-                    Additional dwelling surcharge (higher rates) applies when purchasing a second property 
-                    unless you're replacing your main residence. For married couples/civil partnerships, 
-                    the economic unit (buyer + spouse) is considered together. 
-                    This is for guidance only - always consult a tax professional for official advice.
-                </p>
-            </div>
+            <h3>Information</h3>
+            <p class="info-text">
+                <strong>Note:</strong> This calculator uses current UK SDLT rates (April 2025). 
+                First-time buyer relief applies to properties up to £500,000. 
+                Additional dwelling surcharge (higher rates) applies when purchasing a second property 
+                unless you're replacing your main residence. For married couples/civil partnerships, 
+                the economic unit (buyer + spouse) is considered together. 
+                This is for guidance only - always consult a tax professional for official advice.
+            </p>
         </div>
     </main>
 
@@ -338,16 +333,36 @@
         
         // Setup collapsible sections
         document.addEventListener('DOMContentLoaded', () => {
-            const infoHeader = document.getElementById('infoHeader');
-            if (infoHeader) {
-                infoHeader.addEventListener('click', () => toggleSection(infoHeader));
-            }
-            
             const savedCalculationsHeader = document.getElementById('savedCalculationsHeader');
             if (savedCalculationsHeader) {
                 savedCalculationsHeader.addEventListener('click', () => toggleSection(savedCalculationsHeader));
             }
+            
+            // Setup explanation and breakdown collapsible headers
+            setupCollapsibleHeader('explanationHeader', 'explanationContent');
+            setupCollapsibleHeader('breakdownHeader', 'breakdownContent');
         });
+        
+        // Deduplicated function for collapsible headers
+        function setupCollapsibleHeader(headerId, contentId) {
+            const header = document.getElementById(headerId);
+            if (header) {
+                header.addEventListener('click', () => {
+                    const content = document.getElementById(contentId);
+                    const icon = header.querySelector('.collapse-icon');
+                    
+                    if (content && icon) {
+                        if (content.classList.contains('hidden')) {
+                            content.classList.remove('hidden');
+                            icon.textContent = '▼';
+                        } else {
+                            content.classList.add('hidden');
+                            icon.textContent = '▶';
+                        }
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>
