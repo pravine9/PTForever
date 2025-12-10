@@ -27,12 +27,58 @@ const CACHE_KEY_LAST_FETCH = 'thaali_last_fetch';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 const RATE_LIMIT = 60 * 1000; // 1 minute between refreshes
 
+// Memory keys for form inputs
+const MEMORY_KEY_SOVEREIGN_COUNT = 'thaali_sovereign_count';
+const MEMORY_KEY_MAKING_CHARGES = 'thaali_making_charges';
+const MEMORY_KEY_VAT_INCLUDED = 'thaali_vat_included';
+
 // Track fetch status
 let lastFetchWasSuccessful = false;
 
+// Save form inputs to localStorage
+function saveThaaliInputs() {
+    try {
+        const sovereignCount = document.getElementById('sovereignCount').value;
+        const makingCharges = document.getElementById('makingCharges').value;
+        const vatIncluded = document.getElementById('vatIncluded').checked;
+        
+        localStorage.setItem(MEMORY_KEY_SOVEREIGN_COUNT, sovereignCount);
+        localStorage.setItem(MEMORY_KEY_MAKING_CHARGES, makingCharges);
+        localStorage.setItem(MEMORY_KEY_VAT_INCLUDED, vatIncluded.toString());
+    } catch (e) {
+        console.error('Failed to save thaali inputs:', e);
+    }
+}
+
+// Load form inputs from localStorage
+function loadThaaliInputs() {
+    try {
+        const savedSovereignCount = localStorage.getItem(MEMORY_KEY_SOVEREIGN_COUNT);
+        const savedMakingCharges = localStorage.getItem(MEMORY_KEY_MAKING_CHARGES);
+        const savedVatIncluded = localStorage.getItem(MEMORY_KEY_VAT_INCLUDED);
+        
+        if (savedSovereignCount !== null) {
+            document.getElementById('sovereignCount').value = savedSovereignCount;
+        }
+        if (savedMakingCharges !== null) {
+            document.getElementById('makingCharges').value = savedMakingCharges;
+        }
+        if (savedVatIncluded !== null) {
+            document.getElementById('vatIncluded').checked = savedVatIncluded === 'true';
+        }
+    } catch (e) {
+        console.error('Failed to load thaali inputs:', e);
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    loadThaaliInputs();
     loadGoldPrice();
+    // Calculate will be called after gold price loads, but also calculate now with cached/fallback prices
+    if (currentGoldPriceUSD > 0 && currentExchangeRate > 0) {
+        calculateThaali();
+    }
 });
 
 // Save gold price to localStorage
@@ -300,6 +346,9 @@ function calculateThaali() {
     const makingChargesPercent = parseFloat(document.getElementById('makingCharges').value) || 0;
     const vatIncluded = document.getElementById('vatIncluded').checked;
     
+    // Save inputs after calculation
+    saveThaaliInputs();
+    
     if (sovereignCount < 0) {
         document.getElementById('sovereignCount').value = 0;
         return;
@@ -353,12 +402,14 @@ function adjustSovereigns(delta) {
     const currentValue = parseFloat(input.value) || 0;
     const newValue = Math.max(0, currentValue + delta);
     input.value = newValue;
+    saveThaaliInputs();
     calculateThaali();
 }
 
 // Set specific number of sovereigns
 function setSovereigns(count) {
     document.getElementById('sovereignCount').value = count;
+    saveThaaliInputs();
     calculateThaali();
 }
 
@@ -368,12 +419,14 @@ function adjustMakingCharges(delta) {
     const currentValue = parseFloat(input.value) || 0;
     const newValue = Math.max(0, Math.min(100, currentValue + delta));
     input.value = newValue;
+    saveThaaliInputs();
     calculateThaali();
 }
 
 // Set specific making charges percentage
 function setMakingCharges(percent) {
     document.getElementById('makingCharges').value = percent;
+    saveThaaliInputs();
     calculateThaali();
 }
 
