@@ -92,18 +92,6 @@
                                 <span class="tooltip-icon" aria-label="Help">i</span>
                             </label>
                         </div>
-                        <div class="checkbox-group hidden nested-option" id="replacingResidenceRow">
-                            <label class="checkbox-option">
-                                <input 
-                                    type="checkbox" 
-                                    id="isReplacingMainResidence" 
-                                    aria-label="Replacing main residence"
-                                    data-tooltip="Check this if you're selling your current main residence and buying this as your new main residence. This exempts you from the additional dwelling surcharge (higher rates)."
-                                >
-                                <span>Replacing main residence</span>
-                                <span class="tooltip-icon" aria-label="Help">i</span>
-                            </label>
-                        </div>
                     </div>
 
                     <!-- Buyer Type -->
@@ -161,12 +149,24 @@
                                 <span>Owns property at completion</span>
                                 <span class="tooltip-icon" aria-label="Help">i</span>
                             </label>
+                            <div class="checkbox-group hidden" id="replacingResidenceRow">
+                                <label class="checkbox-option">
+                                    <input 
+                                        type="checkbox" 
+                                        id="isReplacingMainResidence" 
+                                        name="isReplacingMainResidence"
+                                        aria-label="Replacing main residence"
+                                        data-tooltip="Check this if you're selling your current main residence and buying this as your new main residence. This exempts you from the additional dwelling surcharge (higher rates)."
+                                    >
+                                    <span>Replacing main residence</span>
+                                    <span class="tooltip-icon" aria-label="Help">i</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Married Couple Options (conditional) -->
-                    <div class="input-section hidden nested-option" id="marriedOptions" style="margin-top: 0;">
-                        <label class="section-label spouse-label">Married/Civil Partnership - Economic Unit</label>
+                    <div class="input-section hidden nested-option" id="marriedOptions">
                         <p class="help-text">For married couples and civil partnerships, HMRC considers you as one economic unit. If either of you has owned property, it affects your eligibility.</p>
                         <div class="checkbox-group">
                             <label class="checkbox-option">
@@ -189,6 +189,19 @@
                                 <span>Either owns property at completion</span>
                                 <span class="tooltip-icon" aria-label="Help">i</span>
                             </label>
+                            <div class="checkbox-group hidden" id="replacingResidenceRowMarried">
+                                <label class="checkbox-option">
+                                    <input 
+                                        type="checkbox" 
+                                        id="isReplacingMainResidenceMarried" 
+                                        name="isReplacingMainResidence"
+                                        aria-label="Replacing main residence"
+                                        data-tooltip="Check this if you're selling your current main residence and buying this as your new main residence. This exempts you from the additional dwelling surcharge (higher rates)."
+                                    >
+                                    <span>Replacing main residence</span>
+                                    <span class="tooltip-icon" aria-label="Help">i</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>

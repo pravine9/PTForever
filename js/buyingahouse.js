@@ -58,6 +58,7 @@ function cacheDOMElements() {
         propertyTypeNonResidential: document.getElementById('propertyTypeNonResidential'),
         willBeMainResidence: document.getElementById('willBeMainResidence'),
         isReplacingMainResidence: document.getElementById('isReplacingMainResidence'),
+        isReplacingMainResidenceMarried: document.getElementById('isReplacingMainResidenceMarried'),
         buyerTypeIndividual: document.getElementById('buyerTypeIndividual'),
         buyerTypeMarried: document.getElementById('buyerTypeMarried'),
         hasEverOwnedProperty: document.getElementById('hasEverOwnedProperty'),
@@ -66,6 +67,7 @@ function cacheDOMElements() {
         eitherOwnsPropertyAtCompletion: document.getElementById('eitherOwnsPropertyAtCompletion'),
         residentialOptions: document.getElementById('residentialOptions'),
         replacingResidenceRow: document.getElementById('replacingResidenceRow'),
+        replacingResidenceRowMarried: document.getElementById('replacingResidenceRowMarried'),
         marriedOptions: document.getElementById('marriedOptions'),
         buyerOptionsGroup: document.getElementById('buyerOptionsGroup'),
         totalSDLT: document.getElementById('totalSDLT'),
@@ -410,12 +412,23 @@ function togglePropertyType() {
 function toggleMarriedOptions() {
     const buyerType = (domCache.buyerTypeMarried?.checked) ? 'married' : 'individual';
     
+    // Get the parent input-section of buyerOptionsGroup
+    const buyerOptionsSection = domCache.buyerOptionsGroup?.parentElement;
+    
     if (buyerType === 'married') {
         domCache.marriedOptions?.classList.remove('hidden');
         domCache.buyerOptionsGroup?.classList.add('hidden');
+        // Hide the border of the parent section when content is hidden
+        if (buyerOptionsSection) {
+            buyerOptionsSection.classList.add('content-hidden');
+        }
     } else {
         domCache.marriedOptions?.classList.add('hidden');
         domCache.buyerOptionsGroup?.classList.remove('hidden');
+        // Show the border again when content is visible
+        if (buyerOptionsSection) {
+            buyerOptionsSection.classList.remove('content-hidden');
+        }
         // Reset married couple checkboxes
         if (domCache.eitherHasEverOwnedProperty) domCache.eitherHasEverOwnedProperty.checked = false;
         if (domCache.eitherOwnsPropertyAtCompletion) domCache.eitherOwnsPropertyAtCompletion.checked = false;
@@ -446,17 +459,31 @@ function validateResidenceOptions() {
         if (domCache.isReplacingMainResidence?.checked) {
             domCache.isReplacingMainResidence.checked = false;
         }
+        if (domCache.isReplacingMainResidenceMarried?.checked) {
+            domCache.isReplacingMainResidenceMarried.checked = false;
+        }
         domCache.replacingResidenceRow?.classList.add('hidden');
+        domCache.replacingResidenceRowMarried?.classList.add('hidden');
         return;
     }
     
-    // Show/hide "Replacing main residence" option
+    // Show/hide "Replacing main residence" option in the appropriate section
     if (ownsProperty && willBeMainResidence) {
-        domCache.replacingResidenceRow?.classList.remove('hidden');
+        if (isMarried) {
+            domCache.replacingResidenceRowMarried?.classList.remove('hidden');
+            domCache.replacingResidenceRow?.classList.add('hidden');
+        } else {
+            domCache.replacingResidenceRow?.classList.remove('hidden');
+            domCache.replacingResidenceRowMarried?.classList.add('hidden');
+        }
     } else {
         domCache.replacingResidenceRow?.classList.add('hidden');
+        domCache.replacingResidenceRowMarried?.classList.add('hidden');
         if (domCache.isReplacingMainResidence) {
             domCache.isReplacingMainResidence.checked = false;
+        }
+        if (domCache.isReplacingMainResidenceMarried) {
+            domCache.isReplacingMainResidenceMarried.checked = false;
         }
     }
 }
@@ -497,7 +524,11 @@ function calculateStampDuty() {
         const propertyType = (domCache.propertyTypeResidential?.checked) ? 'residential' : 'non-residential';
         const isResidential = propertyType === 'residential';
         const willBeMainResidence = domCache.willBeMainResidence?.checked || false;
-        const isReplacingMainResidence = domCache.isReplacingMainResidence?.checked || false;
+        // Check the visible checkbox (individual or married)
+        const isMarried = domCache.buyerTypeMarried?.checked || false;
+        const isReplacingMainResidence = isMarried 
+            ? (domCache.isReplacingMainResidenceMarried?.checked || false)
+            : (domCache.isReplacingMainResidence?.checked || false);
 
         // Get buyer information
         const buyerType = (domCache.buyerTypeMarried?.checked) ? 'married' : 'individual';
@@ -574,15 +605,14 @@ function updateResults(result) {
     // Update main results
     domCache.totalSDLT.textContent = `£${result.tax.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
-    // Format regime name with badge
+    // Format regime name (simple text, no badge)
     const regimeNames = {
         'STANDARD': 'Standard Rates',
         'FTB': 'First-Time Buyer',
         'HIGHER_RATES': 'Higher Rates (Additional Dwelling)',
         'NON_RESIDENTIAL': 'Non-Residential'
     };
-    const regimeName = regimeNames[result.regime] || result.regime;
-    domCache.taxRegime.innerHTML = `<span class="regime-badge regime-${result.regime.toLowerCase()}">${regimeName}</span>`;
+    domCache.taxRegime.textContent = regimeNames[result.regime] || result.regime;
     
     // Effective rate as percentage
     const effectiveRatePercent = (result.effectiveRate * 100).toFixed(2);
@@ -645,13 +675,14 @@ function updateFTBIndicatorFromInputs() {
     
     domCache.ftbIndicator.classList.remove('hidden');
     
+    // FTB eligibility check - matches the calculation logic
+    // For married couples, FTB can apply if both meet criteria (neither has ever owned, neither owns at completion)
     const ftbEligible = isResidential && 
                        willBeMainResidence && 
                        price > 0 &&
                        price <= SDLT_CONFIG.ftbPriceLimit &&
                        !hasEverOwned &&
-                       !ownsAtCompletion &&
-                       !isMarried;
+                       !ownsAtCompletion;
     
     if (ftbEligible) {
         domCache.ftbIndicator.className = 'ftb-indicator eligible';
@@ -671,9 +702,7 @@ function updateFTBIndicatorFromInputs() {
         if (ownsAtCompletion) {
             reasons.push('Will own another property at completion');
         }
-        if (isMarried) {
-            reasons.push('Married couples need to check spouse options');
-        }
+        // Don't add "Married couples need to check spouse options" - married couples can qualify for FTB
         
         if (reasons.length > 0) {
             domCache.ftbIndicator.innerHTML = `<strong>First-Time Buyer relief not available:</strong> ${reasons.join(', ')}`;
@@ -683,32 +712,13 @@ function updateFTBIndicatorFromInputs() {
     }
 }
 
-// Check and update FTB eligibility indicator
+// Check and update FTB eligibility indicator based on calculation result
 function updateFTBIndicator(result) {
     if (!domCache.ftbIndicator) return;
     
     const ctx = result.inputContext || {};
     const price = ctx.price || parseFloat(domCache.propertyPrice?.value) || 0;
     const isResidential = ctx.isResidential !== undefined ? ctx.isResidential : (domCache.propertyTypeResidential?.checked || false);
-    const willBeMainResidence = ctx.willBeMainResidence !== undefined ? ctx.willBeMainResidence : (domCache.willBeMainResidence?.checked || false);
-    const isMarried = ctx.isMarried !== undefined ? ctx.isMarried : (domCache.buyerTypeMarried?.checked || false);
-    
-    const hasEverOwned = isMarried 
-        ? (domCache.eitherHasEverOwnedProperty?.checked || false)
-        : (domCache.hasEverOwnedProperty?.checked || false);
-    
-    const ownsAtCompletion = isMarried
-        ? (domCache.eitherOwnsPropertyAtCompletion?.checked || false)
-        : (domCache.ownsPropertyAtCompletion?.checked || false);
-    
-    // Check FTB eligibility
-    const ftbEligible = isResidential && 
-                       willBeMainResidence && 
-                       price > 0 &&
-                       price <= SDLT_CONFIG.ftbPriceLimit &&
-                       !hasEverOwned &&
-                       !ownsAtCompletion &&
-                       !isMarried; // FTB only applies to individuals
     
     if (price === 0 || !isResidential) {
         domCache.ftbIndicator.classList.add('hidden');
@@ -717,10 +727,23 @@ function updateFTBIndicator(result) {
     
     domCache.ftbIndicator.classList.remove('hidden');
     
-    if (ftbEligible && result.regime === 'FTB') {
+    // Use the actual calculation result to determine status
+    if (result.regime === 'FTB') {
         domCache.ftbIndicator.className = 'ftb-indicator eligible';
         domCache.ftbIndicator.innerHTML = '<strong>You qualify for First-Time Buyer relief!</strong>';
     } else {
+        // Not eligible - show why based on actual inputs
+        const willBeMainResidence = ctx.willBeMainResidence !== undefined ? ctx.willBeMainResidence : (domCache.willBeMainResidence?.checked || false);
+        const isMarried = ctx.isMarried !== undefined ? ctx.isMarried : (domCache.buyerTypeMarried?.checked || false);
+        
+        const hasEverOwned = isMarried 
+            ? (domCache.eitherHasEverOwnedProperty?.checked || false)
+            : (domCache.hasEverOwnedProperty?.checked || false);
+        
+        const ownsAtCompletion = isMarried
+            ? (domCache.eitherOwnsPropertyAtCompletion?.checked || false)
+            : (domCache.ownsPropertyAtCompletion?.checked || false);
+        
         domCache.ftbIndicator.className = 'ftb-indicator not-eligible';
         const reasons = [];
         if (!willBeMainResidence) {
@@ -734,9 +757,6 @@ function updateFTBIndicator(result) {
         }
         if (ownsAtCompletion) {
             reasons.push('Will own another property at completion');
-        }
-        if (isMarried) {
-            reasons.push('Married couples need to check spouse options');
         }
         
         if (reasons.length > 0) {
@@ -756,7 +776,7 @@ function updateExplanation(result) {
     
     // Regime-specific explanations
     if (result.regime === 'FTB') {
-        explanations.push('✅ <strong>First-Time Buyer Relief Applied</strong>');
+        explanations.push('<strong>First-Time Buyer Relief Applied</strong>');
         explanations.push('You qualify for First-Time Buyer relief because:');
         const reasons = [];
         if (ctx.willBeMainResidence) reasons.push('• This will be your main residence');
@@ -778,7 +798,7 @@ function updateExplanation(result) {
         explanations.push(...reasons);
         explanations.push(`<br>With First-Time Buyer relief, you pay 0% on the first £300,000 and 5% on the portion between £300,000 and £500,000.`);
     } else if (result.regime === 'HIGHER_RATES') {
-        explanations.push('⚠️ <strong>Additional Dwelling Surcharge Applied</strong>');
+        explanations.push('<strong>Additional Dwelling Surcharge Applied</strong>');
         explanations.push('Higher rates apply because:');
         const reasons = [];
         if (ctx.ownsPropertyAtCompletion || ctx.spouseOwnsPropertyAtCompletion) {
@@ -790,7 +810,7 @@ function updateExplanation(result) {
         explanations.push(...reasons);
         explanations.push(`<br>The additional dwelling surcharge adds 3% to each standard rate band.`);
     } else if (result.regime === 'STANDARD') {
-        explanations.push('📊 <strong>Standard Rates Applied</strong>');
+        explanations.push('<strong>Standard Rates Applied</strong>');
         // Check if they might have qualified for FTB
         const neverOwned = ctx.isMarried 
             ? (!ctx.hasEverOwnedProperty && !ctx.spouseHasEverOwnedProperty)
@@ -814,13 +834,13 @@ function updateExplanation(result) {
             explanations.push('Standard SDLT rates apply to this purchase.');
         }
     } else if (result.regime === 'NON_RESIDENTIAL') {
-        explanations.push('🏢 <strong>Non-Residential Property</strong>');
+        explanations.push('<strong>Non-Residential Property</strong>');
         explanations.push('Non-residential properties use standard SDLT rates. First-Time Buyer relief and additional dwelling surcharge do not apply.');
     }
     
     // Additional context
     if (ctx.isReplacingMainResidence && result.regime !== 'HIGHER_RATES') {
-        explanations.push(`<br>✅ You are replacing your main residence, which exempts you from the additional dwelling surcharge.`);
+        explanations.push(`<br>You are replacing your main residence, which exempts you from the additional dwelling surcharge.`);
     }
     
     if (explanations.length > 0) {

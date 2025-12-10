@@ -70,9 +70,14 @@ body::after {
     z-index: 1;
 }
 
+/* Wider container for calculator pages */
+.container:has(.calculator-layout) {
+    max-width: 1600px;
+}
+
 /* Override container width for calculator layout */
 .container .calculator-layout {
-    max-width: 1200px;
+    max-width: 1600px;
     width: calc(100% + 40px);
     margin-left: -20px;
     margin-right: -20px;
@@ -2011,11 +2016,11 @@ html {
 
 .calculator-layout {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     padding: 15px 0;
     align-items: start;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     width: 100%;
 }
@@ -2069,18 +2074,27 @@ html {
 
 /* Tooltips */
 .tooltip-icon {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-left: 6px;
     cursor: help;
-    opacity: 0.6;
-    font-size: 0.85em;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    font-style: normal;
     vertical-align: middle;
-    color: var(--primary);
     transition: opacity 0.2s;
+    opacity: 0.7;
 }
 
 .tooltip-icon:hover {
     opacity: 1;
+    background: var(--secondary);
 }
 
 .tooltip {
@@ -2167,10 +2181,6 @@ html {
 }
 
 .explanation-content {
-    background: #f8f9fa;
-    padding: 14px 16px;
-    border-radius: 8px;
-    border-left: 4px solid var(--primary);
     font-size: 0.9rem;
     line-height: 1.6;
     color: #4a5568;
@@ -2202,21 +2212,24 @@ html {
     font-style: italic;
 }
 
-/* FTB Eligibility Indicator */
+/* FTB Eligibility Indicator - Below input container */
 .ftb-indicator {
     padding: 12px 16px;
     border-radius: 8px;
-    margin-top: 12px;
-    margin-bottom: 16px;
+    margin-top: 16px;
+    margin-bottom: 0;
     font-size: 0.9rem;
     line-height: 1.5;
     transition: all 0.3s ease;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #4a5568;
 }
 
 .ftb-indicator.eligible {
-    background: #d4edda;
+    background: #f0f9f4;
     color: #155724;
-    border: 2px solid #c3e6cb;
+    border-color: #c3e6cb;
 }
 
 .ftb-indicator.eligible strong {
@@ -2226,43 +2239,14 @@ html {
 .ftb-indicator.not-eligible {
     background: #f8f9fa;
     color: #6c757d;
-    border: 2px solid #dee2e6;
+    border-color: #dee2e6;
 }
 
 .ftb-indicator.not-eligible strong {
     color: #495057;
 }
 
-/* Regime Badges */
-.regime-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.regime-badge.regime-ftb {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-    color: white;
-}
-
-.regime-badge.regime-standard {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    color: white;
-}
-
-.regime-badge.regime-higher_rates {
-    background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
-    color: white;
-}
-
-.regime-badge.regime-non_residential {
-    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
-    color: white;
-}
+/* Regime Badges - Removed, using simple text instead */
 
 /* Nested Options Styling */
 .checkbox-group.nested {
@@ -2326,6 +2310,30 @@ html {
 .input-section:last-of-type {
     border-bottom: none;
     margin-bottom: 0;
+}
+
+/* Hide border when section content is hidden */
+.input-section.content-hidden {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Reduce spacing for nested/conditional sections */
+.input-section[style*="margin-top: 0"] {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+#marriedOptions {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* When buyer options section is hidden, remove its spacing */
+.input-section.content-hidden + #marriedOptions {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .price-section {
@@ -2426,6 +2434,9 @@ html {
 /* Results Column Styles */
 .calculator-results-column .calculator-card {
     padding: 18px;
+    background: white;
+    border: 1px solid #e5e8f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .calculator-results-column .calculator-results {
@@ -2458,10 +2469,17 @@ html {
 }
 
 /* Responsive Design */
+@media (max-width: 1400px) {
+    .calculator-layout {
+        max-width: 1400px;
+    }
+}
+
 @media (max-width: 1024px) {
     .calculator-layout {
-        grid-template-columns: 1fr 350px;
+        grid-template-columns: 1fr 1fr;
         gap: 16px;
+        max-width: 1200px;
     }
 }
 
