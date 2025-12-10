@@ -695,9 +695,6 @@ function resetCollapsibleStates() {
 function calculateStampDuty() {
     hideError();
     
-    // Reset collapsible states when calculation changes
-    resetCollapsibleStates();
-    
     try {
         // Get and validate price
         const priceValue = domCache.propertyPrice.value;
