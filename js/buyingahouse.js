@@ -53,6 +53,73 @@ const STORAGE_KEY_SAVED_CALCULATIONS = 'buyingahouse_saved_calculations';
 const MAX_SAVED_CALCULATIONS = 10;
 
 // ============================================================================
+// Helper Constants and Functions
+// ============================================================================
+
+const REGIME_NAMES = {
+    'STANDARD': 'Standard',
+    'FTB': 'First-Time Buyer',
+    'HIGHER_RATES': 'Higher Rates',
+    'NON_RESIDENTIAL': 'Non-Residential'
+};
+
+const REGIME_NAMES_DETAILED = {
+    'STANDARD': 'Standard Rates',
+    'FTB': 'First-Time Buyer',
+    'HIGHER_RATES': 'Higher Rates (Additional Dwelling)',
+    'NON_RESIDENTIAL': 'Non-Residential'
+};
+
+// Format currency with consistent formatting
+function formatCurrency(amount, includeDecimals = true) {
+    const options = includeDecimals 
+        ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+        : {};
+    return `£${amount.toLocaleString('en-GB', options)}`;
+}
+
+// Check if buyer type is married
+function isBuyerMarried() {
+    return domCache.buyerTypeMarried?.checked || false;
+}
+
+// Get property ownership values based on buyer type (married vs individual)
+function getPropertyOwnershipValues() {
+    const isMarried = isBuyerMarried();
+    return {
+        hasEverOwned: isMarried
+            ? (domCache.eitherHasEverOwnedProperty?.checked || false)
+            : (domCache.hasEverOwnedProperty?.checked || false),
+        ownsAtCompletion: isMarried
+            ? (domCache.eitherOwnsPropertyAtCompletion?.checked || false)
+            : (domCache.ownsPropertyAtCompletion?.checked || false)
+    };
+}
+
+// Get text variation for married vs individual
+function getBuyerText(isMarried, marriedText, individualText) {
+    return isMarried ? marriedText : individualText;
+}
+
+// Build array of reasons why FTB relief is not available
+function buildFTBIneligibilityReasons(price, willBeMainResidence, hasEverOwned, ownsAtCompletion) {
+    const reasons = [];
+    if (!willBeMainResidence) {
+        reasons.push('Not your main residence');
+    }
+    if (price > SDLT_CONFIG.ftbPriceLimit) {
+        reasons.push(`Price exceeds ${formatCurrency(SDLT_CONFIG.ftbPriceLimit, false)} limit`);
+    }
+    if (hasEverOwned) {
+        reasons.push('Previously owned property');
+    }
+    if (ownsAtCompletion) {
+        reasons.push('Will own another property at completion');
+    }
+    return reasons;
+}
+
+// ============================================================================
 // DOM Element Cache
 // ============================================================================
 
@@ -324,7 +391,7 @@ function saveBuyingHouseInputs() {
         localStorage.setItem(MEMORY_KEY_BUYER_TYPE, domCache.buyerTypeIndividual?.checked ? 'individual' : 'married');
         
         // Save based on buyer type
-        const isMarried = domCache.buyerTypeMarried?.checked || false;
+        const isMarried = isBuyerMarried();
         if (isMarried) {
             localStorage.setItem(MEMORY_KEY_HAS_EVER_OWNED_PROPERTY, (domCache.eitherHasEverOwnedProperty?.checked || false).toString());
             localStorage.setItem(MEMORY_KEY_OWNS_PROPERTY_AT_COMPLETION, (domCache.eitherOwnsPropertyAtCompletion?.checked || false).toString());
@@ -502,17 +569,10 @@ function getCalculationSummary(calculation) {
     const buyerType = calculation.inputs.buyerType === 'married' ? 'Married' : 'Individual';
     const propertyType = calculation.inputs.propertyType === 'residential' ? 'Residential' : 'Non-residential';
     
-    const regimeNames = {
-        'STANDARD': 'Standard',
-        'FTB': 'First-Time Buyer',
-        'HIGHER_RATES': 'Higher Rates',
-        'NON_RESIDENTIAL': 'Non-Residential'
-    };
-    
     return {
-        price: `£${price.toLocaleString('en-GB')}`,
-        sdlt: `£${sdlt.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-        regime: regimeNames[regime] || regime,
+        price: formatCurrency(price, false),
+        sdlt: formatCurrency(sdlt, true),
+        regime: REGIME_NAMES[regime] || regime,
         date: date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
         time: date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
         dateTime: date.toLocaleString('en-GB'),
@@ -542,7 +602,7 @@ function togglePropertyType() {
 }
 
 function toggleMarriedOptions() {
-    const buyerType = (domCache.buyerTypeMarried?.checked) ? 'married' : 'individual';
+    const buyerType = isBuyerMarried() ? 'married' : 'individual';
     
     // Get the parent input-section of buyerOptionsGroup
     const buyerOptionsSection = domCache.buyerOptionsGroup?.parentElement;
@@ -611,12 +671,9 @@ function toggleOwnsPropertyAtCompletionVisibility() {
 // Validate residence options to prevent contradictory states
 function validateResidenceOptions() {
     const willBeMainResidence = domCache.willBeMainResidence?.checked || false;
-    const ownsPropertyAtCompletion = domCache.ownsPropertyAtCompletion?.checked || false;
-    const eitherOwnsPropertyAtCompletion = domCache.eitherOwnsPropertyAtCompletion?.checked || false;
-    const isMarried = domCache.buyerTypeMarried?.checked || false;
-    
-    // Check if user owns property (either individual or married)
-    const ownsProperty = isMarried ? eitherOwnsPropertyAtCompletion : ownsPropertyAtCompletion;
+    const isMarried = isBuyerMarried();
+    const ownership = getPropertyOwnershipValues();
+    const ownsProperty = ownership.ownsAtCompletion;
     
     // If "Will be main residence" is unchecked, can't replace main residence
     if (!willBeMainResidence) {
@@ -722,8 +779,8 @@ function calculateStampDuty() {
         const willBeMainResidence = domCache.willBeMainResidence?.checked || false;
 
         // Get buyer information
-        const buyerType = (domCache.buyerTypeMarried?.checked) ? 'married' : 'individual';
-        const isMarried = buyerType === 'married';
+        const isMarried = isBuyerMarried();
+        const buyerType = isMarried ? 'married' : 'individual';
         
         // Check the visible checkbox (individual or married) for replacing main residence
         const isReplacingMainResidence = isMarried 
@@ -731,22 +788,20 @@ function calculateStampDuty() {
             : (domCache.isReplacingMainResidence?.checked || false);
         
         // For married couples, use "either" options; for individuals, use individual options
+        const ownership = getPropertyOwnershipValues();
         let hasEverOwnedProperty, ownsPropertyAtCompletion, spouseHasEverOwnedProperty, spouseOwnsPropertyAtCompletion;
         
         if (isMarried) {
             // Married couples: use "either" options
             // If "either" is checked, we set both buyer and spouse to true (economic unit)
-            const eitherHasEverOwned = domCache.eitherHasEverOwnedProperty?.checked || false;
-            const eitherOwnsAtCompletion = domCache.eitherOwnsPropertyAtCompletion?.checked || false;
-            
-            hasEverOwnedProperty = eitherHasEverOwned;
-            ownsPropertyAtCompletion = eitherOwnsAtCompletion;
-            spouseHasEverOwnedProperty = eitherHasEverOwned;
-            spouseOwnsPropertyAtCompletion = eitherOwnsAtCompletion;
+            hasEverOwnedProperty = ownership.hasEverOwned;
+            ownsPropertyAtCompletion = ownership.ownsAtCompletion;
+            spouseHasEverOwnedProperty = ownership.hasEverOwned;
+            spouseOwnsPropertyAtCompletion = ownership.ownsAtCompletion;
         } else {
             // Individual buyers: use individual options
-            hasEverOwnedProperty = domCache.hasEverOwnedProperty?.checked || false;
-            ownsPropertyAtCompletion = domCache.ownsPropertyAtCompletion?.checked || false;
+            hasEverOwnedProperty = ownership.hasEverOwned;
+            ownsPropertyAtCompletion = ownership.ownsAtCompletion;
             spouseHasEverOwnedProperty = undefined;
             spouseOwnsPropertyAtCompletion = undefined;
         }
@@ -807,16 +862,10 @@ function calculateStampDuty() {
 
 function updateResults(result) {
     // Update main results
-    domCache.totalSDLT.textContent = `£${result.tax.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    domCache.totalSDLT.textContent = formatCurrency(result.tax, true);
     
     // Format regime name (simple text, no badge)
-    const regimeNames = {
-        'STANDARD': 'Standard Rates',
-        'FTB': 'First-Time Buyer',
-        'HIGHER_RATES': 'Higher Rates (Additional Dwelling)',
-        'NON_RESIDENTIAL': 'Non-Residential'
-    };
-    domCache.taxRegime.textContent = regimeNames[result.regime] || result.regime;
+    domCache.taxRegime.textContent = REGIME_NAMES_DETAILED[result.regime] || result.regime;
     
     // Effective rate as percentage
     const effectiveRatePercent = (result.effectiveRate * 100).toFixed(2);
@@ -830,9 +879,9 @@ function updateResults(result) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.band}</td>
-                <td>£${item.taxable.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>${formatCurrency(item.taxable, true)}</td>
                 <td>${(item.rate * 100).toFixed(1)}%</td>
-                <td>£${item.tax.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td>${formatCurrency(item.tax, true)}</td>
             `;
             domCache.breakdownBody.appendChild(row);
         });
@@ -881,15 +930,9 @@ function updateFTBIndicatorFromInputs() {
     const price = parseFloat(domCache.propertyPrice?.value) || 0;
     const isResidential = domCache.propertyTypeResidential?.checked || false;
     const willBeMainResidence = domCache.willBeMainResidence?.checked || false;
-    const isMarried = domCache.buyerTypeMarried?.checked || false;
-    
-    const hasEverOwned = isMarried 
-        ? (domCache.eitherHasEverOwnedProperty?.checked || false)
-        : (domCache.hasEverOwnedProperty?.checked || false);
-    
-    const ownsAtCompletion = isMarried
-        ? (domCache.eitherOwnsPropertyAtCompletion?.checked || false)
-        : (domCache.ownsPropertyAtCompletion?.checked || false);
+    const ownership = getPropertyOwnershipValues();
+    const hasEverOwned = ownership.hasEverOwned;
+    const ownsAtCompletion = ownership.ownsAtCompletion;
     
     if (price === 0 || !isResidential) {
         domCache.ftbIndicator.classList.add('hidden');
@@ -912,20 +955,7 @@ function updateFTBIndicatorFromInputs() {
         domCache.ftbIndicator.innerHTML = '<strong>You may qualify for First-Time Buyer relief!</strong>';
     } else {
         domCache.ftbIndicator.className = 'ftb-indicator not-eligible';
-        const reasons = [];
-        if (!willBeMainResidence) {
-            reasons.push('Not your main residence');
-        }
-        if (price > SDLT_CONFIG.ftbPriceLimit) {
-            reasons.push(`Price exceeds £${SDLT_CONFIG.ftbPriceLimit.toLocaleString()} limit`);
-        }
-        if (hasEverOwned) {
-            reasons.push('Previously owned property');
-        }
-        if (ownsAtCompletion) {
-            reasons.push('Will own another property at completion');
-        }
-        // Don't add "Married couples need to check spouse options" - married couples can qualify for FTB
+        const reasons = buildFTBIneligibilityReasons(price, willBeMainResidence, hasEverOwned, ownsAtCompletion);
         
         if (reasons.length > 0) {
             domCache.ftbIndicator.innerHTML = `<strong>First-Time Buyer relief not available:</strong> ${reasons.join(', ')}`;
@@ -957,30 +987,13 @@ function updateFTBIndicator(result) {
     } else {
         // Not eligible - show why based on actual inputs
         const willBeMainResidence = ctx.willBeMainResidence !== undefined ? ctx.willBeMainResidence : (domCache.willBeMainResidence?.checked || false);
-        const isMarried = ctx.isMarried !== undefined ? ctx.isMarried : (domCache.buyerTypeMarried?.checked || false);
-        
-        const hasEverOwned = isMarried 
-            ? (domCache.eitherHasEverOwnedProperty?.checked || false)
-            : (domCache.hasEverOwnedProperty?.checked || false);
-        
-        const ownsAtCompletion = isMarried
-            ? (domCache.eitherOwnsPropertyAtCompletion?.checked || false)
-            : (domCache.ownsPropertyAtCompletion?.checked || false);
+        const isMarried = ctx.isMarried !== undefined ? ctx.isMarried : isBuyerMarried();
+        const ownership = getPropertyOwnershipValues();
+        const hasEverOwned = ownership.hasEverOwned;
+        const ownsAtCompletion = ownership.ownsAtCompletion;
         
         domCache.ftbIndicator.className = 'ftb-indicator not-eligible';
-        const reasons = [];
-        if (!willBeMainResidence) {
-            reasons.push('Not your main residence');
-        }
-        if (price > SDLT_CONFIG.ftbPriceLimit) {
-            reasons.push(`Price exceeds £${SDLT_CONFIG.ftbPriceLimit.toLocaleString()} limit`);
-        }
-        if (hasEverOwned) {
-            reasons.push('Previously owned property');
-        }
-        if (ownsAtCompletion) {
-            reasons.push('Will own another property at completion');
-        }
+        const reasons = buildFTBIneligibilityReasons(price, willBeMainResidence, hasEverOwned, ownsAtCompletion);
         
         if (reasons.length > 0) {
             domCache.ftbIndicator.innerHTML = `<strong>First-Time Buyer relief not available:</strong> ${reasons.join(', ')}`;
@@ -1003,20 +1016,20 @@ function updateExplanation(result) {
         explanations.push('You qualify for First-Time Buyer relief because:');
         const reasons = [];
         if (ctx.willBeMainResidence) reasons.push('• This will be your main residence');
-        if (ctx.price <= SDLT_CONFIG.ftbPriceLimit) reasons.push(`• Property price (£${ctx.price.toLocaleString()}) is within the £${SDLT_CONFIG.ftbPriceLimit.toLocaleString()} limit`);
+        if (ctx.price <= SDLT_CONFIG.ftbPriceLimit) reasons.push(`• Property price (${formatCurrency(ctx.price, false)}) is within the ${formatCurrency(SDLT_CONFIG.ftbPriceLimit, false)} limit`);
         // For married couples, we check the "either" value; for individuals, check individual value
         const neverOwned = ctx.isMarried 
             ? (!ctx.hasEverOwnedProperty && !ctx.spouseHasEverOwnedProperty)
             : !ctx.hasEverOwnedProperty;
         if (neverOwned) {
-            reasons.push('• ' + (ctx.isMarried ? 'Neither you nor your spouse' : 'You') + ' have never owned a property before');
+            reasons.push('• ' + getBuyerText(ctx.isMarried, 'Neither you nor your spouse', 'You') + ' have never owned a property before');
         }
         
         const noOtherProperty = ctx.isMarried
             ? (!ctx.ownsPropertyAtCompletion && !ctx.spouseOwnsPropertyAtCompletion)
             : !ctx.ownsPropertyAtCompletion;
         if (noOtherProperty) {
-            reasons.push('• ' + (ctx.isMarried ? 'Neither you nor your spouse' : 'You') + ' will not own another property at completion');
+            reasons.push('• ' + getBuyerText(ctx.isMarried, 'Neither you nor your spouse', 'You') + ' will not own another property at completion');
         }
         explanations.push(...reasons);
         explanations.push(`<br>With First-Time Buyer relief, you pay 0% on the first £300,000 and 5% on the portion between £300,000 and £500,000.`);
@@ -1025,7 +1038,7 @@ function updateExplanation(result) {
         explanations.push('Higher rates apply because:');
         const reasons = [];
         if (ctx.ownsPropertyAtCompletion || ctx.spouseOwnsPropertyAtCompletion) {
-            reasons.push('• ' + (ctx.isMarried ? 'Either you or your spouse' : 'You') + ' will still own another property at completion');
+            reasons.push('• ' + getBuyerText(ctx.isMarried, 'Either you or your spouse', 'You') + ' will still own another property at completion');
         }
         if (!ctx.isReplacingMainResidence) {
             reasons.push('• You are not replacing your main residence');
@@ -1045,13 +1058,13 @@ function updateExplanation(result) {
         if (ctx.price <= SDLT_CONFIG.ftbPriceLimit && ctx.willBeMainResidence && neverOwned && noOtherProperty) {
             explanations.push('Note: You may have qualified for First-Time Buyer relief, but:');
             if (ctx.price > SDLT_CONFIG.ftbPriceLimit) {
-                explanations.push(`• Property price (£${ctx.price.toLocaleString()}) exceeds the £${SDLT_CONFIG.ftbPriceLimit.toLocaleString()} limit for FTB relief`);
+                explanations.push(`• Property price (${formatCurrency(ctx.price, false)}) exceeds the ${formatCurrency(SDLT_CONFIG.ftbPriceLimit, false)} limit for FTB relief`);
             }
             const hasOtherProperty = ctx.isMarried
                 ? (ctx.ownsPropertyAtCompletion || ctx.spouseOwnsPropertyAtCompletion)
                 : ctx.ownsPropertyAtCompletion;
             if (hasOtherProperty) {
-                explanations.push('• ' + (ctx.isMarried ? 'Either you or your spouse' : 'You') + ' will own another property at completion');
+                explanations.push('• ' + getBuyerText(ctx.isMarried, 'Either you or your spouse', 'You') + ' will own another property at completion');
             }
         } else {
             explanations.push('Standard SDLT rates apply to this purchase.');
@@ -1067,12 +1080,20 @@ function updateExplanation(result) {
     }
     
     if (explanations.length > 0) {
+        // Preserve current collapse state
+        const wasOpen = !domCache.explanationContent.classList.contains('hidden');
+        
         domCache.explanationContent.innerHTML = '<p>' + explanations.join('</p><p>') + '</p>';
         domCache.explanationContainer.classList.remove('hidden');
-        // Keep explanation content hidden by default (collapsed)
-        domCache.explanationContent.classList.add('hidden');
-        // Update collapse icon to show closed state
-        updateCollapsibleIcon('explanationHeader', false);
+        
+        // Restore previous collapse state
+        if (wasOpen) {
+            domCache.explanationContent.classList.remove('hidden');
+            updateCollapsibleIcon('explanationHeader', true);
+        } else {
+            domCache.explanationContent.classList.add('hidden');
+            updateCollapsibleIcon('explanationHeader', false);
+        }
     } else {
         domCache.explanationContainer.classList.add('hidden');
     }
@@ -1710,11 +1731,11 @@ function renderComparisonDifference(calc1, calc2) {
         differenceIcon = '=';
     } else if (isHigher) {
         differenceClass = 'higher';
-        differenceText = `Calculation 1 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} more than Calculation 2`;
+        differenceText = `Calculation 1 is ${formatCurrency(Math.abs(difference), true)} more than Calculation 2`;
         differenceIcon = '↑';
     } else {
         differenceClass = 'lower';
-        differenceText = `Calculation 1 is £${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} less than Calculation 2`;
+        differenceText = `Calculation 1 is ${formatCurrency(Math.abs(difference), true)} less than Calculation 2`;
         differenceIcon = '↓';
     }
     
@@ -1725,14 +1746,14 @@ function renderComparisonDifference(calc1, calc2) {
                     <span class="difference-icon-compact">${differenceIcon}</span>
                     <div class="difference-compact-info">
                         <span class="difference-label-compact">Difference:</span>
-                        <span class="difference-value-compact">£${Math.abs(difference).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span class="difference-value-compact">${formatCurrency(Math.abs(difference), true)}</span>
                         ${!isSame ? `<span class="difference-percent-compact">(${Math.abs(differencePercent).toFixed(1)}% ${isHigher ? 'higher' : 'lower'})</span>` : ''}
                     </div>
                 </div>
                 <div class="difference-compact-details">
-                    <span>Calc 1: £${sdlt1.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span>Calc 1: ${formatCurrency(sdlt1, true)}</span>
                     <span>•</span>
-                    <span>Calc 2: £${sdlt2.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span>Calc 2: ${formatCurrency(sdlt2, true)}</span>
                 </div>
             </div>
         </div>
