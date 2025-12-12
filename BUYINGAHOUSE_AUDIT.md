@@ -283,3 +283,5 @@ function calculateSDLTFromBands(price, bands) {
 - The calculation logic appears correct based on UK SDLT rules
 - Main remaining work is edge case handling, testing, and UX enhancements
 - Consider adding unit tests before making significant changes to calculation logic
+
+

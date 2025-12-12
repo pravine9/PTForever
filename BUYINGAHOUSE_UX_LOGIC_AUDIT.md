@@ -396,3 +396,5 @@ The option logic is **mostly sound** but has some **UX gaps**:
 4. **Validation Issues**: No prevention of contradictory states
 
 **Priority fixes**: Add validation for "replacing main residence", add FTB eligibility indicator, add tooltips for complex options.
+
+
