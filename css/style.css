@@ -24,8 +24,22 @@
     /* Error/Red Colors */
     --error: #ef4444;
     --error-dark: #dc2626;
+    --error-light: #fc8181;
+    --error-lighter: #f56565;
     --red: #e74c3c;
     --red-dark: #c0392b;
+    
+    /* Neutral/Gray Colors */
+    --gray-light: #e2e8f0;
+    --gray-medium: #cbd5e0;
+    --gray-disabled: #ccc;
+    
+    /* Gray Colors */
+    --gray-400: #9ca3af;
+    --gray-500: #718096;
+    --gray-600: #4a5568;
+    --gray-700: #a0aec0;
+    --gray-800: #2d3748;
     
     /* ===== COLOR OPACITIES ===== */
     /* Black with opacity */
@@ -599,7 +613,9 @@ body::after {
     box-shadow: var(--shadow-primary-button);
 }
 
-/* Timeline */
+/* ============================================
+   TIMELINE
+   ============================================ */
 .timeline {
     position: relative;
     padding: 2rem 0;
@@ -617,6 +633,9 @@ body::after {
     box-shadow: 0 0 10px var(--primary-3);
 }
 
+/* ============================================
+   MEMORY CARD COMPONENT
+   ============================================ */
 .memory-card {
     background: white;
     border-radius: var(--radius-xl);
@@ -702,19 +721,19 @@ body::after {
 }
 
 .memory-card-thuvaraha::before {
-    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    background: var(--gradient-pink);
     box-shadow: 0 0 0 3px var(--pink), 0 0 15px var(--pink-5);
 }
 
 .memory-card-thuvaraha .memory-date {
-    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    background: var(--gradient-pink);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .memory-card-thuvaraha .memory-title {
-    color: #be185d;
+    color: var(--pink-dark);
 }
 
 .memory-card-thuvaraha .photo-badge {
@@ -723,22 +742,18 @@ body::after {
 
 .memory-card-thuvaraha .memory-tags span {
     background: linear-gradient(135deg, var(--pink-1) 0%, var(--pink-light-1) 100%);
-    color: #ec4899;
+    color: var(--pink);
     border: 1px solid var(--pink-2);
 }
 
-/* Modal styles for Thuvaraha's memories */
-.modal-content.memory-modal-thuvaraha .memory-date {
-    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+/* Memory Card Positioning */
+.memory-card:nth-child(odd) {
+    margin-right: auto;
 }
 
-.modal-content.memory-modal-thuvaraha .memory-tags span {
-    background: linear-gradient(135deg, var(--pink-1) 0%, var(--pink-light-1) 100%);
-    color: #ec4899;
-    border: 1px solid var(--pink-2);
+.memory-card:nth-child(even) {
+    margin-left: auto;
 }
 
 .memory-card:nth-child(odd)::before {
@@ -749,6 +764,7 @@ body::after {
     left: -48px;
 }
 
+/* Memory Card Elements */
 .memory-date {
     font-size: 0.9rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -768,18 +784,8 @@ body::after {
 }
 
 .memory-content {
-    color: #4a5568;
+    color: var(--gray-600);
     line-height: 1.8;
-    white-space: pre-line;
-}
-
-/* Memory content in modal - better for long text */
-.modal-content .memory-content {
-    margin-bottom: 1.5rem;
-    line-height: 1.9;
-    font-size: 1.05rem;
-    text-align: justify;
-    color: #4a5568;
     white-space: pre-line;
 }
 
@@ -798,7 +804,63 @@ body::after {
     opacity: 1;
 }
 
-/* Photo badge for timeline view */
+.memory-tags {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.memory-tags span {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, var(--primary-1) 0%, var(--secondary-1) 100%);
+    border-radius: 15px;
+    color: var(--primary);
+    border: 1px solid var(--primary-2);
+    font-weight: 500;
+}
+
+.memory-media {
+    margin-top: 1rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-card-hover);
+}
+
+.memory-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.memory-media video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.memory-locked {
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.memory-locked:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.memory-locked .memory-content {
+    filter: blur(5px);
+    user-select: none;
+}
+
+.lock-icon {
+    font-size: 2rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
 .photo-badge {
     display: inline-flex;
     align-items: center;
@@ -813,7 +875,9 @@ body::after {
     box-shadow: var(--shadow-tag);
 }
 
-/* Thumbnail gallery in modal */
+/* ============================================
+   MEMORY THUMBNAIL GALLERY
+   ============================================ */
 .memory-thumbnail-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -848,7 +912,9 @@ body::after {
     object-position: center;
 }
 
-/* Full-screen gallery viewer */
+/* ============================================
+   GALLERY VIEWER (Full-screen)
+   ============================================ */
 .gallery-viewer {
     position: fixed;
     top: 0;
@@ -975,69 +1041,9 @@ body::after {
     backdrop-filter: blur(10px);
 }
 
-.memory-tags {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.modal-content .memory-tags {
-    margin-top: 0;
-}
-
-.memory-tags span {
-    font-size: 0.8rem;
-    padding: 0.4rem 1rem;
-    background: linear-gradient(135deg, var(--primary-1) 0%, var(--secondary-1) 100%);
-    border-radius: 15px;
-    color: var(--primary);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    font-weight: 500;
-}
-
-.memory-media {
-    margin-top: 1rem;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-card-hover);
-}
-
-.memory-media img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.memory-media video {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.memory-locked {
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.memory-locked:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.memory-locked .memory-content {
-    filter: blur(5px);
-    user-select: none;
-}
-
-.lock-icon {
-    font-size: 2rem;
-    text-align: center;
-    margin: 1rem 0;
-}
 
 /* ============================================
-   QUIZ STYLES
+   BUTTON COMPONENTS
    ============================================ */
 .btn-primary, .btn-secondary {
     padding: 1rem 2.5rem;
@@ -1186,9 +1192,9 @@ body::after {
 }
 
 .answer-btn.incorrect {
-    background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+    background: linear-gradient(135deg, var(--error-light) 0%, var(--error-lighter) 100%);
     color: white;
-    border-color: #fc8181;
+    border-color: var(--error-light);
 }
 
 .answer-btn:disabled {
@@ -1239,7 +1245,9 @@ body::after {
     font-weight: 600;
 }
 
-/* Modal */
+/* ============================================
+   MODAL COMPONENT
+   ============================================ */
 .modal {
     display: none;
     position: fixed;
@@ -1312,12 +1320,25 @@ body::after {
     line-height: 1.3;
 }
 
-/* Override for Thuvaraha's memories in modal - needs higher specificity */
-.modal-content.memory-modal-thuvaraha .memory-title {
-    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+/* Modal - Thuvaraha's Memory Styles */
+.modal-content.memory-modal-thuvaraha .memory-date {
+    background: var(--gradient-pink);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.modal-content.memory-modal-thuvaraha .memory-title {
+    background: var(--gradient-pink);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-content.memory-modal-thuvaraha .memory-tags span {
+    background: linear-gradient(135deg, var(--pink-1) 0%, var(--pink-light-1) 100%);
+    color: var(--pink);
+    border: 1px solid var(--pink-2);
 }
 
 .modal-content h3 {
@@ -1372,12 +1393,12 @@ body::after {
 }
 
 .modal-buttons button:last-child {
-    background: #e2e8f0;
+    background: var(--gray-light);
     color: var(--dark);
 }
 
 .modal-buttons button:last-child:hover {
-    background: #cbd5e0;
+    background: var(--gray-medium);
 }
 
 .error {
@@ -1393,7 +1414,7 @@ body::after {
     right: 1rem;
     font-size: 2rem;
     cursor: pointer;
-    color: #a0aec0;
+    color: var(--gray-700);
     line-height: 1;
     transition: var(--transition);
     z-index: 10;
@@ -1408,140 +1429,6 @@ body::after {
     max-width: 800px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    body {
-        margin-left: 0;
-    }
-    
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    .sidebar.active {
-        transform: translateX(0);
-    }
-    
-    .mobile-toggle {
-        display: block;
-    }
-    
-    .timeline::before {
-        left: 30px;
-    }
-    
-    .memory-card {
-        width: calc(100% - 60px);
-        margin-left: 60px !important;
-        margin-right: 0 !important;
-    }
-    
-    .memory-card::before {
-        left: -48px !important;
-    }
-    
-    .page-header h2 {
-        font-size: 2rem;
-    }
-    
-    .perspective-toggle {
-        font-size: 0.85rem;
-        padding: 0.6rem 1.2rem;
-    }
-    
-    .perspective-toggle-container {
-        margin-top: 1rem;
-    }
-    
-    .question-container {
-        padding: 2rem 1.5rem;
-    }
-    
-    .question-text {
-        font-size: 1.2rem;
-    }
-    
-    /* Gallery responsive */
-    .memory-thumbnail-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 0.5rem;
-    }
-    
-    .gallery-close {
-        top: 1rem;
-        right: 1rem;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-    
-    .gallery-prev,
-    .gallery-next {
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-    }
-    
-    .gallery-prev {
-        left: 1rem;
-    }
-    
-    .gallery-next {
-        right: 1rem;
-    }
-    
-    .gallery-counter {
-        bottom: 1rem;
-        font-size: 0.8rem;
-        padding: 0.4rem 1rem;
-    }
-    
-    /* Modal responsive */
-    .modal-content {
-        max-width: 95%;
-    }
-    
-    .modal-content > div {
-        padding: 2rem 1.5rem;
-    }
-    
-    .modal-content .memory-title {
-        font-size: 1.5rem;
-    }
-    
-    .modal-content .memory-content {
-        font-size: 1rem;
-    }
-    
-    /* Gallery responsive */
-    .photo-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 1rem;
-    }
-    
-    .filter-section {
-        gap: 0.5rem;
-    }
-    
-    .gallery-stats {
-        gap: 1rem;
-        padding: 0.5rem 1rem;
-        margin-right: 0.5rem;
-    }
-    
-    .stat-item {
-        gap: 0.35rem;
-    }
-    
-    .stat-number {
-        font-size: 1.25rem;
-    }
-    
-    .stat-label {
-        font-size: 0.75rem;
-    }
-}
 
 /* ============================================
    GALLERY STYLES
@@ -1582,7 +1469,7 @@ body::after {
 
 .stat-label {
     font-size: 0.85rem;
-    color: #718096;
+    color: var(--gray-500);
     font-weight: 500;
 }
 
@@ -1659,7 +1546,7 @@ body::after {
 .no-photos {
     text-align: center;
     padding: 3rem;
-    color: #a0aec0;
+    color: var(--gray-700);
     font-size: 1.1rem;
 }
 
@@ -1790,7 +1677,7 @@ html {
 }
 
 .btn-nav:disabled {
-    background: #ccc;
+    background: var(--gray-disabled);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -1882,54 +1769,6 @@ html {
     transform: translateY(-2px);
 }
 
-/* Responsive adjustments for whiteboard/quiz games */
-@media (max-width: 768px) {
-    .question-display .question-text {
-        font-size: 1.8rem;
-    }
-
-    .question-display {
-        padding: 2rem 1.5rem;
-        min-height: 300px;
-    }
-
-    .question-content {
-        min-height: 200px;
-        max-height: calc(100vh - 350px);
-    }
-
-    .btn-nav {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        min-width: 100px;
-    }
-
-    .fullscreen-mode .question-text {
-        font-size: 2rem;
-    }
-
-    .fullscreen-mode .question-display {
-        padding: 3rem 2rem;
-        min-height: 50vh;
-    }
-
-    .fullscreen-mode .question-content {
-        max-height: calc(100vh - 250px);
-    }
-
-    .fullscreen-mode .question-counter {
-        font-size: 1.1rem;
-    }
-
-    .fullscreen-mode .btn-nav {
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-
-    .navigation-buttons {
-        padding-top: 1rem;
-    }
-}
 
 /* Loading Spinner */
 .loading-spinner {
@@ -1945,7 +1784,7 @@ html {
     width: 50px;
     height: 50px;
     border: 4px solid var(--primary-1);
-    border-top: 4px solid #3b82f6;
+    border-top: 4px solid var(--primary);
     border-radius: var(--radius-full);
     animation: spin 1s linear infinite;
     margin-bottom: var(--space-md);
@@ -2228,8 +2067,217 @@ html {
     transition: opacity 0.3s ease;
 }
 
-/* Responsive Birthday Card Styles */
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.hidden {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ============================================
+   RESPONSIVE STYLES - CONSOLIDATED
+   ============================================ */
+
+/* Mobile Devices (max-width: 768px) */
 @media (max-width: 768px) {
+    /* Layout */
+    body {
+        margin-left: 0;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    /* Timeline */
+    .timeline::before {
+        left: 30px;
+    }
+    
+    /* Memory Cards */
+    .memory-card {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+        margin-right: 0 !important;
+    }
+    
+    .memory-card::before {
+        left: -48px !important;
+    }
+    
+    .memory-thumbnail-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.5rem;
+    }
+    
+    /* Page Header */
+    .page-header h2 {
+        font-size: 2rem;
+    }
+    
+    /* Perspective Toggle */
+    .perspective-toggle {
+        font-size: 0.85rem;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    .perspective-toggle-container {
+        margin-top: 1rem;
+    }
+    
+    /* Quiz Components */
+    .question-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .question-text {
+        font-size: 1.2rem;
+    }
+    
+    .question-display .question-text {
+        font-size: 1.8rem;
+    }
+
+    .question-display {
+        padding: 2rem 1.5rem;
+        min-height: 300px;
+    }
+
+    .question-content {
+        min-height: 200px;
+        max-height: calc(100vh - 350px);
+    }
+
+    .btn-nav {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        min-width: 100px;
+    }
+
+    .fullscreen-mode .question-text {
+        font-size: 2rem;
+    }
+
+    .fullscreen-mode .question-display {
+        padding: 3rem 2rem;
+        min-height: 50vh;
+    }
+
+    .fullscreen-mode .question-content {
+        max-height: calc(100vh - 250px);
+    }
+
+    .fullscreen-mode .question-counter {
+        font-size: 1.1rem;
+    }
+
+    .fullscreen-mode .btn-nav {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .navigation-buttons {
+        padding-top: 1rem;
+    }
+    
+    /* Gallery Viewer */
+    .gallery-close {
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .gallery-prev,
+    .gallery-next {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
+    
+    .gallery-prev {
+        left: 1rem;
+    }
+    
+    .gallery-next {
+        right: 1rem;
+    }
+    
+    .gallery-counter {
+        bottom: 1rem;
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
+    
+    /* Modal */
+    .modal-content {
+        max-width: 95%;
+    }
+    
+    .modal-content > div {
+        padding: 2rem 1.5rem;
+    }
+    
+    .modal-content .memory-title {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content .memory-content {
+        font-size: 1rem;
+    }
+    
+    /* Photo Gallery */
+    .photo-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+    
+    .filter-section {
+        gap: 0.5rem;
+    }
+    
+    .gallery-stats {
+        gap: 1rem;
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+    }
+    
+    .stat-item {
+        gap: 0.35rem;
+    }
+    
+    .stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Birthday Card */
     .birthday-card {
         padding: 2rem 2rem;
         max-width: 90%;
@@ -2252,6 +2300,7 @@ html {
     }
 }
 
+/* Small Mobile Devices (max-width: 480px) */
 @media (max-width: 480px) {
     .birthday-card {
         padding: 1.5rem 1.5rem;
@@ -2264,23 +2313,4 @@ html {
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
-}
-
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
-.hidden {
-    display: none !important;
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
 }
