@@ -1,0 +1,190 @@
+/* ============================================
+   DESIGN TOKENS - CSS Custom Properties
+   ============================================
+   This file contains all design system values.
+   Replace hardcoded values throughout CSS with these variables.
+   ============================================ */
+
+:root {
+  /* ===== COLORS ===== */
+  /* Primary Palette */
+  --color-primary: #3b82f6;
+  --color-primary-light: #60a5fa;
+  --color-primary-dark: #2563eb;
+  --color-primary-accent: #93c5fd;
+  
+  /* Secondary Palette */
+  --color-secondary: #60a5fa;
+  
+  /* Accent Colors */
+  --color-accent: #93c5fd;
+  --color-light: #f5f7ff;
+  --color-dark: #2d3748;
+  
+  /* Semantic Colors */
+  --color-success: #48bb78;
+  --color-success-light: #68d391;
+  --color-success-dark: #38a169;
+  
+  /* Pink Palette (for Thuvaraha's perspective) */
+  --color-pink: #ec4899;
+  --color-pink-light: #f472b6;
+  --color-pink-dark: #be185d;
+  
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  
+  /* Background Colors */
+  --bg-primary: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8f9ff;
+  --bg-sidebar: linear-gradient(180deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
+  
+  /* ===== SPACING SCALE ===== */
+  /* Based on 4px base unit (0.25rem) */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  
+  /* ===== TYPOGRAPHY ===== */
+  /* Font Families */
+  --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 2;
+  
+  /* ===== LAYOUT ===== */
+  --sidebar-width: 280px;
+  --container-max-width: 900px;
+  --container-padding: 1.25rem; /* 20px */
+  
+  /* ===== BORDERS ===== */
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 25px;
+  --radius-full: 9999px;
+  
+  /* Border Widths */
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+  
+  /* Border Colors */
+  --border-color-light: rgba(255, 255, 255, 0.5);
+  --border-color-medium: rgba(59, 130, 246, 0.2);
+  --border-color-dark: rgba(45, 55, 72, 0.1);
+  
+  /* ===== SHADOWS ===== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 20px 60px rgba(0, 0, 0, 0.25);
+  
+  /* Colored Shadows */
+  --shadow-primary: 0 4px 20px rgba(59, 130, 246, 0.15);
+  --shadow-primary-lg: 0 8px 30px rgba(59, 130, 246, 0.3);
+  --shadow-pink: 0 4px 20px rgba(236, 72, 153, 0.15);
+  --shadow-pink-lg: 0 12px 40px rgba(236, 72, 153, 0.3);
+  --shadow-sidebar: 2px 0 30px rgba(59, 130, 246, 0.3);
+  
+  /* ===== GRADIENTS ===== */
+  /* Primary Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  --gradient-primary-reverse: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  --gradient-primary-vertical: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 50%, var(--color-primary) 100%);
+  
+  /* Pink Gradients (Thuvaraha) */
+  --gradient-pink: linear-gradient(135deg, var(--color-pink) 0%, var(--color-pink-light) 100%);
+  --gradient-pink-bg: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  --gradient-pink-overlay: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(244, 114, 182, 0.03) 100%);
+  
+  /* Card Gradients */
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  --gradient-card-hover: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  --gradient-input: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  
+  /* Background Gradients */
+  --gradient-bg: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+  --gradient-success: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.1) 100%);
+  --gradient-error: linear-gradient(135deg, rgba(252, 129, 129, 0.1) 0%, rgba(245, 101, 101, 0.1) 100%);
+  
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --transition-all: all 0.3s ease;
+  
+  /* ===== Z-INDEX SCALE ===== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-sidebar: 1000;
+  
+  /* ===== ANIMATIONS ===== */
+  --animation-duration-fast: 0.15s;
+  --animation-duration-base: 0.3s;
+  --animation-duration-slow: 0.5s;
+  --animation-timing: ease;
+  --animation-timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* ===== OPACITY ===== */
+  --opacity-disabled: 0.5;
+  --opacity-hover: 0.8;
+  --opacity-overlay: 0.6;
+  --opacity-backdrop: 0.4;
+}
+
+/* ===== DARK MODE SUPPORT (Future) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Can add dark mode overrides here when needed */
+  }
+}

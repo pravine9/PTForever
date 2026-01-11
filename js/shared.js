@@ -16,7 +16,6 @@ function createSidebar(activePage) {
                 <a href="quiz.html" class="nav-item ${activePage === 'quiz' ? 'active' : ''}">🎯 Birthday Quiz</a>
                 <a href="favorites-quiz.html" class="nav-item ${activePage === 'favorites' ? 'active' : ''}">💝 Favorites Quiz</a>
                 <a href="whiteboard-game.html" class="nav-item ${activePage === 'whiteboard' ? 'active' : ''}">🎲 Whiteboard Game</a>
-                <a href="thaali.html" class="nav-item ${activePage === 'thaali' ? 'active' : ''}">💍 Thaali Calculator</a>
             </div>
             
             <div class="nav-section timeline-nav">
