@@ -1,0 +1,16 @@
+{
+  "name": "ptforever",
+  "version": "1.0.0",
+  "description": "PTForever - Personal timeline and memories website",
+  "scripts": {
+    "lint:css": "stylelint \"css/**/*.css\"",
+    "lint:css:fix": "stylelint \"css/**/*.css\" --fix",
+    "lint:css:style": "stylelint \"css/style.css\"",
+    "lint:css:auth": "stylelint \"css/auth.css\""
+  },
+  "devDependencies": {
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "private": true
+}

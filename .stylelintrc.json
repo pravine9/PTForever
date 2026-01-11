@@ -1,0 +1,33 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "declaration-block-no-duplicate-properties": true,
+    "no-duplicate-selectors": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "selector-class-pattern": null,
+    "selector-id-pattern": null,
+    "custom-property-pattern": null,
+    "keyframes-name-pattern": null,
+    "value-keyword-case": null,
+    "color-function-notation": null,
+    "alpha-value-notation": null,
+    "color-hex-length": null,
+    "property-no-vendor-prefix": null,
+    "media-feature-range-notation": null,
+    "comment-empty-line-before": null,
+    "rule-empty-line-before": null,
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": ["/^--/"]
+      }
+    ],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["keyframes", "layer"]
+      }
+    ]
+  },
+  "ignoreFiles": ["**/*.example.css"]
+}
