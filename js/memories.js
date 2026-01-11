@@ -1,5 +1,6 @@
 let memories = [];
 let currentLockedMemory = null;
+let currentAuthorFilter = 'all'; // 'all', 'user', or 'thuvaraha'
 
 // Load all our memories
 async function loadMemories() {
@@ -35,9 +36,18 @@ function displayMemories(filterTag = 'all') {
     const timeline = document.getElementById('timeline');
     timeline.innerHTML = '';
     
-    const filteredMemories = filterTag === 'all' 
+    // First filter by tag
+    let filteredMemories = filterTag === 'all' 
         ? memories 
         : memories.filter(memory => memory.tags && memory.tags.includes(filterTag));
+    
+    // Then filter by author if needed
+    if (currentAuthorFilter !== 'all') {
+        filteredMemories = filteredMemories.filter(memory => {
+            const author = memory.author || 'user';
+            return author === currentAuthorFilter;
+        });
+    }
     
     // Sort by date (newest first)
     filteredMemories.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -100,8 +110,10 @@ async function getImagesForDate(date) {
 // Create a memory card
 function createMemoryCard(memory, index) {
     const card = document.createElement('div');
-    card.className = 'memory-card';
+    const author = memory.author || 'user'; // Default to 'user' if no author specified
+    card.className = `memory-card memory-card-${author}`;
     card.setAttribute('data-memory-id', memory.id);
+    card.setAttribute('data-author', author);
     // Reduced delay for faster loading - max 0.5s delay for any card
     card.style.animationDelay = `${Math.min(index * 0.05, 0.5)}s`;
     
@@ -273,6 +285,13 @@ async function showMemoryDetail(memory) {
     
     const modal = document.getElementById('memoryModal');
     const content = document.getElementById('memoryContent');
+    const author = memory.author || 'user';
+    
+    // Apply author-based styling to modal
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.className = `modal-content memory-detail memory-modal-${author}`;
+    }
     
     let mediaHtml = '';
     if (memory.media) {
@@ -443,10 +462,58 @@ if (window.location.hash && !sessionStorage.getItem('intentionalHash')) {
     history.replaceState(null, null, window.location.pathname);
 }
 
+// Toggle between showing all memories, only user's, or only Thuvaraha's
+function togglePerspective() {
+    // Cycle through: all -> user -> thuvaraha -> all
+    if (currentAuthorFilter === 'all') {
+        currentAuthorFilter = 'user';
+    } else if (currentAuthorFilter === 'user') {
+        currentAuthorFilter = 'thuvaraha';
+    } else {
+        currentAuthorFilter = 'all';
+    }
+    
+    localStorage.setItem('memoryAuthorFilter', currentAuthorFilter);
+    updatePerspectiveToggle();
+    
+    // Get current tag filter to maintain it
+    const activeTag = document.querySelector('.tag.active');
+    const currentTag = activeTag ? activeTag.dataset.tag : 'all';
+    
+    displayMemories(currentTag);
+}
+
+// Update the toggle button text
+function updatePerspectiveToggle() {
+    const toggle = document.getElementById('perspectiveToggle');
+    const label = document.getElementById('perspectiveLabel');
+    if (toggle && label) {
+        if (currentAuthorFilter === 'thuvaraha') {
+            label.textContent = 'Showing: Thuvaraha\'s Memories';
+        } else if (currentAuthorFilter === 'user') {
+            label.textContent = 'Showing: Your Memories';
+        } else {
+            label.textContent = 'Showing: All Memories';
+        }
+    }
+}
+
+// Load author filter from localStorage
+function loadPerspective() {
+    const saved = localStorage.getItem('memoryAuthorFilter');
+    if (saved === 'thuvaraha' || saved === 'user' || saved === 'all') {
+        currentAuthorFilter = saved;
+    }
+    updatePerspectiveToggle();
+}
+
 // Set up everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Force scroll to top on load
     window.scrollTo(0, 0);
+    
+    // Load and apply perspective
+    loadPerspective();
     
     loadMemories();
     populateTimelineSidebar(); // Call the shared function

@@ -70,22 +70,6 @@ body::after {
     z-index: 1;
 }
 
-/* Wider container for calculator pages */
-.container:has(.calculator-layout) {
-    max-width: 1600px;
-    padding: 0 80px;
-}
-
-/* Override container width for calculator layout */
-.container .calculator-layout {
-    max-width: 1600px;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-}
-
 /* Left Sidebar Navigation */
 .sidebar {
     position: fixed;
@@ -383,6 +367,40 @@ body::after {
     font-weight: 300;
 }
 
+/* Perspective Toggle */
+.perspective-toggle-container {
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.perspective-toggle {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: var(--primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.perspective-toggle:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.perspective-icon {
+    font-size: 1.1rem;
+}
+
 /* Filter Tags */
 .filter-tags {
     display: flex;
@@ -500,6 +518,62 @@ body::after {
     border-radius: 50%;
     border: 3px solid white;
     box-shadow: 0 0 0 3px var(--primary), 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Thuvaraha's Memory Card Styles */
+.memory-card-thuvaraha {
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    border: 1px solid rgba(236, 72, 153, 0.2);
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15);
+}
+
+.memory-card-thuvaraha::after {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(244, 114, 182, 0.03) 100%);
+}
+
+.memory-card-thuvaraha:hover {
+    box-shadow: 0 12px 40px rgba(236, 72, 153, 0.3);
+    border-color: rgba(236, 72, 153, 0.4);
+}
+
+.memory-card-thuvaraha::before {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    box-shadow: 0 0 0 3px #ec4899, 0 0 15px rgba(236, 72, 153, 0.5);
+}
+
+.memory-card-thuvaraha .memory-date {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.memory-card-thuvaraha .memory-title {
+    color: #be185d;
+}
+
+.memory-card-thuvaraha .photo-badge {
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+}
+
+.memory-card-thuvaraha .memory-tags span {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+    color: #ec4899;
+    border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+/* Modal styles for Thuvaraha's memories */
+.modal-content.memory-modal-thuvaraha .memory-date {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-content.memory-modal-thuvaraha .memory-tags span {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(244, 114, 182, 0.1) 100%);
+    color: #ec4899;
+    border: 1px solid rgba(236, 72, 153, 0.2);
 }
 
 .memory-card:nth-child(odd)::before {
@@ -1071,6 +1145,14 @@ body::after {
     line-height: 1.3;
 }
 
+/* Override for Thuvaraha's memories in modal - needs higher specificity */
+.modal-content.memory-modal-thuvaraha .memory-title {
+    background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .modal-content h3 {
     margin-bottom: 1rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -1194,6 +1276,15 @@ body::after {
     
     .page-header h2 {
         font-size: 2rem;
+    }
+    
+    .perspective-toggle {
+        font-size: 0.85rem;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    .perspective-toggle-container {
+        margin-top: 1rem;
     }
     
     .question-container {
@@ -2013,21 +2104,6 @@ html {
     gap: 12px;
 }
 
-/* ===== BUYINGAHOUSE CALCULATOR TWO-COLUMN LAYOUT ===== */
-
-.calculator-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 15px 0;
-    align-items: start;
-    max-width: 1600px;
-    margin: 0 auto;
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-}
-
 /* Utility Classes */
 .hidden {
     display: none !important;
@@ -2183,377 +2259,6 @@ html {
         max-width: calc(100vw - 40px);
         font-size: 0.8rem;
         padding: 8px 12px;
-    }
-}
-
-/* Explanation Section */
-.explanation-section {
-    margin-top: 1rem;
-    padding-top: 0;
-    border-top: none;
-}
-
-.explanation-header {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 12px;
-}
-
-.explanation-content {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: #4a5568;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
-    overflow: hidden;
-    max-height: 2000px; /* Large enough for explanation content */
-    display: block; /* Override .hidden display: none for smooth animations */
-}
-
-.explanation-content.hidden {
-    max-height: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, margin 0.4s ease;
-    display: block !important; /* Keep block for animation, but height is 0 */
-}
-
-.explanation-content p {
-    margin: 8px 0;
-}
-
-.explanation-content p:first-child {
-    margin-top: 0;
-}
-
-.explanation-content p:last-child {
-    margin-bottom: 0;
-}
-
-.explanation-content strong {
-    color: var(--dark);
-    font-weight: 600;
-}
-
-/* Help text for married couples */
-.help-text {
-    font-size: 0.85rem;
-    color: #6b7280;
-    margin-bottom: 12px;
-    line-height: 1.5;
-    font-style: italic;
-}
-
-/* FTB Eligibility Indicator - Below input container */
-.ftb-indicator {
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-top: 16px;
-    margin-bottom: 0;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    color: #4a5568;
-}
-
-.ftb-indicator.eligible {
-    background: #f0f9f4;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.ftb-indicator.eligible strong {
-    color: #155724;
-}
-
-.ftb-indicator.not-eligible {
-    background: #f8f9fa;
-    color: #6c757d;
-    border-color: #dee2e6;
-}
-
-.ftb-indicator.not-eligible strong {
-    color: #495057;
-}
-
-/* Regime Badges - Removed, using simple text instead */
-
-/* Nested Options Styling */
-.checkbox-group.nested {
-    margin-left: 1.5rem;
-    padding-left: 1rem;
-    border-left: 2px solid var(--primary);
-    margin-top: 8px;
-}
-
-.input-section .nested-option {
-    margin-left: 1rem;
-    padding-left: 1rem;
-    border-left: 2px solid rgba(59, 130, 246, 0.2);
-    transition: all 0.3s ease;
-}
-
-.input-section .nested-option.visible {
-    opacity: 1;
-    max-height: 500px;
-}
-
-.input-section .nested-option.hidden {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-}
-
-.calculator-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.calculator-results-column {
-    position: sticky;
-    top: 20px;
-    align-self: start;
-}
-
-.results-card {
-    position: relative;
-}
-
-.results-header {
-    color: var(--primary);
-    font-size: 1.3rem;
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e5e8f5;
-}
-
-/* Input Sections */
-.input-section {
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.input-section:last-of-type {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-/* Hide border when section content is hidden */
-.input-section.content-hidden {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-/* Reduce spacing for nested/conditional sections */
-.input-section[style*="margin-top: 0"] {
-    margin-top: 0;
-    padding-top: 0;
-}
-
-#marriedOptions {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
-
-/* When buyer options section is hidden, remove its spacing */
-.input-section.content-hidden + #marriedOptions {
-    margin-top: 0;
-    padding-top: 0;
-}
-
-.price-section {
-    border-bottom: 2px solid #e5e8f5;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-.price-label {
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 10px;
-}
-
-.price-input {
-    width: 100%;
-    padding: 14px 16px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    border: 2px solid var(--accent);
-    border-radius: 10px;
-    text-align: center;
-    color: var(--dark);
-    transition: all 0.3s ease;
-    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-}
-
-.price-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    background: white;
-}
-
-.section-label {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 10px;
-}
-
-.spouse-label {
-    color: var(--primary);
-    font-size: 1rem;
-}
-
-/* Radio Groups */
-.radio-group {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.radio-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--dark);
-}
-
-.radio-option input[type="radio"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--primary);
-}
-
-/* Checkbox Groups */
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.checkbox-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--dark);
-    padding: 6px 0;
-}
-
-.checkbox-option input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--primary);
-    flex-shrink: 0;
-}
-
-/* Results Column Styles */
-.calculator-results-column .calculator-card {
-    padding: 18px;
-    background: white;
-    border: 1px solid #e5e8f5;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.calculator-results-column .calculator-results {
-    gap: 10px;
-}
-
-.calculator-results-column .result-row {
-    padding: 12px 14px;
-}
-
-.calculator-results-column .result-row.highlight {
-    padding: 16px;
-    font-size: 1.05rem;
-}
-
-.breakdown-header {
-    color: var(--primary);
-    margin-bottom: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.calculator-results-column .comparison-table {
-    font-size: 0.85rem;
-}
-
-.calculator-results-column .comparison-table th,
-.calculator-results-column .comparison-table td {
-    padding: 8px 10px;
-}
-
-/* Responsive Design */
-@media (max-width: 1400px) {
-    .calculator-layout {
-        max-width: 1400px;
-    }
-    
-    .container:has(.calculator-layout) {
-        padding: 0 40px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .calculator-layout {
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        max-width: 1200px;
-    }
-    
-    .container:has(.calculator-layout) {
-        padding: 0 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    .container:has(.calculator-layout) {
-        padding: 0 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .calculator-layout {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .calculator-results-column {
-        position: static;
-        order: -1; /* Show results first on mobile */
-    }
-    
-    .price-input {
-        font-size: 1.3rem;
-        padding: 12px 14px;
-    }
-    
-    .radio-group {
-        gap: 15px;
-    }
-    
-    .input-section {
-        margin-bottom: 16px;
-        padding-bottom: 12px;
     }
 }
 
@@ -3710,4 +3415,3 @@ html {
         width: 100%;
     }
 }
-
