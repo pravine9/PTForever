@@ -1,4 +1,6 @@
-/* Reset and Base Styles */
+/* ============================================
+   RESET AND BASE STYLES
+   ============================================ */
 * {
     margin: 0;
     padding: 0;
@@ -6,21 +8,87 @@
 }
 
 :root {
+    /* ===== COLORS ===== */
     --primary: #3b82f6;
     --secondary: #60a5fa;
     --accent: #93c5fd;
     --light: #f5f7ff;
     --dark: #2d3748;
     --success: #48bb78;
+    
+    /* Pink Palette (for Thuvaraha's perspective) */
+    --pink: #ec4899;
+    --pink-light: #f472b6;
+    --pink-dark: #be185d;
+    
+    /* ===== SPACING SCALE ===== */
+    --space-xs: 0.25rem;   /* 4px */
+    --space-sm: 0.5rem;    /* 8px */
+    --space-md: 1rem;      /* 16px */
+    --space-lg: 1.5rem;    /* 24px */
+    --space-xl: 2rem;      /* 32px */
+    --space-2xl: 2.5rem;   /* 40px */
+    
+    /* ===== SHADOWS ===== */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.2);
+    --shadow-2xl: 0 20px 60px rgba(0, 0, 0, 0.25);
+    
+    /* Colored Shadows */
+    --shadow-primary: 0 4px 20px rgba(59, 130, 246, 0.15);
+    --shadow-primary-lg: 0 8px 30px rgba(59, 130, 246, 0.3);
+    --shadow-primary-xl: 0 12px 40px rgba(59, 130, 246, 0.3);
+    --shadow-primary-button: 0 4px 15px rgba(59, 130, 246, 0.3);
+    --shadow-primary-button-hover: 0 6px 20px rgba(59, 130, 246, 0.4);
+    --shadow-sidebar: 2px 0 30px rgba(59, 130, 246, 0.3);
+    --shadow-pink: 0 4px 20px rgba(236, 72, 153, 0.15);
+    --shadow-pink-lg: 0 12px 40px rgba(236, 72, 153, 0.3);
+    --shadow-tag: 0 2px 8px rgba(59, 130, 246, 0.3);
+    --shadow-tag-hover: 0 4px 15px rgba(59, 130, 246, 0.4);
+    --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-card-hover: 0 4px 15px rgba(59, 130, 246, 0.15);
+    
+    /* ===== BORDER RADIUS ===== */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 25px;
+    --radius-full: 50%;
+    --radius-tiny: 2px;
+    
+    /* ===== GRADIENTS ===== */
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    --gradient-primary-vertical: linear-gradient(180deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
+    --gradient-pink: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+    --gradient-pink-bg: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    --gradient-pink-overlay: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(244, 114, 182, 0.03) 100%);
+    --gradient-bg: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+    --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    
+    /* ===== LAYOUT ===== */
     --sidebar-width: 280px;
+    --container-max-width: 900px;
+    --container-padding: 20px;
+    
+    /* ===== TRANSITIONS ===== */
     --transition: all 0.3s ease;
+    --transition-fast: 0.15s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* ===== Z-INDEX ===== */
+    --z-base: 1;
+    --z-sidebar: 1000;
+    --z-modal: 500;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--dark);
-    background: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+    background: var(--gradient-bg);
     margin-left: var(--sidebar-width);
     min-height: 100vh;
     position: relative;
@@ -65,12 +133,14 @@ body::after {
 .container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 var(--container-padding);
     position: relative;
     z-index: 1;
 }
 
-/* Left Sidebar Navigation */
+/* ============================================
+   SIDEBAR NAVIGATION
+   ============================================ */
 .sidebar {
     position: fixed;
     left: 0;
@@ -80,7 +150,7 @@ body::after {
     background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
     color: white;
     z-index: 1000;
-    box-shadow: 2px 0 30px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-sidebar);
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
@@ -142,7 +212,7 @@ body::after {
 
 .sidebar-nav::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.3);
-    border-radius: 2px;
+    border-radius: var(--radius-tiny);
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb:hover {
@@ -180,7 +250,9 @@ body::after {
     margin-right: 0.5rem;
 }
 
-/* Timeline in Sidebar */
+/* ============================================
+   TIMELINE IN SIDEBAR
+   ============================================ */
 .timeline-nav {
     margin-top: 1rem;
 }
@@ -259,7 +331,7 @@ body::after {
 /* Sidebar Footer */
 .sidebar-footer {
     width: 100%;
-    padding: 1.5rem;
+    padding: var(--space-lg);
     text-align: center;
     border-top: 1px solid rgba(255,255,255,0.1);
     font-size: 0.85rem;
@@ -268,7 +340,9 @@ body::after {
     z-index: 10;
 }
 
-/* Mobile Toggle */
+/* ============================================
+   MOBILE TOGGLE
+   ============================================ */
 .mobile-toggle {
     display: none;
     position: fixed;
@@ -279,18 +353,20 @@ body::after {
     color: white;
     border: none;
     padding: 0.8rem 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-primary-button);
     transition: var(--transition);
 }
 
 .mobile-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: var(--shadow-primary-button-hover);
 }
 
-/* Top Bar (simplified since we have sidebar) */
+/* ============================================
+   TOP BAR
+   ============================================ */
 .top-bar {
     background: white;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -314,7 +390,9 @@ body::after {
     text-decoration: underline;
 }
 
-/* Page Header */
+/* ============================================
+   PAGE HEADER
+   ============================================ */
 .page-header {
     text-align: center;
     padding: 2rem 0 1.5rem;
@@ -379,7 +457,7 @@ body::after {
     border: 2px solid rgba(255, 255, 255, 0.5);
     color: var(--primary);
     padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    border-radius: var(--radius-2xl);
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 600;
@@ -405,7 +483,7 @@ body::after {
 .filter-tags {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
     padding: 1rem;
     flex-wrap: wrap;
     justify-content: center;
@@ -415,7 +493,7 @@ body::after {
     padding: 0.5rem 1.5rem;
     border: 2px solid transparent;
     background: white;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     cursor: pointer;
     transition: var(--transition);
     font-size: 0.9rem;
@@ -426,14 +504,14 @@ body::after {
     border-color: var(--primary);
     color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: var(--shadow-card-hover);
 }
 
 .tag.active {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-primary-button);
 }
 
 /* Timeline */
@@ -450,16 +528,16 @@ body::after {
     width: 3px;
     height: 100%;
     background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
-    border-radius: 2px;
+    border-radius: var(--radius-tiny);
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
 .memory-card {
     background: white;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     padding: 2rem;
     margin-bottom: 3rem;
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    box-shadow: var(--shadow-primary);
     position: relative;
     width: calc(50% - 40px);
     opacity: 0;
@@ -477,7 +555,7 @@ body::after {
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(147, 197, 253, 0.02) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -486,7 +564,7 @@ body::after {
 
 .memory-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-primary-xl);
     border-color: rgba(59, 130, 246, 0.3);
 }
 
@@ -515,16 +593,18 @@ body::after {
     width: 16px;
     height: 16px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     border: 3px solid white;
     box-shadow: 0 0 0 3px var(--primary), 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
-/* Thuvaraha's Memory Card Styles */
+/* ============================================
+   THUVARAHA'S MEMORY CARD STYLES
+   ============================================ */
 .memory-card-thuvaraha {
-    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    background: var(--gradient-pink-bg);
     border: 1px solid rgba(236, 72, 153, 0.2);
-    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15);
+    box-shadow: var(--shadow-pink);
 }
 
 .memory-card-thuvaraha::after {
@@ -532,7 +612,7 @@ body::after {
 }
 
 .memory-card-thuvaraha:hover {
-    box-shadow: 0 12px 40px rgba(236, 72, 153, 0.3);
+    box-shadow: var(--shadow-pink-lg);
     border-color: rgba(236, 72, 153, 0.4);
 }
 
@@ -553,7 +633,7 @@ body::after {
 }
 
 .memory-card-thuvaraha .photo-badge {
-    background: linear-gradient(135deg, #ec4899, #f472b6);
+    background: var(--gradient-pink);
 }
 
 .memory-card-thuvaraha .memory-tags span {
@@ -597,7 +677,7 @@ body::after {
 
 .memory-title {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     font-weight: 500;
     color: var(--dark);
 }
@@ -642,7 +722,7 @@ body::after {
     padding: 0.35rem 0.7rem;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     font-size: 0.8rem;
     font-weight: 500;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
@@ -654,7 +734,7 @@ body::after {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 0.75rem;
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
 }
 
 .thumbnail-item {
@@ -662,7 +742,7 @@ body::after {
     width: 100%;
     padding-bottom: 100%; /* Square aspect ratio */
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -725,7 +805,7 @@ body::after {
     max-height: 90vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-modal);
     animation: galleryFadeIn 0.3s ease;
 }
 
@@ -751,7 +831,7 @@ body::after {
     font-size: 2rem;
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -804,7 +884,7 @@ body::after {
     border: 2px solid rgba(255, 255, 255, 0.3);
     color: white;
     padding: 0.5rem 1.5rem;
-    border-radius: 25px;
+    border-radius: var(--radius-2xl);
     font-size: 0.9rem;
     font-weight: 500;
     backdrop-filter: blur(10px);
@@ -833,7 +913,7 @@ body::after {
 
 .memory-media {
     margin-top: 1rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
 }
@@ -871,7 +951,9 @@ body::after {
     margin: 1rem 0;
 }
 
-/* Quiz Styles */
+/* ============================================
+   QUIZ STYLES
+   ============================================ */
 .btn-primary, .btn-secondary {
     padding: 1rem 2.5rem;
     font-size: 1.1rem;
@@ -884,7 +966,7 @@ body::after {
     display: inline-block;
     text-decoration: none;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: var(--shadow-card-hover);
 }
 
 .btn-primary {
@@ -917,7 +999,7 @@ body::after {
 }
 
 .quiz-progress {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
 }
 
 .progress-bar {
@@ -947,7 +1029,7 @@ body::after {
 .question-container {
     background: white;
     padding: 3rem;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     box-shadow: 0 4px 25px rgba(59, 130, 246, 0.15);
     min-height: 300px;
     border: 1px solid rgba(59, 130, 246, 0.1);
@@ -955,7 +1037,7 @@ body::after {
 
 .question-text {
     font-size: 1.4rem;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
     font-weight: 400;
     line-height: 1.6;
     color: var(--dark);
@@ -991,7 +1073,7 @@ body::after {
     padding: 1.2rem 1.5rem;
     border: 2px solid rgba(59, 130, 246, 0.2);
     background: white;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: var(--transition);
     font-size: 1rem;
@@ -1037,15 +1119,15 @@ body::after {
 .score-display {
     background: white;
     padding: 3rem;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     box-shadow: 0 4px 25px rgba(59, 130, 246, 0.15);
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
     border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .score {
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     color: var(--dark);
 }
 
@@ -1068,7 +1150,7 @@ body::after {
 
 .unlock-message h3 {
     color: var(--success);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     font-weight: 600;
 }
 
@@ -1093,7 +1175,7 @@ body::after {
 .modal-content {
     background: white;
     padding: 0;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     max-width: 900px;
     width: 90%;
     max-height: 90vh;
@@ -1154,7 +1236,7 @@ body::after {
 }
 
 .modal-content h3 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1201,7 +1283,7 @@ body::after {
 
 .modal-buttons button:first-child:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-primary-button);
 }
 
 .modal-buttons button:last-child {
@@ -1376,11 +1458,13 @@ body::after {
     }
 }
 
-/* Gallery Styles */
+/* ============================================
+   GALLERY STYLES
+   ============================================ */
 .filter-section {
     display: flex;
     gap: 0.75rem;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
     flex-wrap: wrap;
     align-items: center;
 }
@@ -1434,7 +1518,7 @@ body::after {
     width: 100%;
     padding-bottom: 100%;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -1510,7 +1594,9 @@ html {
     }
 }
 
-/* Whiteboard Game / Interactive Quiz Styles */
+/* ============================================
+   WHITEBOARD GAME / INTERACTIVE QUIZ STYLES
+   ============================================ */
 .whiteboard-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -1520,14 +1606,14 @@ html {
 .game-controls {
     background: var(--card-bg, white);
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .game-controls h2 {
     color: var(--primary);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     font-size: 2.5rem;
     font-weight: 300;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
@@ -1552,7 +1638,7 @@ html {
 .question-display {
     background: var(--card-bg, white);
     padding: 4rem 3rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     text-align: center;
     min-height: 400px;
     display: flex;
@@ -1587,7 +1673,7 @@ html {
 .question-counter {
     font-size: 1.2rem;
     color: var(--secondary);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
 }
 
 .navigation-buttons {
@@ -1609,7 +1695,7 @@ html {
     transition: all 0.3s ease;
     min-width: 120px;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: var(--shadow-card-hover);
 }
 
 .btn-nav:hover {
@@ -1678,7 +1764,7 @@ html {
 
 .fullscreen-mode .question-counter {
     font-size: 1.4rem;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-xl);
 }
 
 .fullscreen-mode .navigation-buttons {
@@ -1775,9 +1861,9 @@ html {
     height: 50px;
     border: 4px solid rgba(59, 130, 246, 0.1);
     border-top: 4px solid #3b82f6;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
 }
 
 @keyframes spin {
@@ -1802,7 +1888,7 @@ html {
         linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%),
         repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 20px);
     padding: 4rem 6rem;
-    border-radius: 25px;
+    border-radius: var(--radius-2xl);
     box-shadow: 
         0 20px 60px rgba(59, 130, 246, 0.4),
         0 10px 30px rgba(59, 130, 246, 0.3),
@@ -1979,7 +2065,7 @@ html {
     font-size: 1.5rem;
     width: 30px;
     height: 30px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2177,7 +2263,7 @@ html {
     cursor: help;
     width: 18px;
     height: 18px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     background: var(--primary);
     color: white;
     font-size: 0.75em;
@@ -2267,7 +2353,7 @@ html {
 .presets-card,
 .info-card {
     background: white;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     padding: 14px 16px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
@@ -2302,7 +2388,7 @@ html {
     background: var(--primary);
     color: white;
     border: none;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     width: 40px;
     height: 40px;
     cursor: pointer;
@@ -2338,9 +2424,9 @@ html {
 }
 
 .price-item {
-    background: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+    background: var(--gradient-bg);
     padding: 15px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     text-align: center;
     border: 2px solid var(--accent);
 }
@@ -2505,7 +2591,7 @@ html {
 
 .calculator-controls {
     background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     border: 1px solid #e5e8f5;
     padding: 12px;
     margin-bottom: 12px;
@@ -2615,7 +2701,7 @@ html {
     justify-content: space-between;
     align-items: center;
     padding: 10px 14px;
-    background: linear-gradient(135deg, #f5f7ff 0%, #e9ecf9 100%);
+    background: var(--gradient-bg);
     border-radius: 10px;
     transition: all 0.3s ease;
 }
@@ -2738,7 +2824,7 @@ html {
     border: 1.5px solid var(--accent);
     color: var(--primary);
     padding: 4px 12px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -2774,7 +2860,7 @@ html {
 /* Guide Card */
 .guide-card {
     background: white;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     padding: 30px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
@@ -3030,7 +3116,7 @@ html {
 .saved-calculation-card {
     background: white;
     border: 2px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     padding: 1.25rem;
     transition: var(--transition);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -3048,7 +3134,7 @@ html {
 }
 
 .calculation-summary {
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
 }
 
 .summary-row {
@@ -3273,7 +3359,7 @@ html {
 .comparison-header {
     font-size: 1.5rem;
     color: var(--dark);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-md);
     text-align: center;
 }
 
@@ -3309,8 +3395,8 @@ html {
 .comparison-card {
     background: white;
     border: 2px solid #3b82f6;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
 }
 
